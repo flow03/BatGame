@@ -1,4 +1,5 @@
 import pygame
+import spritesheet
 
 FPS = pygame.time.Clock()
 pygame.init()
@@ -35,31 +36,47 @@ def get_sprites(folder: str, count: int):
         i += 1
     return sprites
 
-
-move_right = get_sprites('p_move_right', 8)
-move_left = get_sprites('p_move_left', 8)
-move_up = get_sprites('p_move_up', 8)
-move_down = get_sprites('p_move_down', 8)
-
+# Text
 myfont = pygame.font.SysFont("Montserrat", 30)
 # myfont = pygame.font.Font('fonts/Thor.otf', 30)
 myBigerFont = pygame.font.Font('fonts/MunchkinCyr.ttf', 60)
-game_over = myBigerFont.render('GAME OVER', False, 'White')
-restart_text = myfont.render('Restart', False, 'White')
+game_over = myBigerFont.render('GAME OVER', False, 'Black')
+restart_text = myfont.render('Restart', False, 'Black')
 restart_text_rect = restart_text.get_rect(center=(WIDTH/2, HEIGHT/2+60))
+exit_text = myfont.render('Exit', False, 'Black')
+exit_text_rect = exit_text.get_rect(center=(WIDTH/2, 350))
 
-# animation
-p_count = 0
+# animation background
+anim_count = 0
 bg_x = 0
 
+#Test spritesheet
+sprite_sheet = spritesheet.SpriteSheet('img/sprite/3dbfca4.png')
+test_move_down = sprite_sheet.get_anim(0)
+test_move_left = sprite_sheet.get_anim(1)
+# move_up = sprite_sheet.get_anim(3)
+# frame0 = sprite_sheet.get_image(0)
+# frame1 = sprite_sheet.get_image(1)
+# frame7 = sprite_sheet.get_image(7)
+
 # Player
+
+# move_right = get_sprites('p_move_right', 8)
+# move_left = get_sprites('p_move_left', 8)
+# move_up = get_sprites('p_move_up', 8)
+# move_down = get_sprites('p_move_down', 8)
+move_right = sprite_sheet.get_anim(2)
+move_left = sprite_sheet.get_anim(1)
+move_up = sprite_sheet.get_anim(3)
+move_down = sprite_sheet.get_anim(0)
+
 player = pygame.image.load('img/sprite/p_move_down/p_move_down0.png').convert_alpha()
 player_speed = 15
 player_x_start = 150
 player_y_start = 300
 player_x = player_x_start
 player_y = player_y_start
-direction = move_right
+direction = move_down
 
 # Bat
 bat = pygame.image.load('img/bat/bat2.png').convert_alpha()
@@ -76,8 +93,11 @@ green_rect = pygame.Surface((player.get_width(), player.get_height()))
 green_rect.fill('Green')
 green_rect.set_alpha(100)
 
-red_rect = pygame.image.load('img/red_rect.png').convert_alpha()
-red_rect = pygame.transform.scale(red_rect, (bat.get_width(), bat.get_height()))
+# red_rect = pygame.image.load('img/red_rect.png').convert_alpha()
+# red_rect = pygame.transform.scale(red_rect, (bat.get_width(), bat.get_height()))
+red_rect = pygame.Surface((bat.get_width(), bat.get_height()))
+red_rect.fill('Red')
+red_rect.set_alpha(100)
 
 # Jump
 is_jump = False
@@ -90,25 +110,39 @@ player_start_y = player_y
 bat_timer = pygame.USEREVENT + 1
 pygame.time.set_timer(bat_timer, 2000)
 
+# Sound
 # bg_sound = pygame.mixer.Sound('sounds/Psychosocial x Sexy and I Know It (256).mp3')
 # bg_sound.play()
+
+def anim_out():
+    pass
 
 gameplay = True
 run = True
 while run:
     FPS.tick(10)
 
-    screen.blit(bg, (bg_x, 0))
+    # screen.blit(bg, (bg_x, 0)) # bg_x
+    screen.fill("Green")
     # screen.blit(bg, (bg_x + WIDTH, 0))
     # bg_x -= 5
     # if bg_x <= -WIDTH:
     #     bg_x = 0
 
+    # test frames
+    spritesheet.anim_blit(screen, move_down, 0, 40)
+    spritesheet.anim_blit(screen, move_left, 0, 100)
+    spritesheet.anim_blit(screen, move_right, 0, 160)
+    spritesheet.anim_blit(screen, move_up, 0, 220)
+    # screen.blit(frame0, (0 * frame0.get_width(), 30))
+    # screen.blit(frame1, (1 * frame1.get_width(), 30))
+    # screen.blit(frame7, (2 * frame7.get_width(), 30))
+
     if gameplay:
         if bat_list:
             for bat_rect in bat_list:
-                screen.blit(bat, bat_rect)
                 screen.blit(red_rect, bat_rect)
+                screen.blit(bat, bat_rect)
                 bat_rect.x -= 10
 
                 if bat_rect.right < 0:
@@ -145,7 +179,8 @@ while run:
             player_y += player_speed
             direction = move_down
             # green_rect = down_green_rect
-            
+        
+        # Player jump
         if not is_jump and keys[pygame.K_SPACE]:
                 is_jump = True
                 player_start_y = player_y
@@ -162,16 +197,17 @@ while run:
                     is_jump_down = False
                     is_jump = False
 
-
-        player = direction[p_count]
-        if p_count < 7:
-            p_count += 1
+        # Player animation
+        player = direction[anim_count]
+        if anim_count < 7:
+            anim_count += 1
         else:
-            p_count = 1
+            anim_count = 1
     else:
-        screen.fill("Black")
+        # screen.fill("Black")
         screen.blit(game_over, (WIDTH/2-game_over.get_width()/2, HEIGHT/2-game_over.get_height()/2))
         screen.blit(restart_text, restart_text_rect)
+        screen.blit(exit_text, exit_text_rect)
 
         mouse = pygame.mouse.get_pos()
         if restart_text_rect.collidepoint(mouse) and pygame.mouse.get_pressed()[0]:
@@ -179,15 +215,21 @@ while run:
             player_x = player_x_start
             player_y = player_y_start
             bat_list.clear()
+        elif exit_text_rect.collidepoint(mouse) and pygame.mouse.get_pressed()[0]:
+            run = False
+            # pygame.quit()
     
     pygame.display.update()
 
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             run = False
-            pygame.quit()
+            # pygame.quit()
         if event.type == bat_timer:
-            bat_list.append(bat.get_rect(topleft=(WIDTH + bat.get_width(), player_y)))
+            # bat_list.append(bat.get_rect(topleft=(WIDTH + bat.get_width(), player_y)))
+            pass
 
         # elif event.type == pygame.KEYDOWN:
         #     pass
+
+pygame.quit()
