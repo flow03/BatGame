@@ -1,6 +1,4 @@
 import pygame
-import os
-import sys
 
 class SpriteSheet():
     def __init__(self, path: str):
@@ -13,12 +11,12 @@ class SpriteSheet():
 
         return image
 
-    def get_anim(self, row: int):
+    def get_anim(self, row: int, width = 60, height = 60):
         anim = []
-        # count = self.sheet.get_width()/width # 8
+        count = self.sheet.get_width()/width # 8
         col = 0
-        while col < 8:
-            anim.append(self.get_image(col, row))
+        while col < count:
+            anim.append(self.get_image(col, row, width, height))
             col += 1
 
         return anim
