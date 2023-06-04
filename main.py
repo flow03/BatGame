@@ -77,7 +77,7 @@ bg_x = 0
 #         return False
 
 #Test spritesheet
-sprite_sheet = spritesheet.SpriteSheet('img/sprite/3dbfca5.png')
+sprite_sheet = spritesheet.SpriteSheet('img/sprite/3dbfca7.png')
 test_move_down = sprite_sheet.get_anim(0)
 test_move_left = sprite_sheet.get_anim(1)
 # move_up = sprite_sheet.get_anim(3)
@@ -149,8 +149,8 @@ run = True
 while run:
     FPS.tick(60)
 
-    screen.blit(bg, (bg_x, 0)) # bg_x
-    # screen.fill("Green")
+    # screen.blit(bg, (bg_x, 0)) # bg_x
+    screen.fill("Green")
     # screen.blit(bg, (bg_x + WIDTH, 0))
     # bg_x -= 5
     # if bg_x <= -WIDTH:
@@ -260,8 +260,8 @@ while run:
             # pygame.quit()
         if event.type == bat_timer:
             # bat_list.append(bat.get_rect(topleft=(WIDTH + bat.get_width(), player_y)))
-            bat_list.append(create_bat())
-            # pass
+            # bat_list.append(create_bat())
+            pass
 
         # elif event.type == pygame.KEYDOWN:
         #     pass
