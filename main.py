@@ -138,10 +138,14 @@ jump_height = 120
 jump_speed = 6
 player_start_y = player_y
 
-
+# Bullet
+bullet = pygame.image.load('img/bullet.png').convert_alpha()
+bullet = pygame.transform.scale(bullet, (25, 25))
+bullets = []
+bullets_count = 5
 
 # Sound
-# bg_sound = pygame.mixer.Sound('sounds/Psychosocial x Sexy and I Know It (256).mp3')
+# bg_sound = pygame.mixer.Sound('sounds/Black Sabbath - Paranoid.mp3')
 # bg_sound.play()
 
 gameplay = True
@@ -149,8 +153,8 @@ run = True
 while run:
     FPS.tick(60)
 
-    # screen.blit(bg, (bg_x, 0)) # bg_x
-    screen.fill("Green")
+    screen.blit(bg, (bg_x, 0)) # bg_x
+    # screen.fill("Green")
     # screen.blit(bg, (bg_x + WIDTH, 0))
     # bg_x -= 5
     # if bg_x <= -WIDTH:
@@ -182,6 +186,7 @@ while run:
                 if player_rect.colliderect(bat[1]):
                     # screen.blit(myfont.render('You lose', True, COLOR_RED), (0, 20))
                     gameplay = False
+
         
         screen.blit(myfont.render('FPS: ' + str(int(FPS.get_fps())), True, COLOR_BLACK), (WIDTH - 80, 20))
         screen.blit(myfont.render('bats: ' + str(len(bat_list)), True, COLOR_BLACK), (20, 20))
@@ -234,6 +239,22 @@ while run:
                 frame = 0
             # frame = (frame+1)%8
             nextFrame += anim_delay
+
+        
+
+        if bullets:
+            for (i, el) in enumerate(bullets):
+                screen.blit(bullet, el)
+                el.x += 4
+                if el.x > WIDTH:
+                    bullets.pop(i)
+
+                if bat_list:
+                    for bat in bat_list:
+                        if bat[1].colliderect(el):
+                            bat_list.pop(bat_list.index(bat))
+                            bullets.pop(i)
+
     else:
         # screen.fill("Black")
         screen.blit(game_over, (WIDTH/2-game_over.get_width()/2, HEIGHT/2-game_over.get_height()/2))
@@ -246,8 +267,10 @@ while run:
             player_x = player_x_start
             player_y = player_y_start
             bat_list.clear()
-            nextFrame = clock() + anim_delay
+            bullets.clear()
             is_jump = False
+            bullets_count = 5
+            nextFrame = clock() + anim_delay
         elif exit_text_rect.collidepoint(mouse) and pygame.mouse.get_pressed()[0]:
             run = False
             # pygame.quit()
@@ -260,8 +283,13 @@ while run:
             # pygame.quit()
         if event.type == bat_timer:
             # bat_list.append(bat.get_rect(topleft=(WIDTH + bat.get_width(), player_y)))
-            # bat_list.append(create_bat())
+            bat_list.append(create_bat())
             pass
+        if gameplay and event.type == pygame.KEYDOWN:
+            if  event.key == pygame.K_e and bullets_count > 0:
+                bullets.append(bullet.get_rect(topleft=(player_x + 30, player_y + 10)))
+                bullets_count -=1
+            # pygame.time.delay(80)
 
         # elif event.type == pygame.KEYDOWN:
         #     pass
