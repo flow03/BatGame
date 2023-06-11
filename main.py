@@ -1,6 +1,7 @@
 import pygame
 import random
-import spritesheet
+# import spritesheet
+import Player
 
 FPS = pygame.time.Clock()
 pygame.init()
@@ -77,9 +78,9 @@ bg_x = 0
 #         return False
 
 #Test spritesheet
-sprite_sheet = spritesheet.SpriteSheet('img/sprite/3dbfca7.png')
-test_move_down = sprite_sheet.get_anim(0)
-test_move_left = sprite_sheet.get_anim(1)
+# sprite_sheet = spritesheet.SpriteSheet('img/sprite/3dbfca7.png')
+# test_move_down = sprite_sheet.get_anim(0)
+# test_move_left = sprite_sheet.get_anim(1)
 # move_up = sprite_sheet.get_anim(3)
 # frame0 = sprite_sheet.get_image(0)
 # frame1 = sprite_sheet.get_image(1)
@@ -91,18 +92,19 @@ test_move_left = sprite_sheet.get_anim(1)
 # move_left = get_sprites('p_move_left', 8)
 # move_up = get_sprites('p_move_up', 8)
 # move_down = get_sprites('p_move_down', 8)
-move_right = sprite_sheet.get_anim(2)
-move_left = sprite_sheet.get_anim(1)
-move_up = sprite_sheet.get_anim(3)
-move_down = sprite_sheet.get_anim(0)
+# move_right = sprite_sheet.get_anim(2)
+# move_left = sprite_sheet.get_anim(1)
+# move_up = sprite_sheet.get_anim(3)
+# move_down = sprite_sheet.get_anim(0)
 
-player = pygame.image.load('img/sprite/p_move_down/p_move_down0.png').convert_alpha()
-player_speed = 3
+# player = pygame.image.load('img/sprite/p_move_down/p_move_down0.png').convert_alpha()
+# player_speed = 3
 player_x_start = 150
 player_y_start = 300
 player_x = player_x_start
 player_y = player_y_start
-direction = move_down
+player = Player.Player(player_x, player_y)
+# direction = move_down
 
 # Bat
 # bat = pygame.image.load('img/bat/bat2.png').convert_alpha()
@@ -120,7 +122,7 @@ pygame.time.set_timer(bat_timer, 1500)
 # side_green_rect = pygame.image.load('img/sprite/side_green_rect.png').convert_alpha()
 # down_green_rect = pygame.image.load('img/sprite/down_green_rect.png').convert_alpha()
 # green_rect = down_green_rect
-green_rect = pygame.Surface((player.get_width(), player.get_height()))
+green_rect = pygame.Surface((player.rect.width, player.rect.height))
 green_rect.fill('Green')
 green_rect.set_alpha(100)
 
@@ -161,10 +163,10 @@ while run:
     #     bg_x = 0
 
     # test frames
-    spritesheet.anim_blit(screen, move_down, 0, 40)
-    spritesheet.anim_blit(screen, move_left, 0, 100)
-    spritesheet.anim_blit(screen, move_right, 0, 160)
-    spritesheet.anim_blit(screen, move_up, 0, 220)
+    # spritesheet.anim_blit(screen, move_down, 0, 40)
+    # spritesheet.anim_blit(screen, move_left, 0, 100)
+    # spritesheet.anim_blit(screen, move_right, 0, 160)
+    # spritesheet.anim_blit(screen, move_up, 0, 220)
     # screen.blit(frame0, (0 * frame0.get_width(), 30))
     # screen.blit(frame1, (1 * frame1.get_width(), 30))
     # screen.blit(frame7, (2 * frame7.get_width(), 30))
@@ -183,7 +185,7 @@ while run:
                 if bat[1].right < 0:
                     bat_list.pop(bat_list.index(bat))
 
-                if player_rect.colliderect(bat[1]):
+                if bat[1].colliderect(player.rect):
                     # screen.blit(myfont.render('You lose', True, COLOR_RED), (0, 20))
                     gameplay = False
 
@@ -191,27 +193,24 @@ while run:
         screen.blit(myfont.render('FPS: ' + str(int(FPS.get_fps())), True, COLOR_BLACK), (WIDTH - 80, 20))
         screen.blit(myfont.render('bats: ' + str(len(bat_list)), True, COLOR_BLACK), (20, 20))
 
-        player_rect = player.get_rect(topleft=(player_x, player_y))
+        # player_rect = player.get_rect(topleft=(player_x, player_y))
         # green_rect = pygame.transform.scale(green_rect, (player.get_width(), player.get_height()))
-        green_rect = pygame.transform.scale(green_rect, (player_rect.width, player_rect.height))
-        screen.blit(green_rect, player_rect)
+        # green_rect = pygame.transform.scale(green_rect, (player_rect.width, player_rect.height))
+        screen.blit(green_rect, player.rect)
 
-        screen.blit(player, player_rect)
+        # screen.blit(player, player.rect)
+        player.draw(screen)
         
 
         keys = pygame.key.get_pressed()
-        if (keys[pygame.K_LEFT] or keys[pygame.K_a]) and player_x > 0:
-            player_x -= player_speed
-            direction = move_left 
-        if (keys[pygame.K_RIGHT] or keys[pygame.K_d]) and player_x < (WIDTH - player.get_width()):
-            player_x += player_speed
-            direction = move_right
-        if (keys[pygame.K_UP] or keys[pygame.K_w]) and player_y > 0:
-            player_y -= player_speed
-            direction = move_up
-        if (keys[pygame.K_DOWN] or keys[pygame.K_s]) and player_y < (HEIGHT - player.get_height()):
-            player_y += player_speed
-            direction = move_down
+        if (keys[pygame.K_LEFT] or keys[pygame.K_a]) and player.rect.x > 0:
+            player.move('left')
+        if (keys[pygame.K_RIGHT] or keys[pygame.K_d]) and player.rect.x < (WIDTH - player.rect.width):
+            player.move('right')
+        if (keys[pygame.K_UP] or keys[pygame.K_w]) and player.rect.y > 0:
+            player.move('up')
+        if (keys[pygame.K_DOWN] or keys[pygame.K_s]) and player.rect.y < (HEIGHT - player.rect.height):
+            player.move('down')
         
         # Player jump
         if not is_jump and keys[pygame.K_SPACE]:
@@ -231,16 +230,16 @@ while run:
                     is_jump = False
 
         # Player animation
-        player = direction[frame]
-        if clock() > nextFrame:
-            if frame < 7:
-                frame += 1
-            else:
-                frame = 0
-            # frame = (frame+1)%8
-            nextFrame += anim_delay
-
-        
+        # player = direction[frame]
+        # if clock() > nextFrame:
+        #     if frame < 7:
+        #         frame += 1
+        #     else:
+        #         frame = 0
+        #     # frame = (frame+1)%8
+        #     nextFrame += anim_delay
+        player.update()
+        player.draw(screen)
 
         if bullets:
             for (i, el) in enumerate(bullets):
@@ -264,8 +263,10 @@ while run:
         mouse = pygame.mouse.get_pos()
         if restart_text_rect.collidepoint(mouse) and pygame.mouse.get_pressed()[0]:
             gameplay = True
-            player_x = player_x_start
-            player_y = player_y_start
+            # player_x = player_x_start
+            # player_y = player_y_start
+            player.reload(player_x_start, player_y_start)
+            # player.move(player_x_start, player_y_start)
             bat_list.clear()
             bullets.clear()
             is_jump = False
@@ -287,7 +288,7 @@ while run:
             pass
         if gameplay and event.type == pygame.KEYDOWN:
             if  event.key == pygame.K_e and bullets_count > 0:
-                bullets.append(bullet.get_rect(topleft=(player_x + 30, player_y + 10)))
+                bullets.append(bullet.get_rect(topleft=(player.rect.right, player.rect.height//2)))
                 bullets_count -=1
             # pygame.time.delay(80)
 
