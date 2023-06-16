@@ -1,10 +1,11 @@
 import pygame
 import spritesheet
+# from Jump_class import Jump
 
 class Player:
     def __init__(self, x, y):
-        # self.x = x
-        # self.y = y
+        self.start_x = x
+        self.start_y = y
         self.rect = pygame.Rect((x, y), (60, 60))
         self.speed = 3
         self.direction = 'down'  # Початковий напрямок руху
@@ -16,7 +17,7 @@ class Player:
             'left': [],
             'right': []
         }
-        self.sheet = spritesheet.SpriteSheet('img/sprite/3dbfca7.png')
+        self.sheet = spritesheet.SpriteSheet('img/sprite/hero_sprites.png')
         self.load_animation_frames()
 
     def load_animation_frames(self):
@@ -56,6 +57,10 @@ class Player:
     # def get_frame(self):
     #     return self.animation_frames[self.direction][int(self.frame_index)]
 
-    def reload(self, x, y):
-        self.rect.update((x, y),(self.rect.width, self.rect.height))
+    def reload(self):
+        self.rect.update((self.start_x, self.start_y),(self.rect.width, self.rect.height))
         self.direction = 'down'
+
+    # def jump(self):
+    #     self.jump_object = Jump()
+    #     self.jump_object.active(self)

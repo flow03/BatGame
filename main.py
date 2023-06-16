@@ -1,7 +1,8 @@
 import pygame
 import random
 # import spritesheet
-import Player
+from Player_class import Player
+from Jump_class import Jump
 
 FPS = pygame.time.Clock()
 pygame.init()
@@ -77,7 +78,7 @@ bg_x = 0
 #     else:
 #         return False
 
-#Test spritesheet
+# Test spritesheet
 # sprite_sheet = spritesheet.SpriteSheet('img/sprite/3dbfca7.png')
 # test_move_down = sprite_sheet.get_anim(0)
 # test_move_left = sprite_sheet.get_anim(1)
@@ -99,12 +100,15 @@ bg_x = 0
 
 # player = pygame.image.load('img/sprite/p_move_down/p_move_down0.png').convert_alpha()
 # player_speed = 3
-player_x_start = 150
-player_y_start = 300
-player_x = player_x_start
-player_y = player_y_start
-player = Player.Player(player_x, player_y)
+# player_x_start = 150
+# player_y_start = 300
+# player_x = player_x_start
+# player_y = player_y_start
+player = Player(150, 300)
 # direction = move_down
+
+# Jump
+jump = Jump()
 
 # Bat
 # bat = pygame.image.load('img/bat/bat2.png').convert_alpha()
@@ -132,14 +136,6 @@ red_rect = pygame.Surface((bat_images[0].get_width(), bat_images[0].get_height()
 red_rect.fill('Red')
 red_rect.set_alpha(100)
 
-# Jump
-is_jump = False
-# is_jump_up = False
-is_jump_down = False
-jump_height = 120
-jump_speed = 6
-player_start_y = player_y
-
 # Bullet
 bullet = pygame.image.load('img/bullet.png').convert_alpha()
 bullet = pygame.transform.scale(bullet, (25, 25))
@@ -162,15 +158,6 @@ while run:
     # if bg_x <= -WIDTH:
     #     bg_x = 0
 
-    # test frames
-    # spritesheet.anim_blit(screen, move_down, 0, 40)
-    # spritesheet.anim_blit(screen, move_left, 0, 100)
-    # spritesheet.anim_blit(screen, move_right, 0, 160)
-    # spritesheet.anim_blit(screen, move_up, 0, 220)
-    # screen.blit(frame0, (0 * frame0.get_width(), 30))
-    # screen.blit(frame1, (1 * frame1.get_width(), 30))
-    # screen.blit(frame7, (2 * frame7.get_width(), 30))
-
     if gameplay:
         if bat_list:
             # where bat[1] is bat_rect, 
@@ -190,18 +177,12 @@ while run:
                     gameplay = False
 
         
-        screen.blit(myfont.render('FPS: ' + str(int(FPS.get_fps())), True, COLOR_BLACK), (WIDTH - 80, 20))
-        screen.blit(myfont.render('bats: ' + str(len(bat_list)), True, COLOR_BLACK), (20, 20))
+        screen.blit(myfont.render('FPS: ' + str(int(FPS.get_fps())), True, COLOR_BLACK), (WIDTH - 85, 15))
+        screen.blit(myfont.render('bats: ' + str(len(bat_list)), True, COLOR_BLACK), (15, 15))
 
-        # player_rect = player.get_rect(topleft=(player_x, player_y))
-        # green_rect = pygame.transform.scale(green_rect, (player.get_width(), player.get_height()))
-        # green_rect = pygame.transform.scale(green_rect, (player_rect.width, player_rect.height))
         screen.blit(green_rect, player.rect)
-
-        # screen.blit(player, player.rect)
-        player.draw(screen)
+        # player.draw(screen)
         
-
         keys = pygame.key.get_pressed()
         if (keys[pygame.K_LEFT] or keys[pygame.K_a]) and player.rect.x > 0:
             player.move('left')
@@ -213,31 +194,11 @@ while run:
             player.move('down')
         
         # Player jump
-        if not is_jump and keys[pygame.K_SPACE]:
-                is_jump = True
-                player_start_y = player_y
+        if keys[pygame.K_SPACE]:
+            jump.jump_start(player)
 
-        if is_jump:
-            if not is_jump_down:
-                if (player_y > player_start_y - jump_height):
-                    player_y -= jump_speed
-                else: is_jump_down = True
-            else:
-                if (player_y < player_start_y):
-                    player_y += jump_speed
-                else:
-                    is_jump_down = False
-                    is_jump = False
+        jump.jump_end(player)
 
-        # Player animation
-        # player = direction[frame]
-        # if clock() > nextFrame:
-        #     if frame < 7:
-        #         frame += 1
-        #     else:
-        #         frame = 0
-        #     # frame = (frame+1)%8
-        #     nextFrame += anim_delay
         player.update()
         player.draw(screen)
 
@@ -265,7 +226,7 @@ while run:
             gameplay = True
             # player_x = player_x_start
             # player_y = player_y_start
-            player.reload(player_x_start, player_y_start)
+            player.reload()
             # player.move(player_x_start, player_y_start)
             bat_list.clear()
             bullets.clear()
@@ -287,9 +248,10 @@ while run:
             bat_list.append(create_bat())
             pass
         if gameplay and event.type == pygame.KEYDOWN:
-            if  event.key == pygame.K_e and bullets_count > 0:
-                bullets.append(bullet.get_rect(topleft=(player.rect.right, player.rect.height//2)))
-                bullets_count -=1
+            if  event.key == pygame.K_e or event.key == pygame.K_q:
+                if bullets_count > 0:
+                    bullets.append(bullet.get_rect(topleft=(player.rect.right, player.rect.height//2)))
+                    bullets_count -=1
             # pygame.time.delay(80)
 
         # elif event.type == pygame.KEYDOWN:
