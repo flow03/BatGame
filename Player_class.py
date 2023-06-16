@@ -1,6 +1,5 @@
 import pygame
 import spritesheet
-# from Jump_class import Jump
 
 class Player:
     def __init__(self, x, y):
@@ -61,6 +60,3 @@ class Player:
         self.rect.update((self.start_x, self.start_y),(self.rect.width, self.rect.height))
         self.direction = 'down'
 
-    # def jump(self):
-    #     self.jump_object = Jump()
-    #     self.jump_object.active(self)

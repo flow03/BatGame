@@ -1,6 +1,6 @@
 import pygame
 # import math
-import bullet
+import Bullet_class
 
 pygame.init()
 
@@ -49,7 +49,7 @@ while not done:
         if event.type == pygame.MOUSEBUTTONDOWN:
             # Створення кулі з позиції гравця до позиції противника (позиція миші)
             target_pos = pygame.mouse.get_pos()
-            new_bullet = bullet.Bullet(player_pos, target_pos)
+            new_bullet = Bullet_class.Bullet(player_pos, target_pos)
             bullet_group.add(new_bullet)
 
             # Додавання позиції курсора миші до списку червоних цяток
