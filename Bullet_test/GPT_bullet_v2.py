@@ -1,6 +1,13 @@
 import pygame
-# import math
-import Bullet_class
+# import sys
+# import os
+
+# current_dir = os.path.dirname(os.path.abspath(__file__))
+# parent_dir = os.path.dirname(current_dir)
+# sys.path.append(parent_dir)
+
+from Bullet_class import Bullet
+from RedDot_class import RedDot
 
 pygame.init()
 
@@ -17,12 +24,11 @@ pygame.display.set_caption("Політ кулі")
 
 clock = pygame.time.Clock()
 
-
 # Створення групи куль
 bullet_group = pygame.sprite.Group()
 
 # Список для зберігання позицій курсора миші
-red_dots = []
+red_dots = pygame.sprite.Group()
 
 # Позиція гравця і противника
 player = pygame.Surface((20, 20))
@@ -49,11 +55,11 @@ while not done:
         if event.type == pygame.MOUSEBUTTONDOWN:
             # Створення кулі з позиції гравця до позиції противника (позиція миші)
             target_pos = pygame.mouse.get_pos()
-            new_bullet = Bullet_class.Bullet(player_pos, target_pos)
+            new_bullet = Bullet(player_pos, target_pos)
             bullet_group.add(new_bullet)
 
             # Додавання позиції курсора миші до списку червоних цяток
-            red_dots.append(target_pos)
+            red_dots.add(RedDot(*target_pos))
 
             # Збереження поточних координат кулі і позиції противника
             # current_bullet_pos = pygame.mouse.get_pos()
@@ -61,7 +67,7 @@ while not done:
 
     screen.fill(BLACK)
 
-    bullet_group.update(screen)
+    bullet_group.update(screen, red_dots)
     for bullet_el in bullet_group:
         current_bullet_pos = bullet_el.get_pos()
     
@@ -71,8 +77,10 @@ while not done:
     # Відображення куль на екрані
     bullet_group.draw(screen)
     # Відображення червоних цяток
-    for dot in red_dots:
-        pygame.draw.circle(screen, RED, dot, 5)
+    red_dots.draw(screen)
+    # for dot in red_dots:
+    #     pygame.draw.circle(screen, RED, dot, 5)
+    
 
     # Виведення поточних координат на екран
     if current_bullet_pos is not None:
