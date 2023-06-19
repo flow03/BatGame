@@ -6,7 +6,7 @@ import pygame
 # parent_dir = os.path.dirname(current_dir)
 # sys.path.append(parent_dir)
 
-from Bullet_class import Bullet
+from Bullet_test_class import Bullet
 from RedDot_class import RedDot
 
 pygame.init()
@@ -76,6 +76,8 @@ while not done:
 
     # Відображення куль на екрані
     bullet_group.draw(screen)
+    # for bullet in bullet_group:
+    #     pygame.draw.rect(screen, 'Red', bullet.rect, 2)
     # Відображення червоних цяток
     red_dots.draw(screen)
     # for dot in red_dots:

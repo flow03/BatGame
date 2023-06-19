@@ -20,7 +20,7 @@ class Player:
         self.load_animation_frames()
 
     def load_animation_frames(self):
-        # Завантажте всі кадри анімацій для кожного напрямку руху
+        # Завантаження всіх кадрів анімацій для кожного напрямку руху
         # for direction in self.animation_frames.keys():
         #     for i in range(8):
         #         frame = pygame.image.load(f'{direction}_{i}.png')  # Завантаження кадра з файлу

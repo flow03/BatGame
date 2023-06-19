@@ -3,6 +3,7 @@ import random
 # import spritesheet
 from Player_class import Player
 from Jump_class import Jump
+from Bullet_class import Bullet
 import Bat_class
 
 FPS = pygame.time.Clock()
@@ -91,9 +92,7 @@ green_rect.set_alpha(100)
 
 
 # Bullet
-bullet = pygame.image.load('img/bullet.png').convert_alpha()
-bullet = pygame.transform.scale(bullet, (25, 25))
-bullets = []
+bullets = pygame.sprite.Group()
 bullets_count = 5
 
 # Sound
@@ -145,22 +144,14 @@ while run:
         player.update()
         screen.blit(green_rect, player.rect)
         player.draw(screen)
-
-        # bat_list.sprites()[0].red_rect
-
+        
+        bullets.update(screen)
+        bullets.draw(screen)
 
         if bullets:
-            for (i, bullet_rect) in enumerate(bullets):
-                screen.blit(bullet, bullet_rect)
-                bullet_rect.x += 4
-                if bullet_rect.x > WIDTH:
-                    bullets.pop(i)
-
-                if bat_list:
-                    for bat in bat_list:
-                        if bat.rect.colliderect(bullet_rect):
-                            bat_list.remove(bat)
-                            bullets.pop(i)
+            # Параметр True вказує, що об'єкти, які зіткнулися,
+            # мають бути автоматично видалені зі своїх відповідних груп.
+            pygame.sprite.groupcollide(bullets, bat_list, True, True)
 
     else:
         # screen.fill("Black")
@@ -173,7 +164,7 @@ while run:
             gameplay = True
             player.reload()
             bat_list.empty()
-            bullets.clear()
+            bullets.empty()
             bullets_count = 5
             nextFrame = clock() + anim_delay
         elif exit_text_rect.collidepoint(mouse) and pygame.mouse.get_pressed()[0]:
@@ -193,7 +184,7 @@ while run:
         if gameplay and event.type == pygame.KEYDOWN:
             if  event.key == pygame.K_e or event.key == pygame.K_q:
                 # if bullets_count > 0:
-                bullets.append(bullet.get_rect(center=(player.rect.midright)))
+                bullets.add(Bullet(player.rect.center, player.direction))
                 # bullets_count -=1
             # pygame.time.delay(80)
 
