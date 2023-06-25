@@ -35,9 +35,12 @@ class Player:
         if self.frame_index >= len(self.animation_frames[self.direction]):
             self.frame_index = 0
 
-    def draw(self, screen):
+    def draw(self, screen, colour = None):
         current_frame = self.animation_frames[self.direction][int(self.frame_index)]
+        # screen.blit(green_rect, self.rect)
         screen.blit(current_frame, self.rect)
+        if colour:
+            pygame.draw.rect(screen, colour, self.rect, 2)
 
     def move(self, direction):
         self.direction = direction

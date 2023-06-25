@@ -5,7 +5,7 @@ import math
 class Bullet(pygame.sprite.Sprite):
     def __init__(self, start_pos: float, direction):
         super().__init__()
-        self.image = pygame.image.load('img/bullet.png').convert_alpha()
+        self.image = pygame.image.load('img/bullet_new.png').convert_alpha()
         self.scale_image(25)
         self.rect = self.image.get_rect()
         self.rect.center = start_pos

@@ -4,18 +4,20 @@ import random
 from Player_class import Player
 from Jump_class import Jump
 from Bullet_class import Bullet
+from BulletDrop_class import BulletDrop
+from MyGroup_class import MyGroup
 import Bat_class
 
 FPS = pygame.time.Clock()
 pygame.init()
 
-COLOR_WHITE = (255, 255, 255)
-COLOR_BLACK = (0, 0, 0)
-COLOR_CYAN = (0, 255, 255)
-COLOR_VIOLET = (128, 0, 128)
-COLOR_GREEN = (0, 255, 0)
-COLOR_BLUE = (0, 0, 160)
-COLOR_RED = (255, 0, 0)
+# COLOR_WHITE = (255, 255, 255)
+# COLOR_BLACK = (0, 0, 0)
+# COLOR_CYAN = (0, 255, 255)
+# COLOR_VIOLET = (128, 0, 128)
+# COLOR_GREEN = (0, 255, 0)
+# COLOR_BLUE = (0, 0, 160)
+# COLOR_RED = (255, 0, 0)
 
 WIDTH = 800
 HEIGHT = 400
@@ -31,15 +33,6 @@ bg = pygame.image.load('img/bg/Work-2.jpg').convert()
 bg = pygame.transform.scale(bg, (WIDTH, HEIGHT))
 screen.blit(bg, (0, 0))
 # pygame.display.update()
-
-# def get_sprites(filepath: str, count: int):
-#     sprites = []
-#     i = 0
-#     while i < count:
-#         sprites.append(pygame.image.load(
-#             filepath + str(i) + '.png').convert_alpha())
-#         i += 1
-#     return sprites
 
 # Text
 myfont = pygame.font.SysFont("Montserrat", 30)
@@ -76,15 +69,17 @@ jump = Jump()
 
 # Bat
 # bat_images = get_sprites('img/bat/bat', 11)
-bat_list = pygame.sprite.Group()
+bat_list = MyGroup()
 # bat_speed = 4
-bat_timer = pygame.USEREVENT + 1
-pygame.time.set_timer(bat_timer, 1500)
+BAT_TIMER = pygame.USEREVENT + 1
+pygame.time.set_timer(BAT_TIMER, 1500)
+BULLET_DROP_TIMER = pygame.USEREVENT + 2
+pygame.time.set_timer(BULLET_DROP_TIMER, 2500)
 
 # Color rect
-green_rect = pygame.Surface((player.rect.width, player.rect.height))
-green_rect.fill('Green')
-green_rect.set_alpha(100)
+# green_rect = pygame.Surface((player.rect.width, player.rect.height))
+# green_rect.fill('Green')
+# green_rect.set_alpha(100)
 
 # red_rect = pygame.Surface((64, 64))
 # red_rect.fill('Red')
@@ -92,8 +87,9 @@ green_rect.set_alpha(100)
 
 
 # Bullet
-bullets = pygame.sprite.Group()
+bullets = MyGroup() #pygame.sprite.Group()
 bullets_count = 5
+bulletDrops = MyGroup()
 
 # Sound
 # bg_sound = pygame.mixer.Sound('sounds/Black Sabbath - Paranoid.mp3')
@@ -109,19 +105,11 @@ while run:
     if gameplay:
         
         # gameplay = False
-        bat_list.update()
-        bat_list.draw(screen)
-
-        for bat in bat_list:
-            if bat.rect.colliderect(player.rect):
-                gameplay = False
-            # screen.blit(red_rect, bat.rect)
-            pygame.draw.rect(screen, 'Red', bat.rect, 2)
 
         
-        screen.blit(myfont.render('FPS: ' + str(int(FPS.get_fps())), True, COLOR_BLACK), (WIDTH - 85, 15))
-        screen.blit(myfont.render('bats: ' + str(len(bat_list)), True, COLOR_BLACK), (15, 15))
-
+        screen.blit(myfont.render('FPS: ' + str(int(FPS.get_fps())), True, "Black"), (WIDTH - 85, 15))
+        screen.blit(myfont.render('bats: ' + str(len(bat_list)), True, "Black"), (15, 15))
+        screen.blit(myfont.render('bullets: ' + str(bullets_count), True, "Black"), (15, 45))
         
         # player.draw(screen)
         
@@ -141,17 +129,36 @@ while run:
 
         jump.jump_end(player)
 
+        bulletDrops.draw(screen, "Green")
+
+        bat_list.update()
+        bat_list.draw(screen, "Red")
+
         player.update()
-        screen.blit(green_rect, player.rect)
-        player.draw(screen)
+        player.draw(screen, "Green")
         
         bullets.update(screen)
-        bullets.draw(screen)
+        bullets.draw(screen, "Green")
+
+        # COLLISIONS
+        if bat_list:
+            for bat in bat_list:
+                if bat.rect.colliderect(player.rect):
+                    gameplay = False
+                # screen.blit(red_rect, bat.rect)
+                # pygame.draw.rect(screen, 'Red', bat.rect, 2)
 
         if bullets:
             # Параметр True вказує, що об'єкти, які зіткнулися,
             # мають бути автоматично видалені зі своїх відповідних груп.
             pygame.sprite.groupcollide(bullets, bat_list, True, True)
+
+        if bulletDrops:
+            sprite = pygame.sprite.spritecollideany(player, bulletDrops)
+            if sprite:
+                bullets_count += 1
+                sprite.kill()
+            # pygame.sprite.spritecollide(player, bulletDrops, True)
 
     else:
         # screen.fill("Black")
@@ -177,15 +184,20 @@ while run:
         if event.type == pygame.QUIT:
             run = False
             # pygame.quit()
-        if event.type == bat_timer:
+        if event.type == BAT_TIMER:
             new_bat = Bat_class.Bat(WIDTH, HEIGHT)
             bat_list.add(new_bat)
             # pass
+        if event.type == BULLET_DROP_TIMER:
+            offset = 25
+            x = random.randint(offset, WIDTH - offset)
+            y = random.randint(offset, HEIGHT - offset)
+            bulletDrops.add(BulletDrop((x,y)))
         if gameplay and event.type == pygame.KEYDOWN:
             if  event.key == pygame.K_e or event.key == pygame.K_q:
-                # if bullets_count > 0:
-                bullets.add(Bullet(player.rect.center, player.direction))
-                # bullets_count -=1
+                if bullets_count > 0:
+                    bullets.add(Bullet(player.rect.center, player.direction))
+                    bullets_count -=1
             # pygame.time.delay(80)
 
         # elif event.type == pygame.KEYDOWN:
