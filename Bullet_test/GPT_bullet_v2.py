@@ -76,8 +76,8 @@ while not done:
 
     # Відображення куль на екрані
     bullet_group.draw(screen)
-    # for bullet in bullet_group:
-    #     pygame.draw.rect(screen, 'Red', bullet.rect, 2)
+    for bullet in bullet_group:
+        pygame.draw.rect(screen, 'Red', bullet.rect, 2)
     # Відображення червоних цяток
     red_dots.draw(screen)
     # for dot in red_dots:

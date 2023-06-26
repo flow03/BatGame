@@ -1,11 +1,9 @@
 import pygame
-# import math
 
-# Клас, що представляє кулю
 class BulletDrop(pygame.sprite.Sprite):
     def __init__(self, position):
         super().__init__()
-        self.image = pygame.image.load('img/bullet_new.png').convert_alpha()
+        self.image = pygame.image.load('img/bullet.png').convert_alpha()
         self.image = pygame.transform.scale(self.image, (25, 9))
         self.image = pygame.transform.rotate(self.image, 90)
         self.rect = self.image.get_rect(center=position)

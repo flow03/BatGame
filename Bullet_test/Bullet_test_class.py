@@ -5,11 +5,12 @@ import math
 class Bullet(pygame.sprite.Sprite):
     def __init__(self, start_pos: float, target_pos: float):
         super().__init__()
-        self.image = pygame.Surface((32, 12))
+        self.image = pygame.image.load('img/bullet.png').convert_alpha()
+        self.image = pygame.transform.scale(self.image, (25, 9))
         # self.image.fill(WHITE)
-        bullet_image = pygame.image.load('img/bullet.png').convert_alpha()
-        self.image.blit(bullet_image, (0, 0), (0, 10, 32, 12))
-        self.image.set_colorkey('Black')
+        # bullet_image = 
+        # self.image.blit(bullet_image, (0, 0), (0, 10, 32, 12))
+        # self.image.set_colorkey('Black')
         # self.image = pygame.transform.scale(self.image, (25, 25))
         self.rect = self.image.get_rect()
         self.rect.center = start_pos
@@ -28,7 +29,7 @@ class Bullet(pygame.sprite.Sprite):
             angle = math.degrees(math.atan2(-dy, dx))
             self.image = pygame.transform.rotate(self.image, angle)
 
-        self.print(dx, dy, magnitude)
+        # self.print(dx, dy, magnitude)
         
 
     def update(self, screen, circle_group):

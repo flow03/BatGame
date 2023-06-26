@@ -5,8 +5,9 @@ import math
 class Bullet(pygame.sprite.Sprite):
     def __init__(self, start_pos: float, direction):
         super().__init__()
-        self.image = pygame.image.load('img/bullet_new.png').convert_alpha()
-        self.scale_image(25)
+        self.image = pygame.image.load('img/bullet.png').convert_alpha()
+        # self.scale_image(25)
+        self.image = pygame.transform.scale(self.image, (25, 9))
         self.rect = self.image.get_rect()
         self.rect.center = start_pos
         self.speed = 5
@@ -14,12 +15,11 @@ class Bullet(pygame.sprite.Sprite):
         self.velocity = (float, float)
         self.velocity_for_direction(direction)
         
-    def scale_image(self, new_width):
-        # new_width = 25
-        original_width = self.image.get_width()
-        original_height = self.image.get_height()
-        new_height = int(original_height * (new_width / original_width))
-        self.image = pygame.transform.scale(self.image, (new_width, new_height))
+    # def scale_image(self, new_width = 25):
+    #     original_width = self.image.get_width()
+    #     original_height = self.image.get_height()
+    #     new_height = int(original_height * (new_width / original_width))
+    #     self.image = pygame.transform.scale(self.image, (new_width, new_height))
 
     def velocity_for_direction(self, direction):
         # Зміна напрямку та кута повороту кулі
@@ -54,15 +54,26 @@ class Bullet(pygame.sprite.Sprite):
         self.image = pygame.transform.rotate(self.image, self.angle)
         self.rect = self.image.get_rect(center=self.rect.center)
 
-    def update(self, screen):
+    def update(self, screen, bat_list):
         # Оновлення позиції кулі
         self.rect.x += self.velocity[0] * self.speed
         self.rect.y += self.velocity[1] * self.speed
         # self.rect = self.rect.move(self.velocity[0] * 5, self.velocity[1] * 5)
+        
+        # isHit = False
+        # Перевірка колізій з ворогами
+        # if bat_list:
+        #     sprite = pygame.sprite.spritecollideany(self, bat_list)
+        #     if sprite:
+        #         sprite.kill()
+        #         self.kill()
+        #         isHit = True
 
         # Перевірка, чи вийшла куля за межі екрану
         if not screen.get_rect().colliderect(self.rect):
             self.kill()
+
+        # return isHit
 
     # def get_pos(self):
     #     return (self.rect.x, self.rect.y)
