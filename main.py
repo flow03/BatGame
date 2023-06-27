@@ -1,5 +1,5 @@
 import pygame
-import random
+# import random
 # import spritesheet
 from Player_class import Player
 from Jump_class import Jump
@@ -7,6 +7,7 @@ from Bullet_class import Bullet
 from BulletDrop_class import BulletDrop
 from MyGroup_class import MyGroup
 import Bat_class
+from Text_class import Text
 
 FPS = pygame.time.Clock()
 pygame.init()
@@ -25,24 +26,18 @@ HEIGHT = 400
 # screen = pygame.display.set_mode((600, 300), flags=pygame.NOFRAME)
 screen = pygame.display.set_mode((WIDTH, HEIGHT))
 pygame.display.set_caption("Python Game")
-icon = pygame.image.load('img/bat/bat2.png').convert_alpha()
+icon = pygame.image.load('img/bat/bat6.png').convert_alpha()
 pygame.display.set_icon(icon)
+
+# Text
+text = Text(screen)
 
 # bg = pygame.image.load('img/bg/bg_PS7HtBx.jpg')
 bg = pygame.image.load('img/bg/Work-2.jpg').convert()
 bg = pygame.transform.scale(bg, (WIDTH, HEIGHT))
 screen.blit(bg, (0, 0))
-# pygame.display.update()
-
-# Text
-myfont = pygame.font.SysFont("Montserrat", 30)
-# myfont = pygame.font.Font('fonts/Thor.otf', 30)
-myBigerFont = pygame.font.Font('fonts/MunchkinCyr.ttf', 60)
-game_over = myBigerFont.render('GAME OVER', False, 'Black')
-restart_text = myfont.render('Restart', False, 'Black')
-restart_text_rect = restart_text.get_rect(center=(WIDTH/2, HEIGHT/2+60))
-exit_text = myfont.render('Exit', False, 'Black')
-exit_text_rect = exit_text.get_rect(center=(WIDTH/2, 350))
+text.blit_loading_text(screen)
+pygame.display.update()
 
 # def clock():
 #     # current_time = pygame.time.get_ticks()
@@ -91,12 +86,33 @@ bullets = MyGroup() #pygame.sprite.Group()
 bullets_count = 5
 bulletDrops = MyGroup()
 
+# Update and draw
+def update_objects():
+    bat_list.update()
+    player.update()
+    if bullets.update(screen, bat_list):
+        killedBats += 1
+
+def draw_objects(isBoundRects):
+    if not isBoundRects:
+        colourGreen = None
+        colourRed = None
+    else:
+        colourGreen = "Green"
+        colourRed = "Red"
+
+    bulletDrops.draw(screen, colourGreen)
+    bat_list.draw(screen, colourRed)
+    player.draw(screen, colourGreen)
+    bullets.draw(screen, colourGreen)
+
+
 # Sound
 # bg_sound = pygame.mixer.Sound('sounds/Black Sabbath - Paranoid.mp3')
 # bg_sound.play()
 
 # Bool triggers
-isBoundRects = False
+isBoundRects = True
 gameplay = True
 run = True
 
@@ -110,10 +126,7 @@ while run:
         
         # gameplay = False
         
-        screen.blit(myfont.render('FPS: ' + str(int(FPS.get_fps())), True, "Black"), (WIDTH - 85, 15))
-        screen.blit(myfont.render('bats on screen: ' + str(len(bat_list)), True, "Black"), (15, 15))
-        screen.blit(myfont.render('killed bats: ' + str(killedBats), True, "Black"), (15, 40))
-        screen.blit(myfont.render('bullets: ' + str(bullets_count), True, "Black"), (15, 65))
+        text.print_debug_info(screen, FPS, bat_list, killedBats, bullets_count)
         
         # player.draw(screen)
         
@@ -132,21 +145,8 @@ while run:
             jump.jump_start(player)
         jump.jump_end(player)
 
-        bat_list.update()
-        player.update()
-        if bullets.update(screen, bat_list):
-                killedBats += 1
-
-        if not isBoundRects:
-            bulletDrops.draw(screen)
-            bat_list.draw(screen)
-            player.draw(screen)
-            bullets.draw(screen)
-        else:
-            bulletDrops.draw(screen, "Green")
-            bat_list.draw(screen, "Red")
-            player.draw(screen, "Green")
-            bullets.draw(screen, "Green")
+        update_objects()
+        draw_objects(isBoundRects)
 
         # COLLISIONS
         if bat_list:
@@ -176,12 +176,10 @@ while run:
 
     else:
         # screen.fill("Black")
-        screen.blit(game_over, (WIDTH/2-game_over.get_width()/2, HEIGHT/2-game_over.get_height()/2))
-        screen.blit(restart_text, restart_text_rect)
-        screen.blit(exit_text, exit_text_rect)
+        text.blitExitRects(screen)
 
         mouse = pygame.mouse.get_pos()
-        if restart_text_rect.collidepoint(mouse) and pygame.mouse.get_pressed()[0]:
+        if text.restart_text_rect.collidepoint(mouse) and pygame.mouse.get_pressed()[0]:
             gameplay = True
             player.reload()
             bat_list.empty()
@@ -190,9 +188,9 @@ while run:
             bullets_count = 5
             killedBats = 0
             # nextFrame = clock() + anim_delay
-        elif exit_text_rect.collidepoint(mouse) and pygame.mouse.get_pressed()[0]:
+        elif text.exit_text_rect.collidepoint(mouse) and pygame.mouse.get_pressed()[0]:
             run = False
-            # pygame.quit()
+
     
     pygame.display.update()
 
@@ -205,10 +203,7 @@ while run:
             bat_list.add(new_bat)
             # pass
         if event.type == BULLET_DROP_TIMER:
-            offset = 25
-            x = random.randint(offset, WIDTH - offset)
-            y = random.randint(offset, HEIGHT - offset)
-            bulletDrops.add(BulletDrop((x,y)))
+            bulletDrops.add(BulletDrop(screen))
         if gameplay and event.type == pygame.KEYDOWN:
             if event.key == pygame.K_e or event.key == pygame.K_q:
                 if bullets_count > 0:
@@ -221,7 +216,5 @@ while run:
                 else:
                     isBoundRects = False
 
-        # elif event.type == pygame.KEYDOWN:
-        #     pass
-
 pygame.quit()
+

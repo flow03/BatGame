@@ -16,7 +16,7 @@ class Player:
             'left': [],
             'right': []
         }
-        self.sheet = spritesheet.SpriteSheet('img/sprite/hero_sprites.png')
+        self.sheet = spritesheet.SpriteSheet('img/sprite/hero_spritesheet_black.png')
         self.load_animation_frames()
 
     def load_animation_frames(self):
