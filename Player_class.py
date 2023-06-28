@@ -1,5 +1,5 @@
 import pygame
-import spritesheet
+from Spritesheet_class import SpriteSheet
 
 class Player:
     def __init__(self, x, y):
@@ -7,17 +7,18 @@ class Player:
         self.start_y = y
         self.rect = pygame.Rect((x, y), (60, 60))
         self.speed = 3
-        self.direction = 'down'  # Початковий напрямок руху
-        self.frame_index = 0  # Початковий індекс кадру
-        self.animation_speed = 0.2  # Швидкість анімації (затримка між кадрами)
+        
         self.animation_frames = {
             'down': [],
             'up': [],
             'left': [],
             'right': []
         }
-        self.sheet = spritesheet.SpriteSheet('img/sprite/hero_spritesheet_black.png')
         self.load_animation_frames()
+        self.direction = 'down'  # Початковий напрямок руху
+        self.frame_index = 0  # Початковий індекс кадру
+        self.animation_speed = 0.2  # Швидкість анімації (затримка між кадрами)
+
 
     def load_animation_frames(self):
         # Завантаження всіх кадрів анімацій для кожного напрямку руху
@@ -25,10 +26,11 @@ class Player:
         #     for i in range(8):
         #         frame = pygame.image.load(f'{direction}_{i}.png')  # Завантаження кадра з файлу
         #         self.animation_frames[direction].append(frame)
-        self.animation_frames['down'] = self.sheet.get_anim(0)
-        self.animation_frames['left'] = self.sheet.get_anim(1)
-        self.animation_frames['right'] = self.sheet.get_anim(2)
-        self.animation_frames['up'] = self.sheet.get_anim(3)
+        sprite_sheet = SpriteSheet('img/hero_sprites/hero_spritesheet_black.png')
+        self.animation_frames['down'] = sprite_sheet.get_anim(row = 0) # 60x60 as defaultt
+        self.animation_frames['left'] = sprite_sheet.get_anim(row = 1)
+        self.animation_frames['right'] = sprite_sheet.get_anim(row = 2)
+        self.animation_frames['up'] = sprite_sheet.get_anim(row = 3)
 
     def update(self):
         self.frame_index += self.animation_speed

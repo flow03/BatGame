@@ -18,7 +18,7 @@ class Jump:
     def jump_end(self, player):
         if self.is_jump:
             if not self.is_jump_down:
-                if (player.rect.y > self.jump_start_y - self.jump_height):
+                if (player.rect.y > self.jump_start_y - self.jump_height) and player.rect.y >= 0:
                     player.rect.y -= self.jump_speed
                 else: self.is_jump_down = True
             else:

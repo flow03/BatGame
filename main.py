@@ -8,6 +8,7 @@ from BulletDrop_class import BulletDrop
 from MyGroup_class import MyGroup
 import Bat_class
 from Text_class import Text
+from Dance_Girl_class import Dance_Girl
 
 FPS = pygame.time.Clock()
 pygame.init()
@@ -59,6 +60,9 @@ pygame.display.update()
 # Player
 player = Player(150, 300)
 
+# Margosh
+Margosh = Dance_Girl(400, 300)
+
 # Jump
 jump = Jump()
 
@@ -92,6 +96,7 @@ def update_objects():
     player.update()
     if bullets.update(screen, bat_list):
         killedBats += 1
+    Margosh.update()
 
 def draw_objects(isBoundRects):
     if not isBoundRects:
@@ -105,6 +110,7 @@ def draw_objects(isBoundRects):
     bat_list.draw(screen, colourRed)
     player.draw(screen, colourGreen)
     bullets.draw(screen, colourGreen)
+    Margosh.draw(screen, colourGreen)
 
 
 # Sound
@@ -131,14 +137,18 @@ while run:
         # player.draw(screen)
         
         keys = pygame.key.get_pressed()
-        if (keys[pygame.K_LEFT] or keys[pygame.K_a]) and player.rect.x > 0:
+        if (keys[pygame.K_a]) and player.rect.x > 0:
             player.move('left')
-        if (keys[pygame.K_RIGHT] or keys[pygame.K_d]) and player.rect.x < (WIDTH - player.rect.width):
+        if (keys[pygame.K_d]) and player.rect.x < (WIDTH - player.rect.width):
             player.move('right')
         if (keys[pygame.K_UP] or keys[pygame.K_w]) and player.rect.y > 0:
             player.move('up')
         if (keys[pygame.K_DOWN] or keys[pygame.K_s]) and player.rect.y < (HEIGHT - player.rect.height):
             player.move('down')
+        if (keys[pygame.K_LEFT]):
+            Margosh.move('left')
+        if (keys[pygame.K_RIGHT]):
+            Margosh.move('right')
         
         # Player jump
         if keys[pygame.K_SPACE]:
@@ -182,11 +192,13 @@ while run:
         if text.restart_text_rect.collidepoint(mouse) and pygame.mouse.get_pressed()[0]:
             gameplay = True
             player.reload()
+            Margosh.reload()
             bat_list.empty()
             bullets.empty()
             bulletDrops.empty()
             bullets_count = 5
             killedBats = 0
+            jump.is_jump = False
             # nextFrame = clock() + anim_delay
         elif text.exit_text_rect.collidepoint(mouse) and pygame.mouse.get_pressed()[0]:
             run = False
@@ -199,9 +211,9 @@ while run:
             run = False
             # pygame.quit()
         if event.type == BAT_TIMER:
-            new_bat = Bat_class.Bat(WIDTH, HEIGHT)
-            bat_list.add(new_bat)
-            # pass
+            # new_bat = Bat_class.Bat(WIDTH, HEIGHT)
+            # bat_list.add(new_bat)
+            pass
         if event.type == BULLET_DROP_TIMER:
             bulletDrops.add(BulletDrop(screen))
         if gameplay and event.type == pygame.KEYDOWN:
