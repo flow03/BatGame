@@ -27,7 +27,7 @@ class Player:
         #         frame = pygame.image.load(f'{direction}_{i}.png')  # Завантаження кадра з файлу
         #         self.animation_frames[direction].append(frame)
         sprite_sheet = SpriteSheet('img/hero_sprites/hero_spritesheet_black.png')
-        self.animation_frames['down'] = sprite_sheet.get_anim(row = 0) # 60x60 as defaultt
+        self.animation_frames['down'] = sprite_sheet.get_anim(row = 0) # 60x60 as default
         self.animation_frames['left'] = sprite_sheet.get_anim(row = 1)
         self.animation_frames['right'] = sprite_sheet.get_anim(row = 2)
         self.animation_frames['up'] = sprite_sheet.get_anim(row = 3)

@@ -10,8 +10,9 @@ class Dance_Girl:
             'slide': [],
             'snap': []
         }
-        self.load_animations()
-        self.current_animation = 'slide'  # поточна анімація
+        self.load_animations_from_sheet()
+        self.idle_animation = 'snap'
+        self.current_animation = self.idle_animation  # поточна анімація
         self.frame_index = 0  # поточний індекс кадру
         self.animation_speed = 0.18 # 0.2
 
@@ -30,11 +31,28 @@ class Dance_Girl:
             sprite_sheet = SpriteSheet(f'img/Dancing_Girl/{animation_name}.png')
             self.animations[animation_name] = sprite_sheet.get_anim(39, 53)
 
-        self.resize_animations(63)
+        self.add_moving_anims()
+
+
+    def add_moving_anims(self):
+        self.resize_animations(62)
 
         self.animations['skip_left'] = self.animations.pop('skip')
         self.animations['skip_right'] = self.flip_list(self.animations['skip_left'])
-    
+
+        self.animations['balancing_left'] = self.animations.pop('balancing')
+        self.animations['balancing_right'] = self.flip_list(self.animations['balancing_left'])
+
+
+    def load_animations_from_sheet(self):
+        sprite_sheet = SpriteSheet('img/Dancing_Girl/black_rgb_super.png')
+        i = 0
+        for key in self.animations.keys():
+            self.animations[key] = sprite_sheet.get_anim(39, 53, row = i)
+            i += 1
+
+        self.add_moving_anims()
+
     def flip_list(self, list):
         flipped_list = []
         for frame in list:
@@ -63,8 +81,8 @@ class Dance_Girl:
             self.image = self.animations[self.current_animation][int(self.frame_index)]
 
         # перевіряємо, чи персонаж закінчив рух
-        if not self.is_moving and self.current_animation.startswith('skip'):
-            self.current_animation = 'slide'
+        if not self.is_moving and (self.current_animation.startswith('skip') or self.current_animation.startswith('balancing')):
+            self.current_animation = self.idle_animation
         
         self.is_moving = False  # скидаємо прапор руху після оновлення кадру
 
@@ -82,10 +100,10 @@ class Dance_Girl:
             # self.rect = self.rect.move(0, -self.speed)
         if direction == 'left':
             self.rect = self.rect.move(-self.speed, 0)
-            self.current_animation = 'skip_left'
+            self.current_animation = 'balancing_left'
         elif direction == 'right':
             self.rect = self.rect.move(self.speed, 0)
-            self.current_animation = 'skip_right'
+            self.current_animation = 'balancing_right'
 
         self.is_moving = True
 
