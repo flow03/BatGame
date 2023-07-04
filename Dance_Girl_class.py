@@ -26,6 +26,12 @@ class Dance_Girl:
         self.is_moving = False
         self.is_alive = True
 
+        self.dance_delay = 2200
+        self.nextFrame = self.clock() + self.dance_delay
+        self.danceList = ['hips','slide','snap']
+        self.currentDance = 0
+
+
     def load_animations(self):
         for animation_name in self.animations.keys():
             sprite_sheet = SpriteSheet(f'img/Dancing_Girl/{animation_name}.png')
@@ -33,9 +39,25 @@ class Dance_Girl:
 
         self.add_moving_anims()
 
+    def clock(self):
+        return pygame.time.get_ticks()
+
+    def isNextDance(self, delay):
+        if (self.clock() > self.nextFrame):
+            self.nextFrame += delay
+            return True
+        else:
+            return False
+    
+    def changeDance(self):
+        if self.isNextDance(self.dance_delay):
+            self.currentDance +=1
+            self.idle_animation = self.danceList[self.currentDance % len(self.danceList)]
+            if not self.is_moving:
+                self.current_animation = self.idle_animation
 
     def add_moving_anims(self):
-        self.resize_animations(62)
+        self.resize_animations(60)
 
         self.animations['skip_left'] = self.animations.pop('skip')
         self.animations['skip_right'] = self.flip_list(self.animations['skip_left'])
@@ -45,7 +67,7 @@ class Dance_Girl:
 
 
     def load_animations_from_sheet(self):
-        sprite_sheet = SpriteSheet('img/Dancing_Girl/black_rgb_super.png')
+        sprite_sheet = SpriteSheet('img/Dancing_Girl/black_rgb_super_2.png')
         i = 0
         for key in self.animations.keys():
             self.animations[key] = sprite_sheet.get_anim(39, 53, row = i)
@@ -80,11 +102,13 @@ class Dance_Girl:
 
             self.image = self.animations[self.current_animation][int(self.frame_index)]
 
+        # змінюємо танець    
+        self.changeDance()
         # перевіряємо, чи персонаж закінчив рух
         if not self.is_moving and (self.current_animation.startswith('skip') or self.current_animation.startswith('balancing')):
             self.current_animation = self.idle_animation
-        
         self.is_moving = False  # скидаємо прапор руху після оновлення кадру
+        
 
     def draw(self, screen, colour = None):
         # current_frame = self.animation_frames[self.direction][int(self.frame_index)]
@@ -100,10 +124,10 @@ class Dance_Girl:
             # self.rect = self.rect.move(0, -self.speed)
         if direction == 'left':
             self.rect = self.rect.move(-self.speed, 0)
-            self.current_animation = 'balancing_left'
+            self.current_animation = 'skip_left'
         elif direction == 'right':
             self.rect = self.rect.move(self.speed, 0)
-            self.current_animation = 'balancing_right'
+            self.current_animation = 'skip_right'
 
         self.is_moving = True
 

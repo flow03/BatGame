@@ -21,8 +21,8 @@ pygame.init()
 # COLOR_BLUE = (0, 0, 160)
 # COLOR_RED = (255, 0, 0)
 
-WIDTH = 800
-HEIGHT = 400
+WIDTH = 1200
+HEIGHT = 600
 
 # screen = pygame.display.set_mode((600, 300), flags=pygame.NOFRAME)
 screen = pygame.display.set_mode((WIDTH, HEIGHT))
@@ -132,10 +132,6 @@ while run:
         
         # gameplay = False
         
-        text.print_debug_info(screen, FPS, bat_list, killedBats, bullets_count)
-        
-        # player.draw(screen)
-        
         keys = pygame.key.get_pressed()
         if (keys[pygame.K_a]) and player.rect.x > 0:
             player.move('left')
@@ -157,6 +153,9 @@ while run:
 
         update_objects()
         draw_objects(isBoundRects)
+
+        text.print_debug_info(screen, FPS, bat_list, killedBats, bullets_count)
+        text.print_girl_info(screen, Margosh)
 
         # COLLISIONS
         if bat_list:
