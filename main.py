@@ -61,7 +61,7 @@ pygame.display.update()
 player = Player(150, 300)
 
 # Margosh
-Margosh = Dance_Girl(400, 300)
+Margosh = Dance_Girl(800, 300)
 
 # Jump
 jump = Jump()
@@ -71,9 +71,9 @@ jump = Jump()
 bat_list = MyGroup()
 killedBats = 0
 BAT_TIMER = pygame.USEREVENT + 1
-pygame.time.set_timer(BAT_TIMER, 1500)
+# pygame.time.set_timer(BAT_TIMER, 1500)
 BULLET_DROP_TIMER = pygame.USEREVENT + 2
-pygame.time.set_timer(BULLET_DROP_TIMER, 2500)
+# pygame.time.set_timer(BULLET_DROP_TIMER, 2500)
 
 # Color rect
 # green_rect = pygame.Surface((player.rect.width, player.rect.height))
@@ -96,7 +96,7 @@ def update_objects():
     player.update()
     if bullets.update(screen, bat_list):
         killedBats += 1
-    Margosh.update()
+    Margosh.update(player)
 
 def draw_objects(isBoundRects):
     if not isBoundRects:
@@ -210,8 +210,8 @@ while run:
             run = False
             # pygame.quit()
         if event.type == BAT_TIMER:
-            # new_bat = Bat_class.Bat(WIDTH, HEIGHT)
-            # bat_list.add(new_bat)
+            new_bat = Bat_class.Bat(WIDTH, HEIGHT)
+            bat_list.add(new_bat)
             pass
         if event.type == BULLET_DROP_TIMER:
             bulletDrops.add(BulletDrop(screen))

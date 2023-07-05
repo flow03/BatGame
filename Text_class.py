@@ -47,10 +47,11 @@ class Text:
         screen.blit(self.myfont.render('current: ' + girl.current_animation, True, "Black"), (self.x_offset, y))
         y += self.y_offset
         screen.blit(self.myfont.render('currentDance: ' + str(girl.currentDance), True, "Black"), (self.x_offset, y))
+        y += self.y_offset
+        screen.blit(self.myfont.render('angle: ' + str(girl.angle), True, "Black"), (self.x_offset, y))
+        y += self.y_offset
+        screen.blit(self.myfont.render('laps_completed: ' + str(girl.laps_completed), True, "Black"), (self.x_offset, y))
 
-
-        # self.danceList = ['hips','slide','snap']
-        # self.currentDance = 0
     def blit_loading_text(self, screen):
         loading_text = self.myBigerFont.render('LOADING...', False, 'Black')
         loading_text_rect = loading_text.get_rect(center=(self.WIDTH/2, self.HEIGHT/2)) # bottomright

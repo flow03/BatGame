@@ -1,4 +1,6 @@
 import pygame
+from pygame.math import Vector2
+import math
 from Spritesheet_class import SpriteSheet
 
 class Dance_Girl:
@@ -24,12 +26,17 @@ class Dance_Girl:
         self.speed = 3
 
         self.is_moving = False
-        self.is_alive = True
+        # self.is_alive = True
+        self.is_circle = False
 
         self.dance_delay = 2200
         self.nextFrame = self.clock() + self.dance_delay
         self.danceList = ['hips','slide','snap']
         self.currentDance = 0
+        self.circle_radius = 80
+        # self.circle_timer = 0
+        self.laps_completed = 0
+        self.angle = 0
 
 
     def load_animations(self):
@@ -50,11 +57,12 @@ class Dance_Girl:
             return False
     
     def changeDance(self):
-        if self.isNextDance(self.dance_delay):
-            self.currentDance +=1
-            self.idle_animation = self.danceList[self.currentDance % len(self.danceList)]
-            if not self.is_moving:
-                self.current_animation = self.idle_animation
+        if not self.is_moving:
+            if self.isNextDance(self.dance_delay):
+                self.currentDance +=1
+                self.idle_animation = self.danceList[self.currentDance % len(self.danceList)]
+
+            self.current_animation = self.idle_animation
 
     def add_moving_anims(self):
         self.resize_animations(60)
@@ -64,6 +72,9 @@ class Dance_Girl:
 
         self.animations['balancing_left'] = self.animations.pop('balancing')
         self.animations['balancing_right'] = self.flip_list(self.animations['balancing_left'])
+
+        self.move_left_anim = 'skip_left'
+        self.move_right_anim = 'skip_right'
 
 
     def load_animations_from_sheet(self):
@@ -94,19 +105,53 @@ class Dance_Girl:
             for i in range(len(animation)):
                 animation[i] = pygame.transform.scale(animation[i], (new_x, new_y))
 
-    def update(self):
-        if self.is_alive:
-            self.frame_index += self.animation_speed
-            if self.frame_index >= len(self.animations[self.current_animation]):
-                self.frame_index = 0
+    def update(self, player):
+        player_pos = Vector2(player.rect.center)
+        character_pos = Vector2(self.rect.center)
 
-            self.image = self.animations[self.current_animation][int(self.frame_index)]
+        distance = character_pos.distance_to(player_pos)
+        direction = (player_pos - character_pos).normalize()
+
+        if not self.is_circle and distance > self.circle_radius:
+            self.rect.centerx += direction.x * self.speed
+            self.rect.centery += direction.y * self.speed
+            # self.current_animation = 'move'
+            self.is_moving = True
+        else:
+            self.is_circle = True
+
+        # Рух по колу з центром в player.rect.center
+        if self.is_circle:
+            # self.circle_timer += self.animation_speed
+            # angle = math.atan2(character_pos.y - player_pos.y, character_pos.x - player_pos.x)
+            self.angle += self.animation_speed * 0.15
+            # self.angle *=  0.15
+            self.rect.centerx = player_pos.x + int(math.cos(self.angle) * self.circle_radius)
+            self.rect.centery = player_pos.y + int(math.sin(self.angle) * self.circle_radius)
+            # self.current_animation = self.idle_animation
+            self.is_moving = True
+
+            if self.angle >= math.pi * 2:
+                self.laps_completed += 1
+                self.angle = 0  
+
+        if direction.x < 0:
+            self.current_animation = self.move_left_anim
+        elif direction.x > 0:
+            self.current_animation = self.move_right_anim
+
+        # оновлення кадрів анімації
+        self.frame_index += self.animation_speed
+        if self.frame_index >= len(self.animations[self.current_animation]):
+            self.frame_index = 0
+
+        self.image = self.animations[self.current_animation][int(self.frame_index)]
 
         # змінюємо танець    
         self.changeDance()
         # перевіряємо, чи персонаж закінчив рух
-        if not self.is_moving and (self.current_animation.startswith('skip') or self.current_animation.startswith('balancing')):
-            self.current_animation = self.idle_animation
+        # if not self.is_moving and (self.current_animation.startswith('skip') or self.current_animation.startswith('balancing')):
+        #     self.current_animation = self.idle_animation
         self.is_moving = False  # скидаємо прапор руху після оновлення кадру
         
 
@@ -124,10 +169,10 @@ class Dance_Girl:
             # self.rect = self.rect.move(0, -self.speed)
         if direction == 'left':
             self.rect = self.rect.move(-self.speed, 0)
-            self.current_animation = 'skip_left'
+            self.current_animation = self.move_left_anim
         elif direction == 'right':
             self.rect = self.rect.move(self.speed, 0)
-            self.current_animation = 'skip_right'
+            self.current_animation = self.move_right_anim
 
         self.is_moving = True
 
