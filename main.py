@@ -58,10 +58,10 @@ pygame.display.update()
 #         return False
 
 # Player
-player = Player(150, 300)
+player = Player(700, 300) # 150, 300
 
 # Margosh
-Margosh = Dance_Girl(800, 300)
+Margosh = Dance_Girl(150, 300)
 
 # Jump
 jump = Jump()
@@ -121,6 +121,18 @@ def draw_objects(isBoundRects):
 isBoundRects = True
 gameplay = True
 run = True
+
+def initialize():
+    gameplay = True
+    player.reload()
+    Margosh.reload()
+    bat_list.empty()
+    bullets.empty()
+    bulletDrops.empty()
+    bullets_count = 5
+    killedBats = 0
+    jump.is_jump = False
+    # nextFrame = clock() + anim_delay
 
 # Main loop
 while run:
@@ -189,16 +201,7 @@ while run:
 
         mouse = pygame.mouse.get_pos()
         if text.restart_text_rect.collidepoint(mouse) and pygame.mouse.get_pressed()[0]:
-            gameplay = True
-            player.reload()
-            Margosh.reload()
-            bat_list.empty()
-            bullets.empty()
-            bulletDrops.empty()
-            bullets_count = 5
-            killedBats = 0
-            jump.is_jump = False
-            # nextFrame = clock() + anim_delay
+            initialize()
         elif text.exit_text_rect.collidepoint(mouse) and pygame.mouse.get_pressed()[0]:
             run = False
 
@@ -226,6 +229,8 @@ while run:
                     isBoundRects = True
                 else:
                     isBoundRects = False
+            if event.key == pygame.K_r:
+                initialize()
 
 pygame.quit()
 

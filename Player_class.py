@@ -54,14 +54,23 @@ class Player:
 
     def move(self, direction):
         self.direction = direction
+        # if direction == 'down':
+        #     self.rect.move_ip(0, self.speed)
+        # elif direction == 'up':
+        #     self.rect.move_ip(0, -self.speed)
+        # elif direction == 'left':
+        #     self.rect.move_ip(-self.speed, 0)
+        # elif direction == 'right':
+        #     self.rect.move_ip(self.speed, 0)
+
         if direction == 'down':
-            self.rect = self.rect.move(0, self.speed)
+            self.rect.centery += self.speed
         elif direction == 'up':
-            self.rect = self.rect.move(0, -self.speed)
+            self.rect.centery += -self.speed
         elif direction == 'left':
-            self.rect = self.rect.move(-self.speed, 0)
+            self.rect.centerx += -self.speed
         elif direction == 'right':
-            self.rect = self.rect.move(self.speed, 0)
+            self.rect.centerx += self.speed
 
     # def move(self, x, y):
     #     self.rect.update(x, y)

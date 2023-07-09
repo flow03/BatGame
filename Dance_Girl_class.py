@@ -37,6 +37,7 @@ class Dance_Girl:
         # self.circle_timer = 0
         self.laps_completed = 0
         self.angle = 0
+        self.completed_lap = False
 
 
     def load_animations(self):
@@ -59,7 +60,7 @@ class Dance_Girl:
     def changeDance(self):
         if not self.is_moving:
             if self.isNextDance(self.dance_delay):
-                self.currentDance +=1
+                self.currentDance += 1
                 self.idle_animation = self.danceList[self.currentDance % len(self.danceList)]
 
             self.current_animation = self.idle_animation
@@ -78,7 +79,7 @@ class Dance_Girl:
 
 
     def load_animations_from_sheet(self):
-        sprite_sheet = SpriteSheet('img/Dancing_Girl/black_rgb_super_2.png')
+        sprite_sheet = SpriteSheet('img/Dancing_Girl/black_rgb_super.png')
         i = 0
         for key in self.animations.keys():
             self.animations[key] = sprite_sheet.get_anim(39, 53, row = i)
@@ -113,32 +114,15 @@ class Dance_Girl:
         direction = (player_pos - character_pos).normalize()
 
         if not self.is_circle and distance > self.circle_radius:
-            self.rect.centerx += direction.x * self.speed
-            self.rect.centery += direction.y * self.speed
-            # self.current_animation = 'move'
-            self.is_moving = True
+            self.move_to_point(direction)
         else:
             self.is_circle = True
 
         # Рух по колу з центром в player.rect.center
         if self.is_circle:
-            # self.circle_timer += self.animation_speed
-            # angle = math.atan2(character_pos.y - player_pos.y, character_pos.x - player_pos.x)
-            self.angle += self.animation_speed * 0.15
-            # self.angle *=  0.15
-            self.rect.centerx = player_pos.x + int(math.cos(self.angle) * self.circle_radius)
-            self.rect.centery = player_pos.y + int(math.sin(self.angle) * self.circle_radius)
-            # self.current_animation = self.idle_animation
-            self.is_moving = True
+            self.move_around_point(player_pos)
 
-            if self.angle >= math.pi * 2:
-                self.laps_completed += 1
-                self.angle = 0  
-
-        if direction.x < 0:
-            self.current_animation = self.move_left_anim
-        elif direction.x > 0:
-            self.current_animation = self.move_right_anim
+        self.update_direction(direction)
 
         # оновлення кадрів анімації
         self.frame_index += self.animation_speed
@@ -162,26 +146,61 @@ class Dance_Girl:
             pygame.draw.rect(screen, colour, self.rect, 2)
 
     def move(self, direction):
-        
         # if direction == 'down':
         #     self.rect = self.rect.move(0, self.speed)
         # elif direction == 'up':
             # self.rect = self.rect.move(0, -self.speed)
         if direction == 'left':
-            self.rect = self.rect.move(-self.speed, 0)
+            self.rect.move_ip(-self.speed, 0)
             self.current_animation = self.move_left_anim
         elif direction == 'right':
-            self.rect = self.rect.move(self.speed, 0)
+            self.rect.move_ip(self.speed, 0)
             self.current_animation = self.move_right_anim
 
         self.is_moving = True
 
     def reload(self):
         self.rect.update((self.start_x, self.start_y),(self.rect.width, self.rect.height))
-        self.current_animation = 'slide'
+        self.current_animation = self.idle_animation
+        self.frame_index = 0
+        self.angle = 0
+        self.laps_completed = 0
+
+        self.is_moving = False
+        self.is_circle = False
 
     # def destroy(self):
     #     self.is_alive = False
 
     # def revive(self):
     #     self.is_alive = True
+
+    def move_to_point(self, direction):
+        
+        self.rect.centerx += direction.x * self.speed
+        self.rect.centery += direction.y * self.speed
+        self.is_moving = True
+        
+
+    def update_direction(self, direction):
+        if direction.x < 0:
+            self.current_animation = self.move_left_anim
+        elif direction.x > 0:
+            self.current_animation = self.move_right_anim
+
+    def move_around_point(self, player_pos):
+        character_pos = Vector2(self.rect.center)
+        # self.circle_timer += self.animation_speed
+        self.angle = math.atan2(character_pos.y - player_pos.y, character_pos.x - player_pos.x)
+        # self.angle += self.animation_speed * 0.15
+        self.angle += (self.speed - 0.5) / self.circle_radius
+        self.rect.centerx = player_pos.x + int(math.cos(self.angle) * self.circle_radius)
+        self.rect.centery = player_pos.y + int(math.sin(self.angle) * self.circle_radius)
+        # self.current_animation = self.idle_animation
+        self.is_moving = True
+
+        if not self.completed_lap and abs(self.angle) < 0.1:
+            self.laps_completed += 1
+            self.completed_lap = True
+        elif self.completed_lap and abs(self.angle) >= 0.1:
+            self.completed_lap = False
