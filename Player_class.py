@@ -5,7 +5,7 @@ class Player:
     def __init__(self, x, y):
         self.start_x = x
         self.start_y = y
-        self.rect = pygame.Rect((x, y), (60, 60))
+        # self.rect = pygame.Rect((x, y), (60, 60))
         self.speed = 3
         
         self.animation_frames = {
@@ -16,8 +16,11 @@ class Player:
         }
         self.load_animation_frames()
         self.direction = 'down'  # Початковий напрямок руху
+        # self.current_animation = self.direction
         self.frame_index = 0  # Початковий індекс кадру
         self.animation_speed = 0.2  # Швидкість анімації (затримка між кадрами)
+        self.image = self.animation_frames[self.direction][int(self.frame_index)]
+        self.rect = self.image.get_rect(center=(x,y))
 
 
     def load_animation_frames(self):
@@ -33,16 +36,14 @@ class Player:
         self.animation_frames['up'] = sprite_sheet.get_anim(row = 3)
 
     def update(self):
+        # оновлення кадрів анімації
         self.frame_index += self.animation_speed
         if self.frame_index >= len(self.animation_frames[self.direction]):
             self.frame_index = 0
+        self.image = self.animation_frames[self.direction][int(self.frame_index)]
 
     def draw(self, screen, colour = None):
-        current_frame = self.animation_frames[self.direction][int(self.frame_index)]
-        # if colour:
-        #     colour_rect = self.get_colour_rect(colour)
-        #     screen.blit(colour_rect, self.rect)
-        screen.blit(current_frame, self.rect)
+        screen.blit(self.image, self.rect)
         if colour:
             pygame.draw.rect(screen, colour, self.rect, 2)
             
@@ -54,14 +55,6 @@ class Player:
 
     def move(self, direction):
         self.direction = direction
-        # if direction == 'down':
-        #     self.rect.move_ip(0, self.speed)
-        # elif direction == 'up':
-        #     self.rect.move_ip(0, -self.speed)
-        # elif direction == 'left':
-        #     self.rect.move_ip(-self.speed, 0)
-        # elif direction == 'right':
-        #     self.rect.move_ip(self.speed, 0)
 
         if direction == 'down':
             self.rect.centery += self.speed
@@ -79,6 +72,6 @@ class Player:
     #     return self.animation_frames[self.direction][int(self.frame_index)]
 
     def reload(self):
-        self.rect.update((self.start_x, self.start_y),(self.rect.width, self.rect.height))
+        self.rect.center = (self.start_x, self.start_y)
         self.direction = 'down'
 

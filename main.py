@@ -58,10 +58,10 @@ pygame.display.update()
 #         return False
 
 # Player
-player = Player(700, 300) # 150, 300
+player = Player(WIDTH//2, HEIGHT//2) # 150, 300
 
 # Margosh
-Margosh = Dance_Girl(150, 300)
+Margosh = Dance_Girl(screen)
 
 # Jump
 jump = Jump()

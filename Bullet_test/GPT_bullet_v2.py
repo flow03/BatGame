@@ -70,6 +70,7 @@ while not done:
     bullet_group.update(screen, red_dots)
     for bullet_el in bullet_group:
         current_bullet_pos = bullet_el.get_pos()
+        current_distance = bullet_el.distance
     
     # Відображення гравця
     screen.blit(player, player_rect)
@@ -93,6 +94,8 @@ while not done:
         screen.blit(bullet_pos_text, (10, 10))
         enemy_pos_text = myFont.render(f"Enemy: {current_enemy_pos}", True, text_COLOR)
         screen.blit(enemy_pos_text, (10, 40))
+        distance_text = myFont.render(f"distance: {current_distance}", True, text_COLOR)
+        screen.blit(distance_text, (10, 70))
     
     pygame.display.flip()
     clock.tick(60)

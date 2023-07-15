@@ -38,19 +38,23 @@ class Text:
         y = 65 + self.y_offset * 2
         screen.blit(self.myfont.render('Girl', True, "Black"), (self.x_offset, y))
         y += self.y_offset
-        screen.blit(self.myfont.render('clock: ' + str(girl.clock()), True, "Black"), (self.x_offset, y))
-        y += self.y_offset
-        screen.blit(self.myfont.render('nextFrame: ' + str(girl.nextFrame), True, "Black"), (self.x_offset, y))
-        y += self.y_offset
-        screen.blit(self.myfont.render('dance: ' + girl.idle_animation, True, "Black"), (self.x_offset, y))
+        screen.blit(self.myfont.render('idle: ' + girl.idle_animation, True, "Black"), (self.x_offset, y))
         y += self.y_offset
         screen.blit(self.myfont.render('current: ' + girl.current_animation, True, "Black"), (self.x_offset, y))
         y += self.y_offset
-        screen.blit(self.myfont.render('currentDance: ' + str(girl.currentDance), True, "Black"), (self.x_offset, y))
+        screen.blit(self.myfont.render('angle: ' + str(girl.circle.angle), True, "Black"), (self.x_offset, y))
         y += self.y_offset
-        screen.blit(self.myfont.render('angle: ' + str(girl.angle), True, "Black"), (self.x_offset, y))
+        screen.blit(self.myfont.render('start_angle: ' + str(girl.circle.start_angle), True, "Black"), (self.x_offset, y))
         y += self.y_offset
-        screen.blit(self.myfont.render('laps_completed: ' + str(girl.laps_completed), True, "Black"), (self.x_offset, y))
+        screen.blit(self.myfont.render('laps_completed: ' + str(girl.circle.laps_completed), True, "Black"), (self.x_offset, y))
+        y += self.y_offset
+        if girl.dance:
+            screen.blit(self.myfont.render('clock: ' + str(girl.dance.dance_clock.clock()), True, "Black"), (self.x_offset, y))
+            y += self.y_offset
+            screen.blit(self.myfont.render('nextFrame: ' + str(girl.dance.dance_clock.nextFrame), True, "Black"), (self.x_offset, y))
+            y += self.y_offset
+            screen.blit(self.myfont.render('currentDance: ' + str(girl.dance.currentDance), True, "Black"), (self.x_offset, y))
+            y += self.y_offset
 
     def blit_loading_text(self, screen):
         loading_text = self.myBigerFont.render('LOADING...', False, 'Black')
