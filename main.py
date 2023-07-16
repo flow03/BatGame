@@ -69,11 +69,11 @@ jump = Jump()
 # Bat
 # bat_images = get_sprites('img/bat/bat', 11)
 bat_list = MyGroup()
-killedBats = 0
+# killedBats = 0
 BAT_TIMER = pygame.USEREVENT + 1
-# pygame.time.set_timer(BAT_TIMER, 1500)
+pygame.time.set_timer(BAT_TIMER, 1500)
 BULLET_DROP_TIMER = pygame.USEREVENT + 2
-# pygame.time.set_timer(BULLET_DROP_TIMER, 2500)
+pygame.time.set_timer(BULLET_DROP_TIMER, 2500)
 
 # Color rect
 # green_rect = pygame.Surface((player.rect.width, player.rect.height))
@@ -87,15 +87,14 @@ BULLET_DROP_TIMER = pygame.USEREVENT + 2
 
 # Bullet
 bullets = MyGroup() #pygame.sprite.Group()
-bullets_count = 5
+# bullets_count = 5
 bulletDrops = MyGroup()
 
 # Update and draw
 def update_objects():
-    bat_list.update()
-    player.update()
-    if bullets.update(screen, bat_list):
-        killedBats += 1
+    bat_list.update(player)
+    player.update(bulletDrops)
+    bullets.update(screen, bat_list, player)
     Margosh.update(player)
 
 def draw_objects(isBoundRects):
@@ -119,18 +118,18 @@ def draw_objects(isBoundRects):
 
 # Bool triggers
 isBoundRects = True
-gameplay = True
+# gameplay = True
 run = True
 
 def initialize():
-    gameplay = True
+    # gameplay = True
     player.reload()
     Margosh.reload()
     bat_list.empty()
     bullets.empty()
     bulletDrops.empty()
-    bullets_count = 5
-    killedBats = 0
+    # bullets_count = 5
+    # killedBats = 0
     jump.is_jump = False
     # nextFrame = clock() + anim_delay
 
@@ -140,7 +139,7 @@ while run:
 
     screen.blit(bg, (0, 0)) # bg_x
 
-    if gameplay:
+    if player.gameplay:
         
         # gameplay = False
         
@@ -166,34 +165,12 @@ while run:
         update_objects()
         draw_objects(isBoundRects)
 
-        text.print_debug_info(screen, FPS, bat_list, killedBats, bullets_count)
-        text.print_girl_info(screen, Margosh)
+        if isBoundRects:
+            text.print_debug_info(screen, FPS, bat_list, player.killedBats, player.bullets_count)
+            text.print_girl_info(screen, Margosh)
 
         # COLLISIONS
-        if bat_list:
-            for bat in bat_list:
-                if bat.rect.colliderect(player.rect):
-                    gameplay = False
-                # screen.blit(red_rect, bat.rect)
-                # pygame.draw.rect(screen, 'Red', bat.rect, 2)
-
-        if bullets:
-            # Параметр True вказує, що об'єкти, які зіткнулися,
-            # мають бути автоматично видалені зі своїх відповідних груп.
-            # pygame.sprite.groupcollide(bullets, bat_list, True, True)
-            for bullet in bullets:
-                bat_sprite = pygame.sprite.spritecollideany(bullet, bat_list)
-                if bat_sprite:
-                    bat_sprite.kill()
-                    bullet.kill()
-                    killedBats += 1    
-
-        if bulletDrops:
-            sprite = pygame.sprite.spritecollideany(player, bulletDrops)
-            if sprite:
-                bullets_count += 1
-                sprite.kill()
-            # pygame.sprite.spritecollide(player, bulletDrops, True)
+        # All in classes
 
     else:
         # screen.fill("Black")
@@ -218,11 +195,11 @@ while run:
             pass
         if event.type == BULLET_DROP_TIMER:
             bulletDrops.add(BulletDrop(screen))
-        if gameplay and event.type == pygame.KEYDOWN:
+        if player.gameplay and event.type == pygame.KEYDOWN:
             if event.key == pygame.K_e or event.key == pygame.K_q:
-                if bullets_count > 0:
+                if player.bullets_count > 0:
                     bullets.add(Bullet(player.rect.center, player.direction))
-                    bullets_count -=1
+                    player.bullets_count -=1
             # pygame.time.delay(80)
             if event.key == pygame.K_TAB:
                 if not isBoundRects:

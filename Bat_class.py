@@ -18,8 +18,11 @@ class Bat(pygame.sprite.Sprite):
         
         return frame
 
-    def update(self):
+    def update(self, player):
         self.rect = self.rect.move(-self.speed, 0)
+
+        if self.rect.colliderect(player.rect):
+            player.gameplay = False
 
         if self.rect.right < 0:
             self.kill()

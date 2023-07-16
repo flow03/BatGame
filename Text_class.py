@@ -6,9 +6,11 @@ class Text:
         self.myfont = pygame.font.SysFont("Montserrat", 30)
         # myfont = pygame.font.Font('fonts/Thor.otf', 30)
         self.myBigerFont = pygame.font.Font('fonts/MunchkinCyr.ttf', 60)
+        # screen = screen
         self.WIDTH = screen.get_width()
         self.HEIGHT = screen.get_height()
         self.createExitRects()
+        self.y = 15
         self.y_offset = 25
         self.x_offset = 15
 
@@ -27,34 +29,37 @@ class Text:
 
     def print_debug_info(self, screen, FPS, bat_list, killedBats, bullets_count):
         screen.blit(self.myfont.render('FPS: ' + str(int(FPS.get_fps())), True, "Black"), (self.WIDTH - 85, 15))
-        y = 15
-        screen.blit(self.myfont.render('bats on screen: ' + str(len(bat_list)), True, "Black"), (self.x_offset, y))
-        y += self.y_offset
-        screen.blit(self.myfont.render('killed bats: ' + str(killedBats), True, "Black"), (self.x_offset, y))
-        y += self.y_offset
-        screen.blit(self.myfont.render('bullets: ' + str(bullets_count), True, "Black"), (self.x_offset, y))
+        self.y = 15
+        screen.blit(self.myfont.render('bats on screen: ' + str(len(bat_list)), True, "Black"), (self.x_offset, self.y))
+        self.y += self.y_offset
+        screen.blit(self.myfont.render('killed bats: ' + str(killedBats), True, "Black"), (self.x_offset, self.y))
+        self.y += self.y_offset
+        screen.blit(self.myfont.render('bullets: ' + str(bullets_count), True, "Black"), (self.x_offset, self.y))
 
     def print_girl_info(self, screen, girl):
-        y = 65 + self.y_offset * 2
-        screen.blit(self.myfont.render('Girl', True, "Black"), (self.x_offset, y))
-        y += self.y_offset
-        screen.blit(self.myfont.render('idle: ' + girl.idle_animation, True, "Black"), (self.x_offset, y))
-        y += self.y_offset
-        screen.blit(self.myfont.render('current: ' + girl.current_animation, True, "Black"), (self.x_offset, y))
-        y += self.y_offset
-        screen.blit(self.myfont.render('angle: ' + str(girl.circle.angle), True, "Black"), (self.x_offset, y))
-        y += self.y_offset
-        screen.blit(self.myfont.render('start_angle: ' + str(girl.circle.start_angle), True, "Black"), (self.x_offset, y))
-        y += self.y_offset
-        screen.blit(self.myfont.render('laps_completed: ' + str(girl.circle.laps_completed), True, "Black"), (self.x_offset, y))
-        y += self.y_offset
-        if girl.dance:
-            screen.blit(self.myfont.render('clock: ' + str(girl.dance.dance_clock.clock()), True, "Black"), (self.x_offset, y))
-            y += self.y_offset
-            screen.blit(self.myfont.render('nextFrame: ' + str(girl.dance.dance_clock.nextFrame), True, "Black"), (self.x_offset, y))
-            y += self.y_offset
-            screen.blit(self.myfont.render('currentDance: ' + str(girl.dance.currentDance), True, "Black"), (self.x_offset, y))
-            y += self.y_offset
+        self.y = 65 + self.y_offset * 2
+        self.screen = screen    # for print method
+
+        self.screen.blit(self.myfont.render("Girl", True, "Black"), (self.x_offset, self.y))
+        self.y += self.y_offset
+
+        self.print('state', girl.state)
+        self.print('current', girl.current_animation)
+        if girl.state == "move_around_player":
+            self.print('angle', girl.circle.angle)
+            self.print('start_angle', girl.circle.start_angle)
+            self.print('laps_completed', girl.circle.laps_completed)
+        if girl.state == "dance":
+            # self.y += self.y_offset
+            self.print('idle', girl.idle_animation)
+            self.print('clock', girl.dance.dance_clock.clock())
+            self.print('dance_over', girl.dance.dance_clock.dance_over)
+            self.print('nextFrame', girl.dance.dance_clock.nextFrame)
+            self.print('currentDance', girl.dance.currentDance)
+
+    def print(self, string : str, variable):
+        self.screen.blit(self.myfont.render(string + ": " + str(variable), True, "Black"), (self.x_offset, self.y))
+        self.y += self.y_offset
 
     def blit_loading_text(self, screen):
         loading_text = self.myBigerFont.render('LOADING...', False, 'Black')

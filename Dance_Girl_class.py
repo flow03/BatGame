@@ -46,35 +46,40 @@ class Circle:
         self.laps_completed = 0
         self.completed_lap = False
         self.circle_start = True
+        self.circle_direction = 1
 
 class Clock:
-    def __init__(self, delay):
-        self.nextFrame = self.clock() + delay
-        self.dance_over = self.clock() + delay * 5
+    def __init__(self, delay : int):
+        self.delay = delay
+        self.nextFrame = self.clock() + self.delay
+        self.dance_over = None
     
     def clock(self):
         return pygame.time.get_ticks()
 
-    def isNextDance(self, delay):
+    def isNextDance(self):
         if (self.clock() > self.nextFrame):
-            self.nextFrame += delay
+            self.nextFrame += self.delay
             return True
         else:
             return False
+    def danceStart(self):
+        if not self.dance_over:
+            self.dance_over = self.clock() + self.delay * 5
 
     def isDanceOver(self):
         return self.clock() > self.dance_over
 
 class Dance:
     def __init__(self):
-        self.dance_delay = 2200
+        # self.dance_delay = 2200
         self.danceList = ['hips','slide','snap']
         self.currentDance = 0
 
-        self.dance_clock = Clock(self.dance_delay)
+        self.dance_clock = Clock(2200)
 
     def changeDance(self, player):
-        if self.dance_clock.isNextDance(self.dance_delay):
+        if self.dance_clock.isNextDance():
             self.currentDance += 1
             player.idle_animation = self.danceList[self.currentDance % len(self.danceList)]
 
@@ -104,7 +109,7 @@ class Dance_Girl:
         self.speed = 3
         self.is_moving = False
 
-        self.dance = None
+        self.dance = Dance()
         self.circle = Circle()
 
         self.state = "move_to_player"
@@ -170,7 +175,7 @@ class Dance_Girl:
             if distance > self.circle.circle_radius:
                 self.move_to_point(direction)
                 self.is_moving = True
-                print("move_to_point")
+                # print("move_to_point")
             else:
                 # self.circle.is_circle = True
                 self.state = "move_around_player"
@@ -180,25 +185,24 @@ class Dance_Girl:
             if self.circle.laps_completed < 5:
                 self.circle.move_around_point(self.rect, player_pos, self.speed)
                 self.is_moving = True
-                print("move_around_point")
+                # print("move_around_point")
             else:
                 self.state = "dance"
+                self.dance.dance_clock.danceStart()
         # Змінюємо танець
         elif self.state == "dance":
-            if not self.dance:
-                self.dance = Dance()
             if not self.dance.dance_clock.isDanceOver():
                 if not self.is_moving:
                     self.dance.changeDance(self)
                     self.is_moving = False
-                    print("dance")
+                    # print("dance")
             else:
                 self.state = "move_away"
         elif self.state == "move_away":
             if not self.away_direction:
                 self.away_direction = self.get_min_direction()
             self.move(self.away_direction)
-            print("move_away")
+            # print("move_away")
 
         # Оновлюємо напрямок анімації руху
         self.update_direction(direction)
@@ -252,8 +256,8 @@ class Dance_Girl:
         self.is_moving = False
         self.circle.reload()
         self.state = "move_to_player"
-        if self.dance:
-            self.dance = None
+        self.dance.currentDance = 0
+        self.dance.dance_clock.dance_over = None
         self.away_direction = None
         
     # def changeDance(self):
@@ -316,7 +320,7 @@ class Dance_Girl:
         for key, value in distances.items():
             if value == min_distance:
                 min_direction = key
-                print(f"min_direction: {min_direction}")
+                # print(f"min_direction: {min_direction}")
                 break
         
         return min_direction

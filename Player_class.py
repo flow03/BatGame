@@ -7,6 +7,9 @@ class Player:
         self.start_y = y
         # self.rect = pygame.Rect((x, y), (60, 60))
         self.speed = 3
+        self.bullets_count = 5
+        self.killedBats = 0
+        self.gameplay = True
         
         self.animation_frames = {
             'down': [],
@@ -35,7 +38,16 @@ class Player:
         self.animation_frames['right'] = sprite_sheet.get_anim(row = 2)
         self.animation_frames['up'] = sprite_sheet.get_anim(row = 3)
 
-    def update(self):
+    def update(self, bulletDrops):
+        if bulletDrops:
+            sprite = pygame.sprite.spritecollideany(self, bulletDrops)
+            if sprite:
+                self.bullets_count += 1
+                sprite.kill()
+
+             
+            # pygame.sprite.spritecollide(player, bulletDrops, True)
+
         # оновлення кадрів анімації
         self.frame_index += self.animation_speed
         if self.frame_index >= len(self.animation_frames[self.direction]):
@@ -74,4 +86,7 @@ class Player:
     def reload(self):
         self.rect.center = (self.start_x, self.start_y)
         self.direction = 'down'
+        self.bullets_count = 5
+        self.killedBats = 0
+        self.gameplay = True
 

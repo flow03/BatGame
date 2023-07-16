@@ -54,20 +54,24 @@ class Bullet(pygame.sprite.Sprite):
         self.image = pygame.transform.rotate(self.image, self.angle)
         self.rect = self.image.get_rect(center=self.rect.center)
 
-    def update(self, screen, bat_list):
+    def update(self, screen, bat_list, player):
         # Оновлення позиції кулі
         self.rect.x += self.velocity[0] * self.speed
         self.rect.y += self.velocity[1] * self.speed
         # self.rect = self.rect.move(self.velocity[0] * 5, self.velocity[1] * 5)
         
-        # isHit = False
+        isHit = False
         # Перевірка колізій з ворогами
-        # if bat_list:
-        #     sprite = pygame.sprite.spritecollideany(self, bat_list)
-        #     if sprite:
-        #         sprite.kill()
-        #         self.kill()
-        #         isHit = True
+        if bat_list:
+            bat_sprite = pygame.sprite.spritecollideany(self, bat_list)
+            if bat_sprite:
+                player.killedBats += 1
+                bat_sprite.kill()
+                self.kill()
+
+        # Параметр True вказує, що об'єкти, які зіткнулися,
+        # мають бути автоматично видалені зі своїх відповідних груп.
+        # pygame.sprite.groupcollide(bullets, bat_list, True, True)
 
         # Перевірка, чи вийшла куля за межі екрану
         if not screen.get_rect().colliderect(self.rect):
