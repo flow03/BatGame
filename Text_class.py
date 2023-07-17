@@ -27,14 +27,15 @@ class Text:
         screen.blit(self.restart_text, self.restart_text_rect)
         screen.blit(self.exit_text, self.exit_text_rect)
 
-    def print_debug_info(self, screen, FPS, bat_list, killedBats, bullets_count):
+    def print_fps(self, screen, FPS):
         screen.blit(self.myfont.render('FPS: ' + str(int(FPS.get_fps())), True, "Black"), (self.WIDTH - 85, 15))
+
+    def print_debug_info(self, screen, bat_list, killedBats, bullets_count):
         self.y = 15
-        screen.blit(self.myfont.render('bats on screen: ' + str(len(bat_list)), True, "Black"), (self.x_offset, self.y))
-        self.y += self.y_offset
-        screen.blit(self.myfont.render('killed bats: ' + str(killedBats), True, "Black"), (self.x_offset, self.y))
-        self.y += self.y_offset
-        screen.blit(self.myfont.render('bullets: ' + str(bullets_count), True, "Black"), (self.x_offset, self.y))
+        self.screen = screen
+        self.print('bats on screen', len(bat_list))
+        self.print('killed bats', killedBats)
+        self.print('bullets', bullets_count)
 
     def print_girl_info(self, screen, girl):
         self.y = 65 + self.y_offset * 2
@@ -52,9 +53,9 @@ class Text:
         if girl.state == "dance":
             # self.y += self.y_offset
             self.print('idle', girl.idle_animation)
-            self.print('clock', girl.dance.dance_clock.clock())
-            self.print('dance_over', girl.dance.dance_clock.dance_over)
-            self.print('nextFrame', girl.dance.dance_clock.nextFrame)
+            self.print('clock', girl.dance.d_clock.clock())
+            self.print('dance_over', girl.dance.dance_over)
+            self.print('nextFrame', girl.dance.d_clock.nextFrame)
             self.print('currentDance', girl.dance.currentDance)
 
     def print(self, string : str, variable):

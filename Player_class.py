@@ -3,14 +3,6 @@ from Spritesheet_class import SpriteSheet
 
 class Player:
     def __init__(self, x, y):
-        self.start_x = x
-        self.start_y = y
-        # self.rect = pygame.Rect((x, y), (60, 60))
-        self.speed = 3
-        self.bullets_count = 5
-        self.killedBats = 0
-        self.gameplay = True
-        
         self.animation_frames = {
             'down': [],
             'up': [],
@@ -18,13 +10,23 @@ class Player:
             'right': []
         }
         self.load_animation_frames()
+        self.start_x = x
+        self.start_y = y
+        self.speed = 3
+
+        self.init()
+
+    def init(self):
         self.direction = 'down'  # Початковий напрямок руху
         # self.current_animation = self.direction
         self.frame_index = 0  # Початковий індекс кадру
         self.animation_speed = 0.2  # Швидкість анімації (затримка між кадрами)
         self.image = self.animation_frames[self.direction][int(self.frame_index)]
-        self.rect = self.image.get_rect(center=(x,y))
+        self.rect = self.image.get_rect(center=(self.start_x, self.start_y))
 
+        self.bullets_count = 5
+        self.killedBats = 0
+        self.gameplay = True
 
     def load_animation_frames(self):
         # Завантаження всіх кадрів анімацій для кожного напрямку руху
@@ -83,10 +85,10 @@ class Player:
     # def get_frame(self):
     #     return self.animation_frames[self.direction][int(self.frame_index)]
 
-    def reload(self):
-        self.rect.center = (self.start_x, self.start_y)
-        self.direction = 'down'
-        self.bullets_count = 5
-        self.killedBats = 0
-        self.gameplay = True
+    # def reload(self):
+    #     self.rect.center = (self.start_x, self.start_y)
+    #     self.direction = 'down'
+    #     self.bullets_count = 5
+    #     self.killedBats = 0
+    #     self.gameplay = True
 

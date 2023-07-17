@@ -27,7 +27,7 @@ HEIGHT = 600
 # screen = pygame.display.set_mode((600, 300), flags=pygame.NOFRAME)
 screen = pygame.display.set_mode((WIDTH, HEIGHT))
 pygame.display.set_caption("Python Game")
-icon = pygame.image.load('img/bat/bat6.png').convert_alpha()
+icon = pygame.image.load('img/fangs.png').convert_alpha()
 pygame.display.set_icon(icon)
 
 # Text
@@ -61,7 +61,8 @@ pygame.display.update()
 player = Player(WIDTH//2, HEIGHT//2) # 150, 300
 
 # Margosh
-Margosh = Dance_Girl(screen)
+# Margosh = Dance_Girl(screen)
+Margosh = MyGroup()
 
 # Jump
 jump = Jump()
@@ -73,7 +74,7 @@ bat_list = MyGroup()
 BAT_TIMER = pygame.USEREVENT + 1
 pygame.time.set_timer(BAT_TIMER, 1500)
 BULLET_DROP_TIMER = pygame.USEREVENT + 2
-pygame.time.set_timer(BULLET_DROP_TIMER, 2500)
+# pygame.time.set_timer(BULLET_DROP_TIMER, 2500)
 
 # Color rect
 # green_rect = pygame.Surface((player.rect.width, player.rect.height))
@@ -106,10 +107,10 @@ def draw_objects(isBoundRects):
         colourRed = "Red"
 
     bulletDrops.draw(screen, colourGreen)
-    bat_list.draw(screen, colourRed)
+    bat_list.draw(screen, colourRed, True)
     player.draw(screen, colourGreen)
     bullets.draw(screen, colourGreen)
-    Margosh.draw(screen, colourGreen)
+    Margosh.draw(screen, colourGreen, True)
 
 
 # Sound
@@ -123,8 +124,8 @@ run = True
 
 def initialize():
     # gameplay = True
-    player.reload()
-    Margosh.reload()
+    player.init()
+    Margosh.empty()
     bat_list.empty()
     bullets.empty()
     bulletDrops.empty()
@@ -152,10 +153,10 @@ while run:
             player.move('up')
         if (keys[pygame.K_DOWN] or keys[pygame.K_s]) and player.rect.y < (HEIGHT - player.rect.height):
             player.move('down')
-        if (keys[pygame.K_LEFT]):
-            Margosh.move('left')
-        if (keys[pygame.K_RIGHT]):
-            Margosh.move('right')
+        # if (keys[pygame.K_LEFT]):
+        #     Margosh.move('left')
+        # if (keys[pygame.K_RIGHT]):
+        #     Margosh.move('right')
         
         # Player jump
         if keys[pygame.K_SPACE]:
@@ -165,9 +166,13 @@ while run:
         update_objects()
         draw_objects(isBoundRects)
 
+        
         if isBoundRects:
-            text.print_debug_info(screen, FPS, bat_list, player.killedBats, player.bullets_count)
-            text.print_girl_info(screen, Margosh)
+            text.print_fps(screen, FPS)
+            text.print_debug_info(screen, bat_list, player.killedBats, player.bullets_count)
+            if Margosh:
+                # sprite = Margosh.sprites()[0]
+                text.print_girl_info(screen, Margosh.sprites()[-1]) # the last one
 
         # COLLISIONS
         # All in classes
@@ -206,6 +211,11 @@ while run:
                     isBoundRects = True
                 else:
                     isBoundRects = False
+            if event.key == pygame.K_m:
+                if not Margosh:
+                    Margosh.add(Dance_Girl(screen))
+        # працює незалежно від player.gameplay
+        if event.type == pygame.KEYDOWN:
             if event.key == pygame.K_r:
                 initialize()
 
