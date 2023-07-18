@@ -11,23 +11,26 @@ class Bullet(pygame.sprite.Sprite):
         self.rect = self.image.get_rect(center=start_pos)
         # self.rect.center = start_pos
         self.speed = 6
+        self.position = Vector2(start_pos)
 
-        self.set_vector_2(start_pos, target_pos)
+        self.set_direction(start_pos, target_pos)
 
     # Визначення вектора руху кулі 2
-    def set_vector_2(self, start_pos, target_pos):
+    def set_direction(self, start_pos, target_pos):
         
         start_pos = Vector2(start_pos)
         target_pos = Vector2(target_pos)
 
         self.distance = start_pos.distance_to(target_pos) # for debug
         # print(f"distance: {self.distance}")
-        self.direction = (target_pos - start_pos).normalize()
+        self.direction = target_pos - start_pos
+        if self.direction:
+            self.direction = self.direction.normalize()
 
         self.rotate(self.direction.x, self.direction.y)
 
     # Визначення вектора руху кулі 1
-    def set_vector_1(self, start_pos, target_pos):
+    def set_velocity(self, start_pos, target_pos):
         self.velocity = (float, float)
        
         dx = dy = float
@@ -49,11 +52,16 @@ class Bullet(pygame.sprite.Sprite):
 
     def update(self, screen, circle_group):
         # Оновлення позиції кулі
-        # self.rect.x += self.velocity[0] * self.speed
-        # self.rect.y += self.velocity[1] * self.speed
-        
-        self.rect.centerx += self.direction.x * self.speed
-        self.rect.centery += self.direction.y * self.speed
+        self.position += self.direction * self.speed
+
+        # self.rect.center = self.position
+        self.rect.center = round(self.position)
+        # self.rect.centerx = round(self.position.x)
+        # self.rect.centery = round(self.position.y)
+
+        # self.rect.centerx += self.direction.x * self.speed
+        # self.rect.centery += self.direction.y * self.speed
+
         # Перевірка колізій з червоними цятками
         if circle_group:
             self.check_collision(circle_group)
@@ -70,7 +78,7 @@ class Bullet(pygame.sprite.Sprite):
                 obj.change_colour()
 
     def get_pos(self):
-        return (self.rect.x, self.rect.y)
+        return self.rect.center
 
     def print(self, dx, dy, magnitude):
         print(f'dx {dx}')

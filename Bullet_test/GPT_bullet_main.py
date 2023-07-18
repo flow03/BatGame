@@ -68,9 +68,14 @@ while not done:
     screen.fill(BLACK)
 
     bullet_group.update(screen, red_dots)
-    for bullet_el in bullet_group:
-        current_bullet_pos = bullet_el.get_pos()
-        current_distance = bullet_el.distance
+    # for bullet_el in bullet_group:
+    #     current_bullet_pos = bullet_el.get_pos()
+    #     current_distance = bullet_el.distance
+    if bullet_group:
+        last_bullet = bullet_group.sprites()[-1]
+        current_bullet_pos = last_bullet.get_pos()
+        current_distance = last_bullet.distance
+        current_position = last_bullet.position
     
     # Відображення гравця
     screen.blit(player, player_rect)
@@ -86,16 +91,24 @@ while not done:
     
 
     # Виведення поточних координат на екран
-    if current_bullet_pos is not None:
-        if current_enemy_pos is not None and current_bullet_pos == current_enemy_pos:
+    if current_bullet_pos:
+        if current_enemy_pos and current_bullet_pos == current_enemy_pos:
             text_COLOR = RED
-            
+        
+        y = 10
         bullet_pos_text = myFont.render(f"Bullet: {current_bullet_pos}", True, WHITE)
-        screen.blit(bullet_pos_text, (10, 10))
+        screen.blit(bullet_pos_text, (10, y))
+        y += 30
+        position_text = myFont.render(f"position: {current_position}", True, WHITE)
+        screen.blit(position_text, (10, y))
+        y += 30
         enemy_pos_text = myFont.render(f"Enemy: {current_enemy_pos}", True, text_COLOR)
-        screen.blit(enemy_pos_text, (10, 40))
-        distance_text = myFont.render(f"distance: {current_distance}", True, text_COLOR)
-        screen.blit(distance_text, (10, 70))
+        screen.blit(enemy_pos_text, (10, y))
+        y += 30
+        distance_text = myFont.render(f"distance: {current_distance}", True, WHITE)
+        screen.blit(distance_text, (10, y))
+
+        
     
     pygame.display.flip()
     clock.tick(60)
