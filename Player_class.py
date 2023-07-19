@@ -1,4 +1,5 @@
 import pygame
+from pygame.math import Vector2
 from Spritesheet_class import SpriteSheet
 
 class Player:
@@ -10,9 +11,9 @@ class Player:
             'right': []
         }
         self.load_animation_frames()
-        self.start_x = x
-        self.start_y = y
+        self.start_pos = Vector2(x, y)
         self.speed = 3
+        self.max_health = 100
 
         self.init()
 
@@ -22,8 +23,9 @@ class Player:
         self.frame_index = 0  # Початковий індекс кадру
         self.animation_speed = 0.2  # Швидкість анімації (затримка між кадрами)
         self.image = self.animation_frames[self.direction][int(self.frame_index)]
-        self.rect = self.image.get_rect(center=(self.start_x, self.start_y))
+        self.rect = self.image.get_rect(center=self.start_pos)
 
+        self.health = self.max_health
         self.bullets_count = 5
         self.killedBats = 0
         self.gameplay = True
@@ -60,6 +62,19 @@ class Player:
         screen.blit(self.image, self.rect)
         if colour:
             pygame.draw.rect(screen, colour, self.rect, 2)
+
+        self.draw_health(screen, Vector2(20, 15))
+
+    def draw_health(self, screen, pos : Vector2):
+        ratio = self.health/self.max_health
+        width = 250
+        height = 13
+        border = 2
+        pygame.draw.rect(screen, "Red", (*pos, round(width * ratio), height)) # pos unpacking
+        bordered_rect = pygame.Rect(pos.x - border, pos.y - border, 
+            width + border * 2, height + border * 2)
+
+        pygame.draw.rect(screen, "Black", bordered_rect, border)
             
     def get_colour_rect(self, colour):
         colour_rect = pygame.Surface(self.rect.size)
@@ -85,10 +100,9 @@ class Player:
     # def get_frame(self):
     #     return self.animation_frames[self.direction][int(self.frame_index)]
 
-    # def reload(self):
-    #     self.rect.center = (self.start_x, self.start_y)
-    #     self.direction = 'down'
-    #     self.bullets_count = 5
-    #     self.killedBats = 0
-    #     self.gameplay = True
+    def set_damage(self, damage: int):
+        self.health -= int(damage)
+        if self.health <= 0:
+            self.gameplay = False
 
+    

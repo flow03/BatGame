@@ -11,7 +11,7 @@ class Bullet(pygame.sprite.Sprite):
         self.rect = self.image.get_rect(center=start_pos)
         # self.rect.center = start_pos
         self.speed = 6
-        self.position = Vector2(start_pos)
+        self.position = Vector2(start_pos) # position stored in the Vector2 class
 
         self.set_direction(start_pos, target_pos)
 

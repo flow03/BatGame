@@ -74,7 +74,7 @@ bat_list = MyGroup()
 BAT_TIMER = pygame.USEREVENT + 1
 pygame.time.set_timer(BAT_TIMER, 1500)
 BULLET_DROP_TIMER = pygame.USEREVENT + 2
-# pygame.time.set_timer(BULLET_DROP_TIMER, 2500)
+pygame.time.set_timer(BULLET_DROP_TIMER, 2500)
 
 # Color rect
 # green_rect = pygame.Surface((player.rect.width, player.rect.height))
@@ -107,10 +107,10 @@ def draw_objects(isBoundRects):
         colourRed = "Red"
 
     bulletDrops.draw(screen, colourGreen)
-    bat_list.draw(screen, colourRed, True)
+    bat_list.draw(screen, colourRed)
     player.draw(screen, colourGreen)
     bullets.draw(screen, colourGreen)
-    Margosh.draw(screen, colourGreen, True)
+    Margosh.draw(screen, colourGreen)
 
 
 # Sound
@@ -169,7 +169,7 @@ while run:
         
         if isBoundRects:
             text.print_fps(screen, FPS)
-            text.print_debug_info(screen, bat_list, player.killedBats, player.bullets_count)
+            text.print_debug_info(screen, bat_list, player)
             if Margosh:
                 # sprite = Margosh.sprites()[0]
                 text.print_girl_info(screen, Margosh.sprites()[-1]) # the last one

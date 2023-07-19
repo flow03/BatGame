@@ -30,15 +30,16 @@ class Text:
     def print_fps(self, screen, FPS):
         screen.blit(self.myfont.render('FPS: ' + str(int(FPS.get_fps())), True, "Black"), (self.WIDTH - 85, 15))
 
-    def print_debug_info(self, screen, bat_list, killedBats, bullets_count):
-        self.y = 15
+    def print_debug_info(self, screen, bat_list, player):
+        self.y = 35
         self.screen = screen
         self.print('bats on screen', len(bat_list))
-        self.print('killed bats', killedBats)
-        self.print('bullets', bullets_count)
+        self.print('killed bats', player.killedBats)
+        self.print('bullets', player.bullets_count)
+        self.print('health', player.health)
 
     def print_girl_info(self, screen, girl):
-        self.y = 65 + self.y_offset * 2
+        self.y = 85 + self.y_offset * 2
         self.screen = screen    # for print method
 
         self.screen.blit(self.myfont.render("Girl", True, "Black"), (self.x_offset, self.y))

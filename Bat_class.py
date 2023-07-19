@@ -21,17 +21,13 @@ class Bat(pygame.sprite.Sprite):
         self.rect = self.rect.move(-self.speed, 0)
 
         if self.rect.colliderect(player.rect):
-            player.gameplay = False
+            player.set_damage(self.get_damage())
+            player.killedBats += 1
+            self.kill()
 
         if self.rect.right < 0:
             self.kill()
 
-        # if self.rect.colliderect(player.rect):
-        #     return False
-        # else: 
-        #     return True
-
-    # Group ignores this method
-    # def draw(self, screen):
-    #     screen.blit(self.red_rect, self.rect)
-    #     screen.blit(self.image, self.rect)
+    def get_damage(self):
+        damage = random.randint(15, 25)
+        return damage
