@@ -9,6 +9,7 @@ from MyGroup_class import MyGroup
 import Bat_class
 from Text_class import Text
 from Dance_Girl_class import Dance_Girl
+from Food_class import Food
 
 FPS = pygame.time.Clock()
 pygame.init()
@@ -74,27 +75,20 @@ bat_list = MyGroup()
 BAT_TIMER = pygame.USEREVENT + 1
 pygame.time.set_timer(BAT_TIMER, 1500)
 BULLET_DROP_TIMER = pygame.USEREVENT + 2
-pygame.time.set_timer(BULLET_DROP_TIMER, 2500)
-
-# Color rect
-# green_rect = pygame.Surface((player.rect.width, player.rect.height))
-# green_rect.fill('Green')
-# green_rect.set_alpha(100)
-
-# red_rect = pygame.Surface((64, 64))
-# red_rect.fill('Red')
-# red_rect.set_alpha(100)
-
+pygame.time.set_timer(BULLET_DROP_TIMER, 4000)
+FOOD_DROP_TIMER = pygame.USEREVENT + 3
+pygame.time.set_timer(FOOD_DROP_TIMER, 4500)
 
 # Bullet
 bullets = MyGroup() #pygame.sprite.Group()
 # bullets_count = 5
 bulletDrops = MyGroup()
+foodDrops = MyGroup()
 
 # Update and draw
 def update_objects():
     bat_list.update(player)
-    player.update(bulletDrops)
+    player.update(bulletDrops, foodDrops)
     bullets.update(screen, bat_list, player)
     Margosh.update(player)
 
@@ -107,6 +101,7 @@ def draw_objects(isBoundRects):
         colourRed = "Red"
 
     bulletDrops.draw(screen, colourGreen)
+    foodDrops.draw(screen, colourGreen)
     bat_list.draw(screen, colourRed)
     player.draw(screen, colourGreen)
     bullets.draw(screen, colourGreen)
@@ -200,6 +195,8 @@ while run:
             pass
         if event.type == BULLET_DROP_TIMER:
             bulletDrops.add(BulletDrop(screen))
+        if event.type == FOOD_DROP_TIMER:
+            foodDrops.add(Food(screen))
         if player.gameplay and event.type == pygame.KEYDOWN:
             if event.key == pygame.K_e or event.key == pygame.K_q:
                 if player.bullets_count > 0:

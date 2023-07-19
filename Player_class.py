@@ -36,21 +36,25 @@ class Player:
         #     for i in range(8):
         #         frame = pygame.image.load(f'{direction}_{i}.png')  # Завантаження кадра з файлу
         #         self.animation_frames[direction].append(frame)
-        sprite_sheet = SpriteSheet('img/hero_sprites/hero_spritesheet_black.png')
+        sprite_sheet = SpriteSheet('img/spritesheets/hero_spritesheet.png')
         self.animation_frames['down'] = sprite_sheet.get_anim(row = 0) # 60x60 as default
         self.animation_frames['left'] = sprite_sheet.get_anim(row = 1)
         self.animation_frames['right'] = sprite_sheet.get_anim(row = 2)
         self.animation_frames['up'] = sprite_sheet.get_anim(row = 3)
 
-    def update(self, bulletDrops):
+    def update(self, bulletDrops, foodDrops):
         if bulletDrops:
             sprite = pygame.sprite.spritecollideany(self, bulletDrops)
             if sprite:
                 self.bullets_count += 1
                 sprite.kill()
-
-             
             # pygame.sprite.spritecollide(player, bulletDrops, True)
+
+        if foodDrops:
+            food = pygame.sprite.spritecollideany(self, foodDrops)
+            if food:
+                self.set_heal(food.heal)
+                food.kill()
 
         # оновлення кадрів анімації
         self.frame_index += self.animation_speed
@@ -105,4 +109,7 @@ class Player:
         if self.health <= 0:
             self.gameplay = False
 
-    
+    def set_heal(self, heal: int):
+        self.health += int(heal)
+        if self.health > self.max_health:
+            self.health = self.max_health

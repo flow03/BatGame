@@ -10,6 +10,7 @@ class Bat(pygame.sprite.Sprite):
         HEIGHT - self.image.get_height())
         self.rect = self.image.get_rect(midleft=(WIDTH, bat_y))
         self.speed = random.randint(3, 6)
+        self.damage = random.randint(15, 35)
   
     def load_random_frame(self):
         i = random.randint(0, 14) # max bat index
@@ -21,13 +22,9 @@ class Bat(pygame.sprite.Sprite):
         self.rect = self.rect.move(-self.speed, 0)
 
         if self.rect.colliderect(player.rect):
-            player.set_damage(self.get_damage())
+            player.set_damage(self.damage)
             player.killedBats += 1
             self.kill()
 
         if self.rect.right < 0:
             self.kill()
-
-    def get_damage(self):
-        damage = random.randint(15, 25)
-        return damage

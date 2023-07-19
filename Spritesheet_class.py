@@ -4,7 +4,7 @@ class SpriteSheet():
     def __init__(self, path: str):
         self.sheet = pygame.image.load(path).convert_alpha()
 
-    def get_image(self, col: int, row: int = 0, width = 60, height = 60):
+    def get_image(self, width = 60, height = 60, col: int = 0, row: int = 0):
         frame_rect = pygame.Rect((col * width), (row * height), width, height)
         frame_image = self.sheet.subsurface(frame_rect)
 
@@ -12,10 +12,10 @@ class SpriteSheet():
 
     def get_anim(self, width = 60, height = 60, row = 0):
         anim = []
-        count = self.sheet.get_width()//width # 8
+        cols = self.sheet.get_width()//width # 8
         col = 0
-        while col < count:
-            anim.append(self.get_image(col, row, width, height))
+        while col < cols:
+            anim.append(self.get_image(width, height, col, row))
             col += 1
 
         return anim

@@ -150,7 +150,7 @@ class Dance_Girl(pygame.sprite.Sprite):
             self.move_right_anim = anim + '_right'
 
     def load_animations_from_sheet(self):
-        sprite_sheet = SpriteSheet('img/Dancing_Girl/black_rgb_super.png')
+        sprite_sheet = SpriteSheet('img/spritesheets/Dancing_Girl_spritesheet.png')
         i = 0
         for key in self.animations.keys():
             self.animations[key] = sprite_sheet.get_anim(39, 53, row = i)
