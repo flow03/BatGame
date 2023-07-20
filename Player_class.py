@@ -1,6 +1,7 @@
 import pygame
 from pygame.math import Vector2
 from Spritesheet_class import SpriteSheet
+from HealthBar_class import HealthBar
 
 class Player:
     def __init__(self, x, y):
@@ -13,7 +14,10 @@ class Player:
         self.load_animation_frames()
         self.start_pos = Vector2(x, y)
         self.speed = 3
+
         self.max_health = 100
+        self.health_bar = HealthBar((20, 15), 250, 13) # max_health is 100 as default
+        # self.hp_bar.set_max_health(self.max_health)
 
         self.init()
 
@@ -25,10 +29,12 @@ class Player:
         self.image = self.animation_frames[self.direction][int(self.frame_index)]
         self.rect = self.image.get_rect(center=self.start_pos)
 
-        self.health = self.max_health
         self.bullets_count = 5
         self.killedBats = 0
         self.gameplay = True
+
+        self.health = self.max_health
+        self.health_bar.update_health(self.health)
 
     def load_animation_frames(self):
         # Завантаження всіх кадрів анімацій для кожного напрямку руху
@@ -56,6 +62,10 @@ class Player:
                 self.set_heal(food.heal)
                 food.kill()
 
+        self.health_bar.update_health(self.health)
+        self.update_animations()
+
+    def update_animations(self):
         # оновлення кадрів анімації
         self.frame_index += self.animation_speed
         if self.frame_index >= len(self.animation_frames[self.direction]):
@@ -67,18 +77,7 @@ class Player:
         if colour:
             pygame.draw.rect(screen, colour, self.rect, 2)
 
-        self.draw_health(screen, Vector2(20, 15))
-
-    def draw_health(self, screen, pos : Vector2):
-        ratio = self.health/self.max_health
-        width = 250
-        height = 13
-        border = 2
-        pygame.draw.rect(screen, "Red", (*pos, round(width * ratio), height)) # pos unpacking
-        bordered_rect = pygame.Rect(pos.x - border, pos.y - border, 
-            width + border * 2, height + border * 2)
-
-        pygame.draw.rect(screen, "Black", bordered_rect, border)
+        self.health_bar.draw(screen)
             
     def get_colour_rect(self, colour):
         colour_rect = pygame.Surface(self.rect.size)
@@ -108,8 +107,10 @@ class Player:
         self.health -= int(damage)
         if self.health <= 0:
             self.gameplay = False
+        # self.health_bar.update_health(self.health)
 
     def set_heal(self, heal: int):
         self.health += int(heal)
         if self.health > self.max_health:
             self.health = self.max_health
+        # self.health_bar.update_health(self.health)

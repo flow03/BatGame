@@ -124,6 +124,7 @@ def initialize():
     bat_list.empty()
     bullets.empty()
     bulletDrops.empty()
+    foodDrops.empty()
     # bullets_count = 5
     # killedBats = 0
     jump.is_jump = False
