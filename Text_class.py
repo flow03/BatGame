@@ -37,9 +37,13 @@ class Text:
         self.print('killed bats', player.killedBats)
         self.print('bullets', player.bullets_count)
         self.print('health', player.health)
+        self.print('rect_width', player.health_bar.rect.width)
+        self.print('y_rect_width', player.health_bar.yellow_rect.width)
+        # print(self.y)
 
     def print_girl_info(self, screen, girl):
-        self.y = 85 + self.y_offset * 2
+        # self.y = 85 + self.y_offset * 2 # 135
+        self.y += self.y_offset
         self.screen = screen    # for print method
 
         self.screen.blit(self.myfont.render("Girl", True, "Black"), (self.x_offset, self.y))

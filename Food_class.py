@@ -14,7 +14,7 @@ class Food(pygame.sprite.Sprite):
         y = random.randint(offset, screen.get_height() - offset)
         self.rect = self.image.get_rect(center=(x,y))
 
-        self.heal = random.randint(5, 15)
+        self.heal = random.randint(10, 20)
    
     def get_image(self, size):
         sprite_sheet = SpriteSheet('img/spritesheets/food_spritesheet_30.png')

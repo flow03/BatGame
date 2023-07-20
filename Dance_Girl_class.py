@@ -3,6 +3,7 @@ import math
 import random
 from pygame.math import Vector2
 from Spritesheet_class import SpriteSheet
+from Clock_class import Clock
 
 class Circle:
     def __init__(self):
@@ -40,27 +41,6 @@ class Circle:
         elif self.laps_completed >= 4:
             self.is_circle = False
 
-
-class Clock:
-    def __init__(self, delay : int):
-        self.delay = delay
-        # self.nextFrame = self.clock() + self.delay
-        self.set_nextFrame()
-
-    def clock(self):
-        return pygame.time.get_ticks()
-
-    def isNextDance(self):
-        if (self.clock() > self.nextFrame):
-            self.nextFrame += self.delay
-            return True
-        else:
-            return False
-
-    def set_nextFrame(self):
-        self.nextFrame = self.clock() + self.delay
-
-
 class Dance:
     def __init__(self):
         # self.dance_delay = 2200
@@ -74,7 +54,7 @@ class Dance:
         self.d_clock.set_nextFrame()
 
     def changeDance(self, player):
-        if self.d_clock.isNextDance():
+        if self.d_clock.isNextFrame():
             self.currentDance += 1
             player.idle_animation = self.danceList[self.currentDance % len(self.danceList)]
 

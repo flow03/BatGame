@@ -10,7 +10,7 @@ class Bat(pygame.sprite.Sprite):
         HEIGHT - self.image.get_height())
         self.rect = self.image.get_rect(midleft=(WIDTH, bat_y))
         self.speed = random.randint(3, 6)
-        self.damage = random.randint(15, 35)
+        self.damage = random.randint(15, 30)
   
     def load_random_frame(self):
         i = random.randint(0, 14) # max bat index
