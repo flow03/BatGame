@@ -34,7 +34,7 @@ class Player:
         self.gameplay = True
 
         self.health = self.max_health
-        self.health_bar.update_health(self.health)
+        self.health_bar.init()
 
     def load_animation_frames(self):
         # Завантаження всіх кадрів анімацій для кожного напрямку руху

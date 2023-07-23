@@ -51,7 +51,7 @@ class Dance:
     def init(self):
         self.currentDance = 0
         self.dance_over = None
-        self.d_clock.set_nextFrame()
+        self.d_clock.start()
 
     def changeDance(self, player):
         if self.d_clock.isNextFrame():

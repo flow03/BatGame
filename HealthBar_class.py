@@ -15,10 +15,18 @@ class HealthBar:
         self.health = self.max_health
 
         self.yellow_rect = pygame.Rect(self.rect)
-        self.yellow_clock = None
+        self.yellow_clock = Clock(500)
+        self.green_rect = pygame.Rect(self.rect)
+        self.green_clock = Clock(500)
+
+    def init(self):
+        self.rect.width = self.max_width
+        self.green_rect.width = self.max_width
+        self.yellow_rect.width = self.max_width
 
     def draw(self, screen):
         pygame.draw.rect(screen, "Yellow", self.yellow_rect)
+        pygame.draw.rect(screen, "Green", self.green_rect)
         pygame.draw.rect(screen, "Red", self.rect)
         pygame.draw.rect(screen, "Black", self.bordered_rect, self.border)
 
@@ -32,27 +40,42 @@ class HealthBar:
             # if health > self.max_health:
             #     health = self.max_health
             ratio = health/self.max_health
-            self.rect.width = round(self.max_width * ratio)
 
             if health < self.health:
-                self.clock_start()
-            elif not self.yellow_clock:
-                self.yellow_rect.width = self.rect.width
+                self.rect.width = round(self.max_width * ratio)
+                self.green_rect.width = self.rect.width
+                self.yellow_clock.start()
+            elif health > self.health:
+                self.green_rect.width = round(self.max_width * ratio)
+                self.green_clock.start()
 
             self.health = round(health)
 
-        self.clock_end()
+        self.yellow_clock.end()
+        self.green_clock.end()
+        
+        if not self.yellow_clock.nextFrame:
+            self.yellow_rect.width = self.green_rect.width
+        if not self.green_clock.nextFrame:
+            self.rect.width = self.green_rect.width
+
+    def update_health_common(self, health):
+        if health != self.health:
+            self.health = round(health)
+            
+            ratio = self.health/self.max_health
+            self.rect.width = round(self.max_width * ratio)    
 
     def set_max_health(self, max_health):
         self.max_health = round(max_health)
 
-    def clock_start(self):
-        self.yellow_clock = Clock(500)
+    # def clock_start(self):
+    #     self.yellow_clock = Clock(500)
 
-    def clock_end(self):
-        if self.yellow_clock:
-            # print(self.yellow_clock.clock())
-            if self.yellow_clock.isNextFrame():
-                self.yellow_rect.width = self.rect.width
-                self.yellow_clock = None
+    # def clock_end(self):
+    #     if self.yellow_clock:
+    #         # print(self.yellow_clock.clock())
+    #         if self.yellow_clock.isNextFrame():
+    #             # self.yellow_rect.width = self.green_rect.width
+    #             self.yellow_clock = None
 

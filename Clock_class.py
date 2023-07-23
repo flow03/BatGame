@@ -1,20 +1,33 @@
 import pygame
 
 class Clock:
+    # set delay
     def __init__(self, delay : int):
         self.delay = delay
+        self.nextFrame = None
         # self.nextFrame = self.clock() + self.delay
-        self.set_nextFrame()
+        # self.start()
 
     def clock(self):
         return pygame.time.get_ticks()
 
+    # check nextFrame and set new nextFrame if True
     def isNextFrame(self):
-        if (self.clock() >= self.nextFrame):
-            self.nextFrame += self.delay
-            return True
+        if self.nextFrame:
+            if (self.clock() >= self.nextFrame):
+                self.nextFrame += self.delay
+                return True
+            else:
+                return False
         else:
             return False
 
-    def set_nextFrame(self):
+    # set nextFrame
+    def start(self):
         self.nextFrame = self.clock() + self.delay
+    
+    # check nextFrame and disable nextFrame if True
+    def end(self):
+        if self.nextFrame:
+            if self.clock() >= self.nextFrame:
+                self.nextFrame = None
