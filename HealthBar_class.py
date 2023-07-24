@@ -24,6 +24,10 @@ class HealthBar:
         self.green_rect.width = self.max_width
         self.yellow_rect.width = self.max_width
 
+        self.anim_speed = 3
+        self.decrease = False
+        self.increase = False
+
     def draw(self, screen):
         pygame.draw.rect(screen, "Yellow", self.yellow_rect)
         pygame.draw.rect(screen, "Green", self.green_rect)
@@ -42,8 +46,8 @@ class HealthBar:
             ratio = health/self.max_health
 
             if health < self.health:
-                self.rect.width = round(self.max_width * ratio)
-                self.green_rect.width = self.rect.width
+                self.green_rect.width = round(self.max_width * ratio)
+                self.rect.width = self.green_rect.width
                 self.yellow_clock.start()
             elif health > self.health:
                 self.green_rect.width = round(self.max_width * ratio)
@@ -51,13 +55,48 @@ class HealthBar:
 
             self.health = round(health)
 
-        self.yellow_clock.end()
-        self.green_clock.end()
+        if self.yellow_clock.end():
+            self.decrease = True
+        if self.decrease:
+            self.yellow_decrease()
+
+        if self.green_clock.end():
+            self.increase = True
+        if self.increase:
+            self.red_increase()
         
-        if not self.yellow_clock.nextFrame:
+        if not self.yellow_clock.nextFrame and not self.decrease:
             self.yellow_rect.width = self.green_rect.width
-        if not self.green_clock.nextFrame:
+        if not self.green_clock.nextFrame and not self.increase:
             self.rect.width = self.green_rect.width
+
+    def yellow_decrease(self):
+        if self.yellow_rect.width > self.green_rect.width:
+                self.yellow_rect.width -= self.anim_speed
+        else:
+            self.yellow_rect.width = self.green_rect.width
+            self.decrease = False
+
+    def red_increase(self):
+        if self.rect.width < self.green_rect.width:
+            self.rect.width += self.anim_speed
+        else:
+            self.rect.width = self.green_rect.width
+            self.increase = False
+
+    # def fading(self, rect_1, rect_2):
+    #     if not self.fade:
+    #         time = 300  # fading time
+    #         ms = time//(rect_1.width - rect_2.width) # time of each frame
+    #         self.fade = Clock(ms)
+
+    #     self.fade.start()
+
+    #     if rect_1.width != rect_2.width:
+    #         if self.fade.isNextFrame():
+    #             rect_1.width = rect_1.width + 1
+    #     else:
+    #         self.fade = None
 
     def update_health_common(self, health):
         if health != self.health:
@@ -78,4 +117,3 @@ class HealthBar:
     #         if self.yellow_clock.isNextFrame():
     #             # self.yellow_rect.width = self.green_rect.width
     #             self.yellow_clock = None
-
