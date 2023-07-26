@@ -2,6 +2,7 @@ import pygame
 from pygame.math import Vector2
 from Spritesheet_class import SpriteSheet
 from HealthBar_class import HealthBar
+from HealthBar_class import BulletBar
 
 class Player:
     def __init__(self, x, y):
@@ -17,7 +18,7 @@ class Player:
 
         self.max_health = 100
         self.health_bar = HealthBar((20, 15), 250, 13) # max_health is 100 as default
-        # self.hp_bar.set_max_health(self.max_health)
+        self.bullet_bar = BulletBar((20, 32), 250, 16) # 15+13+(2*2)
 
         self.init()
 
@@ -29,12 +30,13 @@ class Player:
         self.image = self.animation_frames[self.direction][int(self.frame_index)]
         self.rect = self.image.get_rect(center=self.start_pos)
 
-        self.bullets_count = 5
+        self.bullets_count = 15
         self.killedBats = 0
         self.gameplay = True
 
         self.health = self.max_health
         self.health_bar.init()
+        self.bullet_bar.update(self.bullets_count)
 
     def load_animation_frames(self):
         # Завантаження всіх кадрів анімацій для кожного напрямку руху
@@ -52,7 +54,7 @@ class Player:
         if bulletDrops:
             sprite = pygame.sprite.spritecollideany(self, bulletDrops)
             if sprite:
-                self.bullets_count += 1
+                self.add_bullet(1)
                 sprite.kill()
             # pygame.sprite.spritecollide(player, bulletDrops, True)
 
@@ -63,6 +65,7 @@ class Player:
                 food.kill()
 
         self.health_bar.update_health(self.health)
+        # self.bullet_bar.update(self.bullets_count)
         self.update_animations()
 
     def update_animations(self):
@@ -78,6 +81,7 @@ class Player:
             pygame.draw.rect(screen, colour, self.rect, 2)
 
         self.health_bar.draw(screen)
+        self.bullet_bar.draw(screen)
             
     def get_colour_rect(self, colour):
         colour_rect = pygame.Surface(self.rect.size)
@@ -114,3 +118,9 @@ class Player:
         if self.health > self.max_health:
             self.health = self.max_health
         # self.health_bar.update_health(self.health)
+
+    def add_bullet(self, new_bullet : int):
+        self.bullets_count += new_bullet
+        if self.bullets_count < 0:
+            self.bullets_count = 0
+        self.bullet_bar.update(self.bullets_count)

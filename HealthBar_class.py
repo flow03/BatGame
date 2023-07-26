@@ -108,12 +108,32 @@ class HealthBar:
     def set_max_health(self, max_health):
         self.max_health = round(max_health)
 
-    # def clock_start(self):
-    #     self.yellow_clock = Clock(500)
+class BulletBar:
+    def __init__(self, pos, width, height):
+        pos = Vector2(pos)
+        self.rect = pygame.Rect(*pos, width, height)
 
-    # def clock_end(self):
-    #     if self.yellow_clock:
-    #         # print(self.yellow_clock.clock())
-    #         if self.yellow_clock.isNextFrame():
-    #             # self.yellow_rect.width = self.green_rect.width
-    #             self.yellow_clock = None
+        self.image = pygame.image.load('img/bullet.png').convert_alpha()
+        self.image = pygame.transform.rotate(self.image, 90)
+        self.scale_image(height)
+        self.bullets_image = pygame.Surface(self.rect.size, pygame.SRCALPHA)
+    
+    def update(self, bullet_count):
+        self.bullets_image = pygame.Surface(self.rect.size, pygame.SRCALPHA)
+        position = Vector2(0, 0)
+        width = self.image.get_width()
+        for i in range(bullet_count):
+            # if position.x < self.rect.width:
+            self.bullets_image.blit(self.image, position)
+            position.x += width + 2
+
+    def draw(self, screen):
+        # pygame.draw.rect(screen, "Red", self.rect, 2)
+        screen.blit(self.bullets_image, self.rect)
+
+    def scale_image(self, new_height):
+        original_width = self.image.get_width()
+        original_height = self.image.get_height()
+        new_width = int(original_width * (new_height / original_height))
+        # print(new_width, new_height)
+        self.image = pygame.transform.scale(self.image, (new_width, new_height))

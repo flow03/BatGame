@@ -31,7 +31,7 @@ class Text:
         screen.blit(self.myfont.render('FPS: ' + str(int(FPS.get_fps())), True, "Black"), (self.WIDTH - 85, 15))
 
     def print_debug_info(self, screen, bat_list, player):
-        self.y = 35
+        self.y = 55
         self.screen = screen
         self.print('bats on screen', len(bat_list))
         self.print('killed bats', player.killedBats)

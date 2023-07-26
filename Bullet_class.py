@@ -18,12 +18,6 @@ class Bullet(pygame.sprite.Sprite):
 
         # self.set_direction(start_pos, target_pos)
         
-    # def scale_image(self, new_width = 25):
-    #     original_width = self.image.get_width()
-    #     original_height = self.image.get_height()
-    #     new_height = int(original_height * (new_width / original_width))
-    #     self.image = pygame.transform.scale(self.image, (new_width, new_height))
-
     def velocity_by_direction(self, direction):
         # Зміна напрямку та кута повороту кулі
         if direction == "up":
