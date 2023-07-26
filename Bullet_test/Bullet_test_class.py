@@ -31,7 +31,7 @@ class Bullet(pygame.sprite.Sprite):
 
     # Визначення вектора руху кулі 1
     def set_velocity(self, start_pos, target_pos):
-        self.velocity = (float, float)
+        # self.velocity = (float, float)
        
         dx = dy = float
         dx = target_pos[0] - start_pos[0]
@@ -40,7 +40,7 @@ class Bullet(pygame.sprite.Sprite):
         # self.velocity = (dx / magnitude, dy / magnitude)
 
         # if magnitude > 0:
-        self.velocity = (dx / magnitude, dy / magnitude)
+        self.velocity = Vector2(dx / magnitude, dy / magnitude)
 
         self.rotate(dx, dy)
 
@@ -49,6 +49,7 @@ class Bullet(pygame.sprite.Sprite):
     def rotate(self, dx, dy):
         angle = math.degrees(math.atan2(-dy, dx))
         self.image = pygame.transform.rotate(self.image, angle)
+        self.rect = self.image.get_rect(center=self.rect.center)
 
     def update(self, screen, circle_group):
         # Оновлення позиції кулі

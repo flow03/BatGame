@@ -198,11 +198,21 @@ while run:
             bulletDrops.add(BulletDrop(screen))
         if event.type == FOOD_DROP_TIMER:
             foodDrops.add(Food(screen))
+        if player.gameplay and event.type == pygame.MOUSEBUTTONDOWN:
+            # Створення кулі з позиції гравця до позиції миші
+            # if player.bullets_count > 0:
+            mouse_pos = pygame.mouse.get_pos()
+            new_bullet = Bullet(player.rect.center)
+            new_bullet.velocity_by_mouse(mouse_pos)
+            bullets.add(new_bullet)
+            player.bullets_count -= 1
         if player.gameplay and event.type == pygame.KEYDOWN:
             if event.key == pygame.K_e or event.key == pygame.K_q:
                 if player.bullets_count > 0:
-                    bullets.add(Bullet(player.rect.center, player.direction))
-                    player.bullets_count -=1
+                    new_bullet = Bullet(player.rect.center)
+                    new_bullet.velocity_by_direction(player.direction)
+                    bullets.add(new_bullet)
+                    player.bullets_count -= 1
             # pygame.time.delay(80)
             if event.key == pygame.K_TAB:
                 if not isBoundRects:

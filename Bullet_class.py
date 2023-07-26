@@ -1,19 +1,22 @@
 import pygame
 import math
+from pygame.math import Vector2
 
 # Клас, що представляє кулю
 class Bullet(pygame.sprite.Sprite):
-    def __init__(self, start_pos: float, direction):
+    def __init__(self, start_pos):
         super().__init__()
         self.image = pygame.image.load('img/bullet.png').convert_alpha()
-        # self.scale_image(25)
         self.image = pygame.transform.scale(self.image, (25, 9))
-        self.rect = self.image.get_rect()
-        self.rect.center = start_pos
-        self.speed = 5
-        self.angle = 0
-        self.velocity = (float, float)
-        self.velocity_for_direction(direction)
+        self.rect = self.image.get_rect(center=start_pos)
+        self.speed = 6
+        # self.angle = 0
+        # self.velocity_for_direction(direction)
+
+        self.position = Vector2(start_pos) # position stored in the Vector2 class
+        self.velocity = None
+
+        # self.set_direction(start_pos, target_pos)
         
     # def scale_image(self, new_width = 25):
     #     original_width = self.image.get_width()
@@ -21,46 +24,49 @@ class Bullet(pygame.sprite.Sprite):
     #     new_height = int(original_height * (new_width / original_width))
     #     self.image = pygame.transform.scale(self.image, (new_width, new_height))
 
-    def velocity_for_direction(self, direction):
+    def velocity_by_direction(self, direction):
         # Зміна напрямку та кута повороту кулі
         if direction == "up":
-            self.velocity = (0, -1)
-            self.angle = 90 #0
+            self.velocity = Vector2(0, -1)
         elif direction == "down":
-            self.velocity = (0, 1)
-            self.angle = 270 #180
+            self.velocity = Vector2(0, 1)
         elif direction == "left":
-            self.velocity = (-1, 0)
-            self.angle = 180 #90
+            self.velocity = Vector2(-1, 0)
         elif direction == "right":
-            self.velocity = (1, 0)
-            self.angle = 0 #270
+            self.velocity = Vector2(1, 0)
 
-        self.rotate()
+        # angle = math.degrees(math.atan2(-self.velocity.y, self.velocity.x))
+        # print(angle)
+        self.rotate(self.velocity.x, self.velocity.y)
 
-    def velocity_for_mouse(self, start_pos: float, target_pos: float):
-        # Визначення вектора руху кулі для миші
-        dx = dy = float
-        dx = target_pos[0] - start_pos[0]
-        dy = target_pos[1] - start_pos[1]
-        magnitude = math.sqrt(dx ** 2 + dy ** 2)
-        self.velocity = (dx / magnitude, dy / magnitude)
+        # self.image = pygame.transform.rotate(self.image, self.angle)
+        # self.rect = self.image.get_rect(center=self.rect.center)
 
-        # Визначення кута повороту зображення, згідно нового вектора руху
+    # Визначення вектора руху кулі 
+    def velocity_by_mouse(self, target_pos : Vector2):
+        
+        # start_pos = self.position
+        target_pos = Vector2(target_pos)
+
+        # self.distance = start_pos.distance_to(target_pos) # for debug
+        # print(f"distance: {self.distance}")
+        self.velocity = target_pos - self.position
+        if self.velocity:
+            self.velocity = self.velocity.normalize()
+
+        self.rotate(self.velocity.x, self.velocity.y)
+
+    def rotate(self, dx, dy):
         angle = math.degrees(math.atan2(-dy, dx))
         self.image = pygame.transform.rotate(self.image, angle)
-
-    def rotate(self):
-        self.image = pygame.transform.rotate(self.image, self.angle)
         self.rect = self.image.get_rect(center=self.rect.center)
 
     def update(self, screen, bat_list, player):
         # Оновлення позиції кулі
-        self.rect.x += self.velocity[0] * self.speed
-        self.rect.y += self.velocity[1] * self.speed
-        # self.rect = self.rect.move(self.velocity[0] * 5, self.velocity[1] * 5)
+        if self.velocity:
+            self.position += self.velocity * self.speed
+            self.rect.center = round(self.position)
         
-        isHit = False
         # Перевірка колізій з ворогами
         if bat_list:
             bat_sprite = pygame.sprite.spritecollideany(self, bat_list)

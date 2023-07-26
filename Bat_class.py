@@ -23,7 +23,7 @@ class Bat(pygame.sprite.Sprite):
 
         if self.rect.colliderect(player.rect):
             player.set_damage(self.damage)
-            player.killedBats += 1
+            # player.killedBats += 1
             self.kill()
 
         if self.rect.right < 0:
