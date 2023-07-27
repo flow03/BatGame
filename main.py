@@ -3,7 +3,7 @@ import pygame
 # import spritesheet
 from Player_class import Player
 from Jump_class import Jump
-from Bullet_class import Bullet
+# from Bullet_class import Bullet
 from BulletDrop_class import BulletDrop
 from MyGroup_class import MyGroup
 import Bat_class
@@ -200,20 +200,11 @@ while run:
             foodDrops.add(Food(screen))
         if player.gameplay and event.type == pygame.MOUSEBUTTONDOWN:
             # Створення кулі з позиції гравця до позиції миші
-            # if player.bullets_count > 0:
-            mouse_pos = pygame.mouse.get_pos()
-            new_bullet = Bullet(player.rect.center)
-            new_bullet.velocity_by_mouse(mouse_pos)
-            bullets.add(new_bullet)
-            player.add_bullet(-1)
+            player.shoot(bullets, pygame.mouse.get_pos())
         if player.gameplay and event.type == pygame.KEYDOWN:
             if event.key == pygame.K_e or event.key == pygame.K_q:
-                if player.bullets_count > 0:
-                    new_bullet = Bullet(player.rect.center)
-                    new_bullet.velocity_by_direction(player.direction)
-                    bullets.add(new_bullet)
-                    player.add_bullet(-1)
-            # pygame.time.delay(80)
+                # Створення кулі, яка летітиме у напрямку player.direction
+                player.shoot(bullets)
             if event.key == pygame.K_TAB:
                 if not isBoundRects:
                     isBoundRects = True

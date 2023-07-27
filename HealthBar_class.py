@@ -123,9 +123,10 @@ class BulletBar:
         position = Vector2(0, 0)
         width = self.image.get_width()
         for i in range(bullet_count):
-            # if position.x < self.rect.width:
             self.bullets_image.blit(self.image, position)
             position.x += width + 2
+            if position.x > self.rect.width - width:
+                break
 
     def draw(self, screen):
         # pygame.draw.rect(screen, "Red", self.rect, 2)
