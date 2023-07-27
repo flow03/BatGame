@@ -36,8 +36,23 @@ text = Text(screen)
 
 # bg = pygame.image.load('img/bg/bg_PS7HtBx.jpg')
 bg = pygame.image.load('img/bg/Work-2.jpg').convert()
-bg = pygame.transform.scale(bg, (WIDTH, HEIGHT))
-screen.blit(bg, (0, 0))
+# bg = pygame.transform.scale(bg, (WIDTH, HEIGHT))
+# screen.blit(bg, (0, 0))
+
+bg_width, bg_height = bg.get_size()
+scale_factor = max(WIDTH / bg_width, HEIGHT / bg_height)
+scaled_bg_width = int(bg_width * scale_factor)
+scaled_bg_height = int(bg_height * scale_factor)
+bg = pygame.transform.scale(bg, (scaled_bg_width, scaled_bg_height))
+bg_x = (WIDTH - scaled_bg_width) // 2
+bg_y = (HEIGHT - scaled_bg_height) // 2
+screen.blit(bg, (bg_x, bg_y))
+
+# print(f"original: {bg_width, bg_height}")
+# print(f"scale_factor: {scale_factor}")
+# print(f"scaled: {scaled_bg_width, scaled_bg_height}")
+# print(f"position: {bg_x, bg_y}")
+
 text.blit_loading_text(screen)
 pygame.display.update()
 
@@ -73,11 +88,11 @@ jump = Jump()
 bat_list = MyGroup()
 # killedBats = 0
 BAT_TIMER = pygame.USEREVENT + 1
-pygame.time.set_timer(BAT_TIMER, 1500)
+# pygame.time.set_timer(BAT_TIMER, 1500)
 BULLET_DROP_TIMER = pygame.USEREVENT + 2
-pygame.time.set_timer(BULLET_DROP_TIMER, 4000)
+# pygame.time.set_timer(BULLET_DROP_TIMER, 4000)
 FOOD_DROP_TIMER = pygame.USEREVENT + 3
-pygame.time.set_timer(FOOD_DROP_TIMER, 4500)
+pygame.time.set_timer(FOOD_DROP_TIMER, 500)
 
 # Bullet
 bullets = MyGroup() #pygame.sprite.Group()
@@ -134,7 +149,7 @@ def initialize():
 while run:
     FPS.tick(60)
 
-    screen.blit(bg, (0, 0)) # bg_x
+    screen.blit(bg, (bg_x, bg_y))
 
     if player.gameplay:
         
