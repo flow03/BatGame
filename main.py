@@ -6,7 +6,8 @@ from Jump_class import Jump
 # from Bullet_class import Bullet
 from BulletDrop_class import BulletDrop
 from MyGroup_class import MyGroup
-import Bat_class
+from Bat_class import Bat
+from Bat_class import BatSpecial
 from Text_class import Text
 from Dance_Girl_class import Dance_Girl
 from Food_class import Food
@@ -88,11 +89,13 @@ jump = Jump()
 bat_list = MyGroup()
 # killedBats = 0
 BAT_TIMER = pygame.USEREVENT + 1
-# pygame.time.set_timer(BAT_TIMER, 1500)
+pygame.time.set_timer(BAT_TIMER, 3000)
 BULLET_DROP_TIMER = pygame.USEREVENT + 2
-# pygame.time.set_timer(BULLET_DROP_TIMER, 4000)
+pygame.time.set_timer(BULLET_DROP_TIMER, 4000)
 FOOD_DROP_TIMER = pygame.USEREVENT + 3
-# pygame.time.set_timer(FOOD_DROP_TIMER, 500)
+pygame.time.set_timer(FOOD_DROP_TIMER, 4000)
+BAT_SP_TIMER = pygame.USEREVENT + 4
+pygame.time.set_timer(BAT_SP_TIMER, 5000)
 
 # Bullet
 bullets = MyGroup() #pygame.sprite.Group()
@@ -206,9 +209,9 @@ while run:
             run = False
             # pygame.quit()
         if event.type == BAT_TIMER:
-            new_bat = Bat_class.Bat(WIDTH, HEIGHT)
-            bat_list.add(new_bat)
-            pass
+            bat_list.add(Bat(screen))
+        if event.type == BAT_SP_TIMER:
+            bat_list.add(BatSpecial(screen))
         if event.type == BULLET_DROP_TIMER:
             bulletDrops.add(BulletDrop(screen))
         if event.type == FOOD_DROP_TIMER:

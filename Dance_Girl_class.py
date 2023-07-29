@@ -236,13 +236,7 @@ class Dance_Girl(pygame.sprite.Sprite):
         self.image = self.animations[self.current_animation][int(self.frame_index)]    
 
     def draw(self, screen):
-        # current_frame = self.animation_frames[self.direction][int(self.frame_index)]
-
-        # self.update_animations()
-
         screen.blit(self.image, self.rect)
-        # if colour:
-        #     pygame.draw.rect(screen, colour, self.rect, 2)
 
     def move(self, direction):
         if direction == 'down':

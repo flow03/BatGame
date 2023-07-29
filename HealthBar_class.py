@@ -36,8 +36,21 @@ class HealthBar:
 
     def update_pos(self, pos):
         pos = Vector2(pos)
-        self.rect.center = pos
         self.bordered_rect.center = pos
+        new_rect_pos = Vector2(self.bordered_rect.midleft)
+        new_rect_pos.x += self.border
+        self.rect.midleft = new_rect_pos
+
+    def update_pos_fancy(self, pos):
+        pos = Vector2(pos)
+        self.bordered_rect.center = pos
+        new_rect_pos = Vector2(self.bordered_rect.midleft)
+        new_rect_pos.x += self.border
+        self.rect.midleft = new_rect_pos
+
+        self.green_rect.midleft = self.rect.midleft
+        self.yellow_rect.midleft = self.rect.midleft
+
 
     def update_health(self, health):
         if health != self.health:
@@ -83,20 +96,6 @@ class HealthBar:
         else:
             self.rect.width = self.green_rect.width
             self.increase = False
-
-    # def fading(self, rect_1, rect_2):
-    #     if not self.fade:
-    #         time = 300  # fading time
-    #         ms = time//(rect_1.width - rect_2.width) # time of each frame
-    #         self.fade = Clock(ms)
-
-    #     self.fade.start()
-
-    #     if rect_1.width != rect_2.width:
-    #         if self.fade.isNextFrame():
-    #             rect_1.width = rect_1.width + 1
-    #     else:
-    #         self.fade = None
 
     def update_health_common(self, health):
         if health != self.health:

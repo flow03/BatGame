@@ -11,9 +11,9 @@ class Food(pygame.sprite.Sprite):
         size = 30
         self.image = self.get_image(size)
         
-        # coords = self.get_random_coordinates(screen, size)
-        coords = self.get_circle_coordinates(
-            (screen.get_width()//2, screen.get_height()//2), 100, 70)
+        coords = self.get_random_coordinates(screen, size)
+        # coords = self.get_circle_coordinates(
+        #     (screen.get_width()//2, screen.get_height()//2), 100, 70)
         self.rect = self.image.get_rect(center=coords)
 
         self.heal = random.randint(10, 20)
@@ -44,3 +44,6 @@ class Food(pygame.sprite.Sprite):
         x = random.randint(offset, screen.get_width() - offset)
         y = random.randint(offset, screen.get_height() - offset)
         return (x, y)
+
+    def draw(self, screen):
+        screen.blit(self.image, self.rect)

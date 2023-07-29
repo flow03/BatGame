@@ -65,8 +65,8 @@ class Bullet(pygame.sprite.Sprite):
         if bat_list:
             bat_sprite = pygame.sprite.spritecollideany(self, bat_list)
             if bat_sprite:
-                player.killedBats += 1
-                bat_sprite.kill()
+                # player.killedBats += 1
+                bat_sprite.set_damage(player, 25)
                 self.kill()
 
         # Параметр True вказує, що об'єкти, які зіткнулися,
@@ -79,5 +79,5 @@ class Bullet(pygame.sprite.Sprite):
 
         # return isHit
 
-    # def get_pos(self):
-    #     return (self.rect.x, self.rect.y)
+    def draw(self, screen):
+        screen.blit(self.image, self.rect)

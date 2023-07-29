@@ -25,7 +25,7 @@ class Player:
         self.init()
 
     def init(self):
-        self.direction = 'down'  # Початковий напрямок руху
+        self.direction = 'idle'  # Початковий напрямок руху
         # self.current_animation = self.direction
         self.frame_index = 0  # Початковий індекс кадру
         self.animation_speed = 0.2  # Швидкість анімації (затримка між кадрами)

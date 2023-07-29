@@ -15,9 +15,8 @@ class BulletDrop(pygame.sprite.Sprite):
         self.rect = self.image.get_rect(center=(x,y))
         # self.rect.center = position
     
+    def draw(self, screen):
+        screen.blit(self.image, self.rect)
+            
 
-    # def update(self, screen):
-        # Перевірка, чи вийшла куля за межі екрану
-        # if not screen.get_rect().colliderect(self.rect):
-        #     self.kill()
 
