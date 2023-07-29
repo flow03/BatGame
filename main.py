@@ -92,7 +92,7 @@ BAT_TIMER = pygame.USEREVENT + 1
 BULLET_DROP_TIMER = pygame.USEREVENT + 2
 # pygame.time.set_timer(BULLET_DROP_TIMER, 4000)
 FOOD_DROP_TIMER = pygame.USEREVENT + 3
-pygame.time.set_timer(FOOD_DROP_TIMER, 500)
+# pygame.time.set_timer(FOOD_DROP_TIMER, 500)
 
 # Bullet
 bullets = MyGroup() #pygame.sprite.Group()

@@ -35,6 +35,7 @@ class Player:
         self.bullets_count = self.max_bullets_count
         self.killedBats = 0
         self.gameplay = True
+        self.is_moving = False
 
         self.health = self.max_health
         self.health_bar.init()
@@ -42,15 +43,13 @@ class Player:
 
     def load_animation_frames(self):
         # Завантаження всіх кадрів анімацій для кожного напрямку руху
-        # for direction in self.animation_frames.keys():
-        #     for i in range(8):
-        #         frame = pygame.image.load(f'{direction}_{i}.png')  # Завантаження кадра з файлу
-        #         self.animation_frames[direction].append(frame)
         sprite_sheet = SpriteSheet('img/spritesheets/hero_spritesheet.png')
         self.animation_frames['down'] = sprite_sheet.get_anim(row = 0) # 60x60 as default
         self.animation_frames['left'] = sprite_sheet.get_anim(row = 1)
         self.animation_frames['right'] = sprite_sheet.get_anim(row = 2)
         self.animation_frames['up'] = sprite_sheet.get_anim(row = 3)
+        idle_sheet = SpriteSheet('img/spritesheets/hero_idle.png')
+        self.animation_frames['idle'] = idle_sheet.get_anim()
 
     def update(self, bulletDrops, foodDrops):
         if bulletDrops:
@@ -68,7 +67,13 @@ class Player:
 
         self.health_bar.update_health(self.health)
         # self.bullet_bar.update(self.bullets_count)
+
+        if not self.is_moving:
+            self.direction = "idle"
+
         self.update_animations()
+        
+        self.is_moving = False
 
     def update_animations(self):
         # оновлення кадрів анімації
@@ -103,11 +108,7 @@ class Player:
         elif direction == 'right':
             self.rect.centerx += self.speed
 
-    # def move(self, x, y):
-    #     self.rect.update(x, y)
-
-    # def get_frame(self):
-    #     return self.animation_frames[self.direction][int(self.frame_index)]
+        self.is_moving = True
 
     def set_damage(self, damage: int):
         self.health -= int(damage)

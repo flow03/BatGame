@@ -36,7 +36,7 @@ class Food(pygame.sprite.Sprite):
         coords.x = center.x + distance * math.cos(angle)
         coords.y = center.y + distance * math.sin(angle)
         coords = round(coords)
-        print(coords)
+        # print(coords)
         return coords
 
     def get_random_coordinates(self, screen, size):

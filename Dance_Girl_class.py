@@ -41,6 +41,8 @@ class Circle:
         elif self.laps_completed >= 4:
             self.is_circle = False
 
+        # direction = self.direction_by_player(point)
+
 class Dance:
     def __init__(self):
         # self.dance_delay = 2200
@@ -156,20 +158,25 @@ class Dance_Girl(pygame.sprite.Sprite):
             for i in range(len(animation)):
                 animation[i] = pygame.transform.scale(animation[i], (new_x, new_y))
 
-    def update(self, player):
-        player_pos = Vector2(player.rect.center)
+    def direction_by_player(self, player_pos):
+        player_pos = Vector2(player_pos)
         character_pos = Vector2(self.rect.center)
 
         direction = player_pos - character_pos
         if direction:   # not Zero
             direction = direction.normalize()
 
+        return direction
+
+    def update(self, player):
+        player_pos = Vector2(player.rect.center)
         # Рух до гравця з-за меж екрану
         if self.state == "move_to_player":
-            distance = character_pos.distance_to(player_pos)
+            distance = Vector2(self.rect.center).distance_to(player_pos)
             if distance > self.circle.circle_radius:
-                self.move_to_point(direction)
-                self.is_moving = True
+                direction = self.direction_by_player(player_pos)
+                self.move_by_direction(direction)
+                # self.is_moving = True
                 # print("move_to_point")
             else:
                 # self.circle.is_circle = True
@@ -180,7 +187,9 @@ class Dance_Girl(pygame.sprite.Sprite):
             # if self.circle.is_circle:
             if self.circle.is_circle:
                 self.circle.move_around_point(self.rect, player_pos, self.speed)
+                direction = self.direction_by_player(player_pos)
                 self.is_moving = True
+                self.update_direction(direction)
                 # print("move_around_point")
             else:
                 self.state = "dance"
@@ -206,15 +215,13 @@ class Dance_Girl(pygame.sprite.Sprite):
                 self.kill()
 
         # Оновлюємо напрямок анімації руху
-        self.update_direction(direction)
+        # self.update_direction(direction)
 
         # змінюємо танець
         # if not self.is_moving:
         #     self.dance.changeDance(self)
 
         self.update_animations() # in draw method
-        
- 
 
         # перевіряємо, чи персонаж закінчив рух
         # if not self.is_moving and (self.current_animation.startswith('skip') or self.current_animation.startswith('balancing')):
@@ -239,44 +246,27 @@ class Dance_Girl(pygame.sprite.Sprite):
 
     def move(self, direction):
         if direction == 'down':
-            self.rect.move_ip(0, self.speed)
+            # self.rect.move_ip(0, self.speed)
+            direction_vec = Vector2(0, 1)
         elif direction == 'up':
-            self.rect.move_ip(0, -self.speed)
+            # self.rect.move_ip(0, -self.speed)
+            direction_vec = Vector2(0, -1)
         elif direction == 'left':
-            self.rect.move_ip(-self.speed, 0)
-            self.current_animation = self.move_left_anim
+            # self.rect.move_ip(-self.speed, 0)
+            # self.current_animation = self.move_left_anim
+            direction_vec = Vector2(-1, 0)
         elif direction == 'right':
-            self.rect.move_ip(self.speed, 0)
-            self.current_animation = self.move_right_anim
+            # self.rect.move_ip(self.speed, 0)
+            # self.current_animation = self.move_right_anim
+            direction_vec = Vector2(1, 0)
 
+        self.move_by_direction(direction_vec)
+
+    def move_by_direction(self, direction : Vector2):
+        self.rect.center += direction * self.speed
         self.is_moving = True
-
-    # def reload(self):
-    #     # self.rect.update((self.start_x, self.start_y),(self.rect.width, self.rect.height))
-    #     self.set_rand_pos()
-    #     self.current_animation = self.idle_animation
-    #     self.frame_index = 0
-    #     self.is_moving = False
-
-    #     self.state = "move_to_player"
-    #     self.away_direction = None
-
-    #     self.dance.currentDance = 0
-    #     self.dance.dance_over = None
-    #     self.circle.reload()
-  
-        
-    # def changeDance(self):
-    #     if not self.is_moving:
-    #         if self.dance.dance_clock.isNextDance(self.dance.dance_delay):
-    #             self.dance.currentDance += 1
-    #             self.idle_animation = self.dance.danceList[self.dance.currentDance % len(self.dance.danceList)]
-
-    #         self.current_animation = self.idle_animation
-
-    def move_to_point(self, direction):
-        self.rect.centerx += direction.x * self.speed
-        self.rect.centery += direction.y * self.speed
+        # Оновлюємо напрямок анімації руху
+        self.update_direction(direction)
 
     # єдина фунція, яка залежить від self.is_moving
     def update_direction(self, direction):
@@ -285,6 +275,11 @@ class Dance_Girl(pygame.sprite.Sprite):
                 self.current_animation = self.move_left_anim
             elif direction.x > 0:
                 self.current_animation = self.move_right_anim
+            elif direction.x == 0:
+                if direction.y < 0:
+                    self.current_animation = self.move_right_anim
+                elif direction.y > 0:
+                    self.current_animation = self.move_left_anim
 
     def set_rand_pos(self):
         new_x = random.randint(0, self.screen.get_width())
@@ -328,6 +323,6 @@ class Dance_Girl(pygame.sprite.Sprite):
                 min_direction = key
                 # print(f"min_direction: {min_direction}")
                 break
-        
+        # print(min_direction)
         return min_direction
         
