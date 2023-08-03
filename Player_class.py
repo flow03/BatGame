@@ -25,11 +25,11 @@ class Player:
         self.init()
 
     def init(self):
-        self.direction = 'idle'  # Початковий напрямок руху
-        # self.current_animation = self.direction
+        self.direction = 'down'  # Початковий напрямок руху
+        self.current_animation = 'idle'
         self.frame_index = 0  # Початковий індекс кадру
         self.animation_speed = 0.2  # Швидкість анімації (затримка між кадрами)
-        self.image = self.animation_frames[self.direction][int(self.frame_index)]
+        self.image = self.animation_frames[self.current_animation][int(self.frame_index)]
         self.rect = self.image.get_rect(center=self.start_pos)
 
         self.bullets_count = 32 # self.max_bullets_count
@@ -69,7 +69,7 @@ class Player:
         # self.bullet_bar.update(self.bullets_count)
 
         if not self.is_moving:
-            self.direction = "idle"
+            self.current_animation = "idle"
 
         self.update_animations()
         
@@ -78,9 +78,9 @@ class Player:
     def update_animations(self):
         # оновлення кадрів анімації
         self.frame_index += self.animation_speed
-        if self.frame_index >= len(self.animation_frames[self.direction]):
+        if self.frame_index >= len(self.animation_frames[self.current_animation]):
             self.frame_index = 0
-        self.image = self.animation_frames[self.direction][int(self.frame_index)]
+        self.image = self.animation_frames[self.current_animation][int(self.frame_index)]
 
     def draw(self, screen, colour = None):
         screen.blit(self.image, self.rect)
@@ -98,6 +98,7 @@ class Player:
 
     def move(self, direction):
         self.direction = direction
+        self.current_animation = self.direction
 
         if direction == 'down':
             self.rect.centery += self.speed

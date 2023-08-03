@@ -212,12 +212,12 @@ while run:
             if event.type == BAT_TIMER:
                 bat_list.add(Bat(screen))
             if event.type == BAT_SP_TIMER:
-                bat_list.add(BatSpecial(screen))
+                bat_list.add(BatSpecial(screen, foodDrops))
             if event.type == BULLET_DROP_TIMER:
                 bulletDrops.add(BulletDrop(screen))
             if event.type == FOOD_DROP_TIMER:
-                new_food = Food(screen)
-                new_food.check_random_coordinates(foodDrops)
+                new_food = Food()
+                new_food.check_random_coordinates(foodDrops, screen)
                 foodDrops.add(new_food)
         if player.gameplay and event.type == pygame.MOUSEBUTTONDOWN:
             # Створення кулі з позиції гравця до позиції миші

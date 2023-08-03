@@ -23,13 +23,13 @@ class BulletDrop(pygame.sprite.Sprite):
             
 
 class Food(pygame.sprite.Sprite):
-    def __init__(self, screen):
+    def __init__(self):
         super().__init__()
         
-        self.screen = screen
         size = 30
         self.image = self.get_image(size)
         self.heal = random.randint(10, 20)
+        self.rect = self.image.get_rect()
    
     def get_image(self, size):
         sprite_sheet = SpriteSheet('img/spritesheets/food_spritesheet_30.png')
@@ -50,22 +50,21 @@ class Food(pygame.sprite.Sprite):
         coords.y = center.y + distance * math.sin(angle)
         coords = round(coords)
         # print(coords)
-        self.rect = self.image.get_rect(center=coords)
-        # return coords
+        self.rect.center = coords
 
-    def set_random_coordinates(self):
-        offset = self.image.get_width()//2 + 10
+    def set_random_coordinates(self, screen):
+        offset =  30 # self.image.get_width()//2 + 10
         coords = Vector2()
-        coords.x = random.randint(offset, self.screen.get_width() - offset)
-        coords.y = random.randint(offset, self.screen.get_height() - offset)
-        self.rect = self.image.get_rect(center=coords)
+        coords.x = random.randint(offset, screen.get_width() - offset)
+        coords.y = random.randint(offset, screen.get_height() - offset)
+        self.rect.center = coords
         # return (x, y)
 
-    def check_random_coordinates(self, food_list):
-        self.set_random_coordinates()
+    def check_random_coordinates(self, food_list, screen):
+        self.set_random_coordinates(screen)
         count = 0
         while pygame.sprite.spritecollideany(self, food_list):
-            self.set_random_coordinates()
+            self.set_random_coordinates(screen)
             count += 1
             if count >= 15:
                 break

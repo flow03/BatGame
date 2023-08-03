@@ -71,7 +71,7 @@ class Dance:
     def update(self, girl):
         self.changeDance(girl)
         if self.food_clock.isNextFrame():
-            new_food = Food(girl.screen)
+            new_food = Food()
             new_food.check_circle_coordinates(girl.food_list, girl.rect.center, 70, 60)
             girl.food_list.add(new_food)
 
@@ -91,8 +91,8 @@ class Dance_Girl(pygame.sprite.Sprite):
         self.load_animations_from_sheet()
         self.screen = screen
         self.speed = 3
-        self.food_list = food_list
 
+        self.food_list = food_list
         self.circle = Circle()
         self.dance = None
         
@@ -106,7 +106,6 @@ class Dance_Girl(pygame.sprite.Sprite):
         self.frame_index = 0  # поточний індекс кадру
         self.animation_speed = 0.18 # 0.2
         self.image = self.animations[self.current_animation][int(self.frame_index)]
-
         self.rect = self.image.get_rect()
         self.set_rand_pos() # rect
 
