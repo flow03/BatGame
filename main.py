@@ -15,14 +15,6 @@ from Drops_class import Food
 FPS = pygame.time.Clock()
 pygame.init()
 
-# COLOR_WHITE = (255, 255, 255)
-# COLOR_BLACK = (0, 0, 0)
-# COLOR_CYAN = (0, 255, 255)
-# COLOR_VIOLET = (128, 0, 128)
-# COLOR_GREEN = (0, 255, 0)
-# COLOR_BLUE = (0, 0, 160)
-# COLOR_RED = (255, 0, 0)
-
 WIDTH = 1200
 HEIGHT = 600
 
@@ -57,23 +49,6 @@ screen.blit(bg, (bg_x, bg_y))
 text.blit_loading_text(screen)
 pygame.display.update()
 
-# def clock():
-#     # current_time = pygame.time.get_ticks()
-#     return pygame.time.get_ticks()
-
-# animation background
-# frame = 0
-# anim_delay = 100
-# nextFrame = clock() + anim_delay
-# bg_x = 0
-
-# def isNextFrame():
-#     if clock() > nextFrame:
-#         nextFrame += 80
-#         return True
-#     else:
-#         return False
-
 # Player
 player = Player(WIDTH//2, HEIGHT//2) # 150, 300
 
@@ -91,25 +66,25 @@ bat_list = MyGroup()
 BAT_TIMER = pygame.USEREVENT + 1
 pygame.time.set_timer(BAT_TIMER, 3000)
 BULLET_DROP_TIMER = pygame.USEREVENT + 2
-pygame.time.set_timer(BULLET_DROP_TIMER, 4000)
+pygame.time.set_timer(BULLET_DROP_TIMER, 3000)
 FOOD_DROP_TIMER = pygame.USEREVENT + 3
-pygame.time.set_timer(FOOD_DROP_TIMER, 4000)
+pygame.time.set_timer(FOOD_DROP_TIMER, 3000)
 BAT_SP_TIMER = pygame.USEREVENT + 4
-pygame.time.set_timer(BAT_SP_TIMER, 5000)
+pygame.time.set_timer(BAT_SP_TIMER, 6000)
 
 # Bullet
 bullets = MyGroup() #pygame.sprite.Group()
-# bullets_count = 5
 bulletDrops = MyGroup()
 foodDrops = MyGroup()
 
-# Update and draw
+# Update
 def update_objects():
     bat_list.update(player)
     player.update(bulletDrops, foodDrops)
     bullets.update(screen, bat_list, player)
     Margosh.update(player)
 
+# Draw
 def draw_objects(isBoundRects):
     if not isBoundRects:
         colourGreen = None
