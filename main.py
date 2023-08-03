@@ -183,7 +183,7 @@ while run:
         
         if isBoundRects:
             text.print_fps(screen, FPS)
-            text.print_debug_info(screen, bat_list, player)
+            text.print_debug_info(screen, bat_list, foodDrops, player)
             if Margosh:
                 # sprite = Margosh.sprites()[0]
                 text.print_girl_info(screen, Margosh.sprites()[-1]) # the last one
@@ -216,8 +216,8 @@ while run:
             if event.type == BULLET_DROP_TIMER:
                 bulletDrops.add(BulletDrop(screen))
             if event.type == FOOD_DROP_TIMER:
-                new_food = Food()
-                new_food.set_random_coordinates(screen)
+                new_food = Food(screen)
+                new_food.check_random_coordinates(foodDrops)
                 foodDrops.add(new_food)
         if player.gameplay and event.type == pygame.MOUSEBUTTONDOWN:
             # Створення кулі з позиції гравця до позиції миші

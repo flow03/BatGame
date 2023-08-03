@@ -31,7 +31,7 @@ class Bullet(pygame.sprite.Sprite):
 
         # angle = math.degrees(math.atan2(-self.velocity.y, self.velocity.x))
         # print(angle)
-        self.rotate(self.velocity.x, self.velocity.y)
+        self.rotate(*self.velocity)
 
         # self.image = pygame.transform.rotate(self.image, self.angle)
         # self.rect = self.image.get_rect(center=self.rect.center)
