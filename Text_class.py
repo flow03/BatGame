@@ -56,13 +56,16 @@ class Text:
             self.print('angle', girl.circle.angle)
             self.print('start_angle', girl.circle.start_angle)
             self.print('laps_completed', girl.circle.laps_completed)
-        if girl.state == "dance":
+        if girl.state == "dance" and girl.dance:
             # self.y += self.y_offset
             self.print('idle', girl.idle_animation)
-            self.print('clock', girl.dance.d_clock.clock())
-            self.print('dance_over', girl.dance.dance_over)
-            self.print('nextFrame', girl.dance.d_clock.nextFrame)
             self.print('currentDance', girl.dance.currentDance)
+            self.print('dance_clock', girl.dance.d_clock.clock())
+            self.print('nextDance', girl.dance.d_clock.nextFrame)
+            self.print('dance_over', girl.dance.dance_over.nextFrame)
+            # self.print('food_clock', girl.dance.food_clock.clock())
+            # self.print('nextFood', girl.dance.food_clock.nextFrame)
+            
 
     def print(self, string : str, variable):
         self.screen.blit(self.myfont.render(string + ": " + str(variable), True, "Black"), (self.x_offset, self.y))

@@ -4,6 +4,8 @@ import random
 from pygame.math import Vector2
 from Spritesheet_class import SpriteSheet
 from Clock_class import Clock
+from MyGroup_class import MyGroup
+from Drops_class import Food
 
 class Circle:
     def __init__(self):
@@ -48,30 +50,36 @@ class Dance:
         # self.dance_delay = 2200
         self.danceList = ['hips','slide','snap']
         self.d_clock = Clock(2200) # dance clock
+        self.food_clock = Clock(500)
+        self.dance_over = Clock(2200 * 4) # one time tick
+
         self.init()
 
     def init(self):
         self.currentDance = 0
-        self.dance_over = None
+        self.dance_over.start()
         self.d_clock.start()
+        self.food_clock.start()
 
-    def changeDance(self, player):
+    def changeDance(self, girl):
         if self.d_clock.isNextFrame():
             self.currentDance += 1
-            player.idle_animation = self.danceList[self.currentDance % len(self.danceList)]
+            girl.idle_animation = self.danceList[self.currentDance % len(self.danceList)]
 
-        player.current_animation = player.idle_animation
+        girl.current_animation = girl.idle_animation
 
-    def danceStart(self):
-        self.init()
-        # if not self.dance_over:
-        self.dance_over = self.d_clock.clock() + self.d_clock.delay * 4
+    def update(self, girl):
+        self.changeDance(girl)
+        if self.food_clock.isNextFrame():
+            new_food = Food()
+            new_food.set_circle_coordinates(girl.rect.center, 70, 60)
+            girl.food_list.add(new_food)
 
     def isDanceOver(self):
-        return self.d_clock.clock() >= self.dance_over
+        return self.dance_over.end()
 
 class Dance_Girl(pygame.sprite.Sprite):
-    def __init__(self, screen):
+    def __init__(self, screen, food_list : MyGroup):
         super().__init__()
         self.animations = {
             'balancing': [],
@@ -83,9 +91,10 @@ class Dance_Girl(pygame.sprite.Sprite):
         self.load_animations_from_sheet()
         self.screen = screen
         self.speed = 3
+        self.food_list = food_list
 
         self.circle = Circle()
-        self.dance = Dance()
+        self.dance = None
         
         self.init()
 
@@ -106,7 +115,7 @@ class Dance_Girl(pygame.sprite.Sprite):
         self.away_direction = None
 
         self.circle.init()
-        self.dance.init()
+        # self.dance.init()
 
     def load_animations(self):
         for animation_name in self.animations.keys():
@@ -179,9 +188,10 @@ class Dance_Girl(pygame.sprite.Sprite):
                 # self.is_moving = True
                 # print("move_to_point")
             else:
-                # self.circle.is_circle = True
                 self.state = "move_around_player"
                 self.circle.is_circle = True
+                # self.state = "dance"
+                # self.dance.danceStart()
         # Рух по колу з центром в player.rect.center
         elif self.state == "move_around_player":
             # if self.circle.is_circle:
@@ -193,15 +203,18 @@ class Dance_Girl(pygame.sprite.Sprite):
                 # print("move_around_point")
             else:
                 self.state = "dance"
-                self.dance.danceStart()
+                # self.dance.danceStart()
         # Змінюємо танець
         elif self.state == "dance":
+            if not self.dance:
+                self.dance = Dance()
             if not self.dance.isDanceOver():
-                if not self.is_moving:
-                    self.dance.changeDance(self)
-                    self.is_moving = False
+                # if not self.is_moving:
+                self.dance.update(self)
+                self.is_moving = False
                     # print("dance")
             else:
+                self.dance = None
                 self.state = "move_away"
                 # self.change_moving_anims('balancing')
                 # self.speed = 2

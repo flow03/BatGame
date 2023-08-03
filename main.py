@@ -4,13 +4,13 @@ import pygame
 from Player_class import Player
 from Jump_class import Jump
 # from Bullet_class import Bullet
-from BulletDrop_class import BulletDrop
+from Drops_class import BulletDrop
 from MyGroup_class import MyGroup
 from Bat_class import Bat
 from Bat_class import BatSpecial
 from Text_class import Text
 from Dance_Girl_class import Dance_Girl
-from Food_class import Food
+from Drops_class import Food
 
 FPS = pygame.time.Clock()
 pygame.init()
@@ -208,14 +208,17 @@ while run:
         if event.type == pygame.QUIT:
             run = False
             # pygame.quit()
-        if event.type == BAT_TIMER:
-            bat_list.add(Bat(screen))
-        if event.type == BAT_SP_TIMER:
-            bat_list.add(BatSpecial(screen))
-        if event.type == BULLET_DROP_TIMER:
-            bulletDrops.add(BulletDrop(screen))
-        if event.type == FOOD_DROP_TIMER:
-            foodDrops.add(Food(screen))
+        if not Margosh:
+            if event.type == BAT_TIMER:
+                bat_list.add(Bat(screen))
+            if event.type == BAT_SP_TIMER:
+                bat_list.add(BatSpecial(screen))
+            if event.type == BULLET_DROP_TIMER:
+                bulletDrops.add(BulletDrop(screen))
+            if event.type == FOOD_DROP_TIMER:
+                new_food = Food()
+                new_food.set_random_coordinates(screen)
+                foodDrops.add(new_food)
         if player.gameplay and event.type == pygame.MOUSEBUTTONDOWN:
             # Створення кулі з позиції гравця до позиції миші
             player.shoot(bullets, pygame.mouse.get_pos())
@@ -230,7 +233,7 @@ while run:
                     isBoundRects = False
             if event.key == pygame.K_m:
                 if not Margosh:
-                    Margosh.add(Dance_Girl(screen))
+                    Margosh.add(Dance_Girl(screen, foodDrops))
         # працює незалежно від player.gameplay
         if event.type == pygame.KEYDOWN:
             if event.key == pygame.K_r:

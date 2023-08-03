@@ -1,7 +1,7 @@
 import pygame
 import random
 from pygame.math import Vector2
-from HealthBar_class import HealthBar
+from HealthBar_class import FancyHealthBar
 
 class Bat(pygame.sprite.Sprite):
     def __init__(self, screen):
@@ -49,11 +49,12 @@ class BatSpecial(Bat):
     def __init__(self, screen):
         super().__init__(screen)
 
-        self.speed = random.randint(1, 3)
+        # self.speed = random.randint(1, 3)
+        self.speed = 2
         self.health = random.randint(40, 60) # bullet damage 25
         self.direction = Vector2()
 
-        self.health_bar = HealthBar(self.rect.midtop, self.rect.width, 5, 1)
+        self.health_bar = FancyHealthBar(self.rect.midtop, self.rect.width, 5, 1)
         self.health_bar.set_max_health(self.health)
         self.health_bar.init()
         self.update_bar_pos()
@@ -73,7 +74,7 @@ class BatSpecial(Bat):
     def update_bar_pos(self):
         self.hp_bar_pos = Vector2(self.rect.midtop)
         self.hp_bar_pos.y -= 10
-        self.health_bar.update_pos_fancy(self.hp_bar_pos)
+        self.health_bar.update_pos(self.hp_bar_pos)
 
     def direction_by_player(self, player_pos):
         player_pos = Vector2(player_pos)

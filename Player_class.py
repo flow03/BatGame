@@ -1,7 +1,7 @@
 import pygame
 from pygame.math import Vector2
 from Spritesheet_class import SpriteSheet
-from HealthBar_class import HealthBar
+from HealthBar_class import FancyHealthBar
 from HealthBar_class import BulletBar
 from Bullet_class import Bullet
 
@@ -18,9 +18,9 @@ class Player:
         self.speed = 3
 
         self.max_health = 100
-        self.max_bullets_count = 32
-        self.health_bar = HealthBar((20, 15), 254, 13) # max_health is 100 as default
-        self.bullet_bar = BulletBar((20, 32), 256, 16) # 15+13+(2*2)
+        # self.max_bullets_count = 32
+        self.health_bar = FancyHealthBar((20, 15), 254, 13) # max_health is 100 as default
+        self.bullet_bar = BulletBar((20, 32), 254, 16) # 15+13+(2*2)
 
         self.init()
 
@@ -32,7 +32,7 @@ class Player:
         self.image = self.animation_frames[self.direction][int(self.frame_index)]
         self.rect = self.image.get_rect(center=self.start_pos)
 
-        self.bullets_count = self.max_bullets_count
+        self.bullets_count = 32 # self.max_bullets_count
         self.killedBats = 0
         self.gameplay = True
         self.is_moving = False
@@ -126,8 +126,8 @@ class Player:
         self.bullets_count += new_bullet
         if self.bullets_count < 0:
             self.bullets_count = 0
-        if self.bullets_count > self.max_bullets_count:
-            self.bullets_count = self.max_bullets_count
+        # if self.bullets_count > self.max_bullets_count:
+        #     self.bullets_count = self.max_bullets_count
         self.bullet_bar.update(self.bullets_count)
 
     # target is direction as default

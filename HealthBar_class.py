@@ -14,6 +14,35 @@ class HealthBar:
         self.set_max_health(100)
         self.health = self.max_health
 
+    def init(self):
+        self.rect.width = self.max_width
+
+    def draw(self, screen):
+        pygame.draw.rect(screen, "Red", self.rect)
+        pygame.draw.rect(screen, "Black", self.bordered_rect, self.border)
+
+    def update_pos(self, pos):
+        pos = Vector2(pos)
+        self.bordered_rect.center = pos
+        new_rect_pos = Vector2(self.bordered_rect.midleft)
+        new_rect_pos.x += self.border
+        self.rect.midleft = new_rect_pos
+
+    def update_health(self, health):
+        if health != self.health:
+            self.health = round(health)
+            
+            ratio = self.health/self.max_health
+            self.rect.width = round(self.max_width * ratio)    
+
+    def set_max_health(self, max_health):
+        self.max_health = round(max_health)
+
+
+class FancyHealthBar(HealthBar):
+    def __init__(self, pos, width, height, border = 2):
+        super().__init__(pos, width, height, border)
+    
         self.yellow_rect = pygame.Rect(self.rect)
         self.yellow_clock = Clock(500)
         self.green_rect = pygame.Rect(self.rect)
@@ -35,23 +64,12 @@ class HealthBar:
         pygame.draw.rect(screen, "Black", self.bordered_rect, self.border)
 
     def update_pos(self, pos):
-        pos = Vector2(pos)
-        self.bordered_rect.center = pos
-        new_rect_pos = Vector2(self.bordered_rect.midleft)
-        new_rect_pos.x += self.border
-        self.rect.midleft = new_rect_pos
-
-    def update_pos_fancy(self, pos):
-        pos = Vector2(pos)
-        self.bordered_rect.center = pos
-        new_rect_pos = Vector2(self.bordered_rect.midleft)
-        new_rect_pos.x += self.border
-        self.rect.midleft = new_rect_pos
+        super().update_pos(pos)
 
         self.green_rect.midleft = self.rect.midleft
         self.yellow_rect.midleft = self.rect.midleft
 
-
+    
     def update_health(self, health):
         if health != self.health:
             # if health > self.max_health:
@@ -97,43 +115,38 @@ class HealthBar:
             self.rect.width = self.green_rect.width
             self.increase = False
 
-    def update_health_common(self, health):
-        if health != self.health:
-            self.health = round(health)
-            
-            ratio = self.health/self.max_health
-            self.rect.width = round(self.max_width * ratio)    
-
-    def set_max_health(self, max_health):
-        self.max_health = round(max_health)
 
 class BulletBar:
     def __init__(self, pos, width, height):
         pos = Vector2(pos)
         self.rect = pygame.Rect(*pos, width, height)
 
-        self.image = pygame.image.load('img/bullet.png').convert_alpha()
-        self.image = pygame.transform.rotate(self.image, 90)
+        self.bullet_image = pygame.image.load('img/bullet.png').convert_alpha()
+        self.bullet_image = pygame.transform.rotate(self.bullet_image, 90)
         self.scale_image(height)
-        self.bullets_image = pygame.Surface(self.rect.size, pygame.SRCALPHA)
-    
+        self.image = pygame.Surface(self.rect.size, pygame.SRCALPHA)
+        self.capacity = (self.rect.width + 2)//(self.bullet_image.get_width() + 2)
+        # print(f"rect_width: {self.rect.width}")
+        # print(f"bullet_width: {self.bullet_image.get_width()}")
+        # print(f"capacity: {self.capacity}")
+
     def update(self, bullet_count):
-        self.bullets_image = pygame.Surface(self.rect.size, pygame.SRCALPHA)
+        self.image = pygame.Surface(self.rect.size, pygame.SRCALPHA)
         position = Vector2(0, 0)
-        width = self.image.get_width()
+        width = self.bullet_image.get_width()
         for i in range(bullet_count):
-            self.bullets_image.blit(self.image, position)
+            self.image.blit(self.bullet_image, position)
             position.x += width + 2
             if position.x > self.rect.width - width:
                 break
 
     def draw(self, screen):
         # pygame.draw.rect(screen, "Red", self.rect, 2)
-        screen.blit(self.bullets_image, self.rect)
+        screen.blit(self.image, self.rect)
 
     def scale_image(self, new_height):
-        original_width = self.image.get_width()
-        original_height = self.image.get_height()
+        original_width = self.bullet_image.get_width()
+        original_height = self.bullet_image.get_height()
         new_width = int(original_width * (new_height / original_height))
         # print(new_width, new_height)
-        self.image = pygame.transform.scale(self.image, (new_width, new_height))
+        self.bullet_image = pygame.transform.scale(self.bullet_image, (new_width, new_height))
