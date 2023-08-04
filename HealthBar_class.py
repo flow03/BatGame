@@ -1,6 +1,7 @@
 import pygame
 from pygame.math import Vector2
 from Clock_class import Clock
+from Path import resource_path
 
 class HealthBar:
     def __init__(self, pos, width, height, border = 2):
@@ -121,7 +122,8 @@ class BulletBar:
         pos = Vector2(pos)
         self.rect = pygame.Rect(*pos, width, height)
 
-        self.bullet_image = pygame.image.load('img/bullet.png').convert_alpha()
+        img_url = resource_path('img/bullet.png')
+        self.bullet_image = pygame.image.load(img_url).convert_alpha()
         self.bullet_image = pygame.transform.rotate(self.bullet_image, 90)
         self.scale_image(height)
         self.image = pygame.Surface(self.rect.size, pygame.SRCALPHA)

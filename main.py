@@ -11,6 +11,7 @@ from Bat_class import BatSpecial
 from Text_class import Text
 from Dance_Girl_class import Dance_Girl
 from Drops_class import Food
+from Path import resource_path
 
 FPS = pygame.time.Clock()
 pygame.init()
@@ -20,15 +21,15 @@ HEIGHT = 600
 
 # screen = pygame.display.set_mode((600, 300), flags=pygame.NOFRAME)
 screen = pygame.display.set_mode((WIDTH, HEIGHT))
-pygame.display.set_caption("Python Game")
-icon = pygame.image.load('img/fangs.png').convert_alpha()
+pygame.display.set_caption("Bat Game")
+icon = pygame.image.load(resource_path('img/fangs.png')).convert_alpha()
 pygame.display.set_icon(icon)
 
 # Text
 text = Text(screen)
 
 # bg = pygame.image.load('img/bg/bg_PS7HtBx.jpg')
-bg = pygame.image.load('img/bg/Work-2.jpg').convert()
+bg = pygame.image.load(resource_path('img/bg/Work-2.jpg')).convert()
 # bg = pygame.transform.scale(bg, (WIDTH, HEIGHT))
 # screen.blit(bg, (0, 0))
 
@@ -106,7 +107,7 @@ def draw_objects(isBoundRects):
 # bg_sound.play()
 
 # Bool triggers
-isBoundRects = True
+isBoundRects = False
 # gameplay = True
 run = True
 

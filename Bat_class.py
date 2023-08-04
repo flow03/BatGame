@@ -2,6 +2,7 @@ import pygame
 import random
 from pygame.math import Vector2
 from HealthBar_class import FancyHealthBar
+from Path import resource_path
 
 class Bat(pygame.sprite.Sprite):
     def __init__(self, screen):
@@ -20,7 +21,8 @@ class Bat(pygame.sprite.Sprite):
   
     def load_random_frame(self):
         i = random.randint(0, 14) # max bat index
-        frame = pygame.image.load(f'img/bat/bat{i}.png')
+        img_url = resource_path(f'img/bat/bat{i}.png')
+        frame = pygame.image.load(img_url)
         
         return frame
 
@@ -100,8 +102,8 @@ class BatSpecial(Bat):
 
             if food_d <= player_d:
                 self.target = food_p
-                print(f"nearest food: {food_p}")
-                print(f"distance: {food_d}")
+                # print(f"nearest food: {food_p}")
+                # print(f"distance: {food_d}")
             else:
                 self.target = player_p
         else:

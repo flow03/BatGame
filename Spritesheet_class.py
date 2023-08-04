@@ -1,8 +1,10 @@
 import pygame
+from Path import resource_path
 
 class SpriteSheet():
     def __init__(self, path: str):
-        self.sheet = pygame.image.load(path).convert_alpha()
+        img_url = resource_path(path)
+        self.sheet = pygame.image.load(img_url).convert_alpha()
 
     def get_image(self, width = 60, height = 60, col: int = 0, row: int = 0):
         frame_rect = pygame.Rect((col * width), (row * height), width, height)

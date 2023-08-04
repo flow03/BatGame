@@ -3,11 +3,13 @@ import random
 import math
 from pygame.math import Vector2
 from Spritesheet_class import SpriteSheet
+from Path import resource_path
 
 class BulletDrop(pygame.sprite.Sprite):
     def __init__(self, screen):
         super().__init__()
-        self.image = pygame.image.load('img/bullet.png').convert_alpha()
+        img_url = resource_path('img/bullet.png')
+        self.image = pygame.image.load(img_url).convert_alpha()
         self.image = pygame.transform.scale(self.image, (25, 9))
         self.image = pygame.transform.rotate(self.image, 90)
        

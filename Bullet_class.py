@@ -1,12 +1,14 @@
 import pygame
 import math
 from pygame.math import Vector2
+from Path import resource_path
 
 # Клас, що представляє кулю
 class Bullet(pygame.sprite.Sprite):
     def __init__(self, start_pos):
         super().__init__()
-        self.image = pygame.image.load('img/bullet.png').convert_alpha()
+        img_url = resource_path('img/bullet.png')
+        self.image = pygame.image.load(img_url).convert_alpha()
         self.image = pygame.transform.scale(self.image, (25, 9))
         self.rect = self.image.get_rect(center=start_pos)
         self.speed = 6

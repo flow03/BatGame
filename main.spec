@@ -1,5 +1,20 @@
 # -*- mode: python ; coding: utf-8 -*-
+# from PyInstaller.utils.hooks import collect_data_files
 
+datas_list = []
+# datas += collect_data_files('img/*.png')
+# datas += collect_data_files('img/bat/*.png')
+# datas += collect_data_files('img/bg/*')
+# datas += collect_data_files('img/spritesheets/*.png')
+# datas += collect_data_files('fonts/*')
+
+datas_list.append(('img/*.png', 'img/'))
+datas_list.append(('img/bat/*.png', 'img/bat/'))
+datas_list.append(('img/spritesheets/*.png', 'img/spritesheets/'))
+datas_list.append(('img/bg/*', 'img/bg/'))
+datas_list.append(('fonts/*', 'fonts/'))
+
+# datas_list = [('img/*.png', 'img/'),('img/bat/*.png', 'img/bat/'),('img/bg/*', 'img/bg/'),('img/spritesheets/*.png', 'img/spritesheets/'),('fonts/*', 'fonts/')]
 
 block_cipher = None
 
@@ -8,7 +23,7 @@ a = Analysis(
     ['main.py'],
     pathex=[],
     binaries=[],
-    datas=[],
+    datas=datas_list,
     hiddenimports=[],
     hookspath=[],
     hooksconfig={},

@@ -1,11 +1,13 @@
 import pygame
+from Path import resource_path
 
 # Text
 class Text:
     def __init__(self, screen):
         self.myfont = pygame.font.SysFont("Montserrat", 30)
         # myfont = pygame.font.Font('fonts/Thor.otf', 30)
-        self.myBigerFont = pygame.font.Font('fonts/MunchkinCyr.ttf', 60)
+        f_url = resource_path('fonts/MunchkinCyr.ttf')
+        self.myBigerFont = pygame.font.Font(f_url, 60)
         # screen = screen
         self.WIDTH = screen.get_width()
         self.HEIGHT = screen.get_height()
