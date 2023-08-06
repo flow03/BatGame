@@ -3,10 +3,16 @@ import random
 from pygame.math import Vector2
 from HealthBar_class import FancyHealthBar
 from Path import resource_path
+import Drops_class
 
 class Bat(pygame.sprite.Sprite):
-    def __init__(self, screen):
+    def __init__(self, screen, food_list, bullet_list, drops_list):
         super().__init__()
+
+        self.screen = screen
+        self.food_list = food_list
+        self.bullet_list = bullet_list
+        self.drops_list = drops_list
 
         WIDTH = screen.get_width()
         HEIGHT = screen.get_height()
@@ -44,15 +50,28 @@ class Bat(pygame.sprite.Sprite):
 
     def set_damage(self, player, damage: int):
         player.killedBats += 1
+        # self.createDrops()
         self.kill()
+
+    def createDrops(self):
+        new_drop = random.randint(0, 1)
+        if new_drop:
+            new_drop = Drops_class.Food()
+            self.food_list.add(new_drop)
+        else:
+            new_drop = Drops_class.BulletDrop()
+            self.bullet_list.add(new_drop)
+
+        dest = random.randrange(self.rect.center, self.screen.get_height() - 15, 1)
+        self.drops_list.add(Drops_class.Drop(new_drop, self.rect.center, dest))
 
 
 class BatSpecial(Bat):
-    def __init__(self, screen, food_list):
-        super().__init__(screen)
+    def __init__(self, screen, food_list, bullet_list, drops_list):
+        super().__init__(screen, food_list, bullet_list, drops_list)
 
         self.set_rand_pos(screen)
-        self.food_list = food_list
+        # self.food_list = food_list
         # self.speed = random.randint(1, 3)
         self.speed = 2
         self.max_health = random.randint(40, 60) # bullet damage 25
@@ -139,8 +158,7 @@ class BatSpecial(Bat):
     def set_damage(self, player, damage: int):
         self.health -= int(damage)
         if self.health <= 0:
-            player.killedBats += 1
-            self.kill()
+            super().set_damage(player, damage)
     
     def set_heal(self, heal: int):
         self.health += int(heal)

@@ -6,20 +6,20 @@ from Spritesheet_class import SpriteSheet
 from Path import resource_path
 
 class BulletDrop(pygame.sprite.Sprite):
-    def __init__(self, screen):
+    def __init__(self):
         super().__init__()
         img_url = resource_path('img/bullet.png')
         self.image = pygame.image.load(img_url).convert_alpha()
         self.image = pygame.transform.scale(self.image, (25, 9))
         self.image = pygame.transform.rotate(self.image, 90)
-       
-        offset = 25
-        x = random.randint(offset, screen.get_width() - offset)
-        y = random.randint(offset, screen.get_height() - offset)
-
-        self.rect = self.image.get_rect(center=(x,y))
-        # self.rect.center = position
+        self.rect = self.image.get_rect()
     
+    def set_random_coordinates(self, screen, offset = 30):
+        coords = Vector2()
+        coords.x = random.randint(offset, screen.get_width() - offset)
+        coords.y = random.randint(offset, screen.get_height() - offset)
+        self.rect.center = coords
+
     def draw(self, screen):
         screen.blit(self.image, self.rect)
             
@@ -30,9 +30,9 @@ class Food(pygame.sprite.Sprite):
         
         size = 30
         self.image = self.get_image(size)
-        self.heal = random.randint(10, 20)
         self.rect = self.image.get_rect()
-   
+        self.heal = random.randint(10, 20)
+
     def get_image(self, size):
         sprite_sheet = SpriteSheet('img/spritesheets/food_spritesheet_30.png')
         col = random.randint(0, 9)
@@ -55,7 +55,7 @@ class Food(pygame.sprite.Sprite):
         self.rect.center = coords
 
     def set_random_coordinates(self, screen):
-        offset =  30 # self.image.get_width()//2 + 10
+        offset = 30 # self.image.get_width()//2 + 10
         coords = Vector2()
         coords.x = random.randint(offset, screen.get_width() - offset)
         coords.y = random.randint(offset, screen.get_height() - offset)
@@ -89,4 +89,27 @@ class Food(pygame.sprite.Sprite):
     def draw(self, screen): # MyGroup required screen param
         screen.blit(self.image, self.rect)
 
+class Drop:
+    def __init__(self, drop_obj, start_pos, dest_pos):
+        self.drop_obj = drop_obj # object reference
+        self.drop_obj.rect.center = start_pos
+        self.position = Vector2(start_pos)
+        self.dest_pos = Vector2(dest_pos) # destination
+        self.speed = 5
+        self.direction = None
 
+        self.set_direction()
+
+    def set_direction(self):
+        self.dest_pos = Vector2(self.dest_pos)
+        self.direction = self.dest_pos - self.position
+        if self.direction:
+            self.direction = self.direction.normalize()
+
+    def update(self):
+        if self.direction:
+            self.position += self.direction * self.speed
+            self.drop_obj.rect.center = round(self.position)
+
+        if self.position == self.dest_pos:
+            self.kill()

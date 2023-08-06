@@ -43,8 +43,6 @@ class Circle:
         elif self.laps_completed >= 4:
             self.is_circle = False
 
-        # direction = self.direction_by_player(point)
-
 class Dance:
     def __init__(self):
         # self.dance_delay = 2200

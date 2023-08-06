@@ -8,7 +8,7 @@ datas_list = []
 # datas += collect_data_files('img/spritesheets/*.png')
 # datas += collect_data_files('fonts/*')
 
-datas_list.append(('img/*.png', 'img/'))
+datas_list.append(('img/*.*', 'img/'))
 datas_list.append(('img/bat/*.png', 'img/bat/'))
 datas_list.append(('img/spritesheets/*.png', 'img/spritesheets/'))
 datas_list.append(('img/bg/*', 'img/bg/'))
@@ -56,4 +56,5 @@ exe = EXE(
     target_arch=None,
     codesign_identity=None,
     entitlements_file=None,
+    icon=['img/fangs.ico'],
 )

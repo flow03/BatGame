@@ -55,7 +55,7 @@ class Player:
         if bulletDrops:
             sprite = pygame.sprite.spritecollideany(self, bulletDrops)
             if sprite:
-                self.add_bullet(1)
+                self.add_bullet(2)
                 sprite.kill()
             # pygame.sprite.spritecollide(player, bulletDrops, True)
 

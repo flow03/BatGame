@@ -5,12 +5,12 @@ from Player_class import Player
 from Jump_class import Jump
 # from Bullet_class import Bullet
 from Drops_class import BulletDrop
+from Drops_class import Food
 from MyGroup_class import MyGroup
 from Bat_class import Bat
 from Bat_class import BatSpecial
 from Text_class import Text
 from Dance_Girl_class import Dance_Girl
-from Drops_class import Food
 from Path import resource_path
 
 FPS = pygame.time.Clock()
@@ -22,7 +22,7 @@ HEIGHT = 600
 # screen = pygame.display.set_mode((600, 300), flags=pygame.NOFRAME)
 screen = pygame.display.set_mode((WIDTH, HEIGHT))
 pygame.display.set_caption("Bat Game")
-icon = pygame.image.load(resource_path('img/fangs.png')).convert_alpha()
+icon = pygame.image.load(resource_path('img/fangs.ico')).convert_alpha()
 pygame.display.set_icon(icon)
 
 # Text
@@ -77,6 +77,7 @@ pygame.time.set_timer(BAT_SP_TIMER, 6000)
 bullets = MyGroup() #pygame.sprite.Group()
 bulletDrops = MyGroup()
 foodDrops = MyGroup()
+drops_list = MyGroup()
 
 # Update
 def update_objects():
@@ -84,6 +85,7 @@ def update_objects():
     player.update(bulletDrops, foodDrops)
     bullets.update(screen, bat_list, player)
     Margosh.update(player)
+    drops_list.update()
 
 # Draw
 def draw_objects(isBoundRects):
@@ -186,11 +188,13 @@ while run:
             # pygame.quit()
         if not Margosh:
             if event.type == BAT_TIMER:
-                bat_list.add(Bat(screen))
+                bat_list.add(Bat(screen, foodDrops, bulletDrops, drops_list))
             if event.type == BAT_SP_TIMER:
-                bat_list.add(BatSpecial(screen, foodDrops))
+                bat_list.add(BatSpecial(screen, foodDrops, bulletDrops, drops_list))
             if event.type == BULLET_DROP_TIMER:
-                bulletDrops.add(BulletDrop(screen))
+                new_bullet_drop = BulletDrop()
+                new_bullet_drop.set_random_coordinates(screen)
+                bulletDrops.add(new_bullet_drop)
             if event.type == FOOD_DROP_TIMER:
                 new_food = Food()
                 new_food.check_random_coordinates(foodDrops, screen)
