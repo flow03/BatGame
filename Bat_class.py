@@ -50,20 +50,27 @@ class Bat(pygame.sprite.Sprite):
 
     def set_damage(self, player, damage: int):
         player.killedBats += 1
-        # self.createDrops()
+        self.createDrops()
         self.kill()
 
     def createDrops(self):
-        new_drop = random.randint(0, 1)
-        if new_drop:
+        rand_drop = random.randint(0, 1)
+        new_drop = None
+        drop_group = None
+        if rand_drop:
             new_drop = Drops_class.Food()
             self.food_list.add(new_drop)
+            drop_group = self.food_list
         else:
             new_drop = Drops_class.BulletDrop()
             self.bullet_list.add(new_drop)
+            drop_group = self.bullet_list
 
-        dest = random.randrange(self.rect.center, self.screen.get_height() - 15, 1)
-        self.drops_list.add(Drops_class.Drop(new_drop, self.rect.center, dest))
+        dest = Vector2()
+        dest.x = self.rect.centerx
+        dest.y = random.randint(self.rect.centery, self.screen.get_height() - 15)
+        
+        self.drops_list.add(Drops_class.Drop(new_drop, drop_group, self.rect.center, dest))
 
 
 class BatSpecial(Bat):

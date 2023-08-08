@@ -89,27 +89,26 @@ class Food(pygame.sprite.Sprite):
     def draw(self, screen): # MyGroup required screen param
         screen.blit(self.image, self.rect)
 
-class Drop:
-    def __init__(self, drop_obj, start_pos, dest_pos):
+class Drop(pygame.sprite.Sprite):
+    def __init__(self, drop_obj, obj_group, start_pos, dest_pos):
+        super().__init__()
         self.drop_obj = drop_obj # object reference
+        self.obj_group = obj_group # object group reference
         self.drop_obj.rect.center = start_pos
-        self.position = Vector2(start_pos)
+        # self.position = Vector2(start_pos)
         self.dest_pos = Vector2(dest_pos) # destination
-        self.speed = 5
-        self.direction = None
-
-        self.set_direction()
-
-    def set_direction(self):
-        self.dest_pos = Vector2(self.dest_pos)
-        self.direction = self.dest_pos - self.position
-        if self.direction:
-            self.direction = self.direction.normalize()
+        self.speed = 3
 
     def update(self):
-        if self.direction:
-            self.position += self.direction * self.speed
-            self.drop_obj.rect.center = round(self.position)
+        if self.obj_group.has(self.drop_obj):
+        # if self.drop_obj in self.obj_group:
+            direction = self.dest_pos - self.drop_obj.rect.center
 
-        if self.position == self.dest_pos:
+            if direction.length() <= self.speed:
+                self.drop_obj.rect.center = self.dest_pos
+                self.kill()
+            else:
+                direction.normalize_ip()
+                self.drop_obj.rect.center += direction * self.speed
+        else:
             self.kill()

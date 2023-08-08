@@ -161,7 +161,7 @@ while run:
         
         if isBoundRects:
             text.print_fps(screen, FPS)
-            text.print_debug_info(screen, bat_list, foodDrops, player)
+            text.print_debug_info(screen, bat_list, foodDrops, drops_list, player)
             if Margosh:
                 # sprite = Margosh.sprites()[0]
                 text.print_girl_info(screen, Margosh.sprites()[-1]) # the last one
