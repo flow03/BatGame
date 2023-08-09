@@ -126,25 +126,69 @@ class BulletBar:
         self.bullet_image = pygame.image.load(img_url).convert_alpha()
         self.bullet_image = pygame.transform.rotate(self.bullet_image, 90)
         self.scale_image(height)
-        self.image = pygame.Surface(self.rect.size, pygame.SRCALPHA)
+        # self.image = pygame.Surface(self.rect.size, pygame.SRCALPHA)
         self.capacity = (self.rect.width + 2)//(self.bullet_image.get_width() + 2)
-        # print(f"rect_width: {self.rect.width}")
-        # print(f"bullet_width: {self.bullet_image.get_width()}")
-        # print(f"capacity: {self.capacity}")
+        self.image_list = []
 
-    def update(self, bullet_count):
-        self.image = pygame.Surface(self.rect.size, pygame.SRCALPHA)
+    def create_image(self, bullets_count):
+        image = pygame.Surface(self.rect.size, pygame.SRCALPHA)
         position = Vector2(0, 0)
+        bullets = 0
         width = self.bullet_image.get_width()
-        for i in range(bullet_count):
-            self.image.blit(self.bullet_image, position)
+        for i in range(bullets_count):
+            image.blit(self.bullet_image, position)
             position.x += width + 2
-            if position.x > self.rect.width - width:
+            bullets += 1
+            if bullets >= self.capacity:
                 break
+            # if position.x > self.rect.width - width:
+            #     break
+        self.image_list.append(image)
+
+    def optimization(self, bullets_count):
+        full_images = bullets_count // self.capacity
+        least_bullets = bullets_count % self.capacity
+
+        # print(f"full_images: {full_images}")
+        # print(f"least_bullets: {least_bullets}")
+
+        if len(self.image_list) > full_images:
+            while len(self.image_list) > full_images:
+                self.image_list.pop()
+        else: # <=
+            if len(self.image_list): # != 0
+                self.image_list.pop()
+
+            while len(self.image_list) < full_images:
+                self.create_image(self.capacity)
+
+        if (least_bullets):
+            self.create_image(least_bullets)
+
+        # print(f"list_len: {len(self.image_list)}")
+        # print()
+        
+
+
+
+    def update(self, bullets_count):
+        self.optimization(bullets_count)
+
+        # self.image_list.clear()
+        # while bullets_count > self.capacity:
+        #     self.create_image(bullets_count)
+        #     bullets_count -= self.capacity
+
+        # if bullets_count:
+        #     self.create_image(bullets_count)
+
 
     def draw(self, screen):
         # pygame.draw.rect(screen, "Red", self.rect, 2)
-        screen.blit(self.image, self.rect)
+        position = Vector2(self.rect.topleft)
+        for image in self.image_list:
+            screen.blit(image, position)
+            position.y += self.rect.height + 2
 
     def scale_image(self, new_height):
         original_width = self.bullet_image.get_width()

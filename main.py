@@ -65,13 +65,13 @@ jump = Jump()
 bat_list = MyGroup()
 # killedBats = 0
 BAT_TIMER = pygame.USEREVENT + 1
-pygame.time.set_timer(BAT_TIMER, 3000)
+# pygame.time.set_timer(BAT_TIMER, 3000)
 BULLET_DROP_TIMER = pygame.USEREVENT + 2
 pygame.time.set_timer(BULLET_DROP_TIMER, 3000)
 FOOD_DROP_TIMER = pygame.USEREVENT + 3
-pygame.time.set_timer(FOOD_DROP_TIMER, 3000)
+# pygame.time.set_timer(FOOD_DROP_TIMER, 3000)
 BAT_SP_TIMER = pygame.USEREVENT + 4
-pygame.time.set_timer(BAT_SP_TIMER, 6000)
+# pygame.time.set_timer(BAT_SP_TIMER, 6000)
 
 # Bullet
 bullets = MyGroup() #pygame.sprite.Group()
@@ -163,7 +163,6 @@ while run:
             text.print_fps(screen, FPS)
             text.print_debug_info(screen, bat_list, foodDrops, drops_list, player)
             if Margosh:
-                # sprite = Margosh.sprites()[0]
                 text.print_girl_info(screen, Margosh.sprites()[-1]) # the last one
 
         # COLLISIONS
