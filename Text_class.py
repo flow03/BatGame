@@ -39,8 +39,8 @@ class Text:
         self.print('food on screen', len(food_list))
         self.print('killed bats', player.killedBats)
         self.print('bullets', player.bullets_count)
-        self.print('health', player.health)
-        self.print('drops on screen', len(drops_list))
+        self.print('health', player.health_new.health)
+        self.print('loot on screen', len(drops_list))
         
         # self.print('r_rect_width', player.health_bar.rect.width)
         # self.print('g_rect_width', player.health_bar.green_rect.width)

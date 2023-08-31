@@ -3,8 +3,37 @@ from pygame.math import Vector2
 from Clock_class import Clock
 from Path import resource_path
 
+
+class Health:
+    def __init__(self, max_health):
+        self.max_health = max_health
+        self.health = self.max_health
+    
+    def set_damage(self, damage: int):
+        self.health -= int(damage)
+        if self.health <= 0:
+            self.health = 0
+            return False
+        else:
+            return True
+
+    def set_heal(self, heal: int):
+        self.health += int(heal)
+        if self.health > self.max_health:
+            self.health = self.max_health
+
+    def get_ratio(self):
+        return self.health/self.max_health
+
+    def reload(self):
+        self.health = self.max_health
+
+    def full(self):
+        return self.health == self.max_health
+
 class HealthBar:
     def __init__(self, pos, width, height, border = 2):
+        # print("HealthBar common constructor called")
         pos = Vector2(pos)
         self.rect = pygame.Rect(*pos, width, height)        
         self.bordered_rect = pygame.Rect(pos.x - border, pos.y - border, 
@@ -14,6 +43,18 @@ class HealthBar:
         self.border = border
         self.set_max_health(100)
         self.health = self.max_health
+
+    def __init__(self, rect : pygame.Rect, health : Health, border = 2):
+        # pos = Vector2(pos)
+        # print("HealthBar Rect constructor called")
+        self.rect = rect        
+        self.bordered_rect = pygame.Rect(self.rect.x - border, self.rect.y - border, 
+            self.rect.width + border * 2, self.rect.height + border * 2)
+
+        self.max_width = self.rect.width
+        self.border = border
+        self.health = health
+        self.prev_health = self.health.health
 
     def init(self):
         self.rect.width = self.max_width
@@ -29,25 +70,29 @@ class HealthBar:
         new_rect_pos.x += self.border
         self.rect.midleft = new_rect_pos
 
-    def update_health(self, health):
-        if health != self.health:
-            self.health = round(health)
+    def update_health(self):
+        if self.prev_health != self.health.health:
+            self.prev_health = round(self.health.health)
             
-            ratio = self.health/self.max_health
+            ratio = self.health.get_ratio()
             self.rect.width = round(self.max_width * ratio)    
 
-    def set_max_health(self, max_health):
-        self.max_health = round(max_health)
+    # def set_max_health(self, max_health):
+    #     self.max_health = round(max_health)
 
 
 class FancyHealthBar(HealthBar):
-    def __init__(self, pos, width, height, border = 2):
-        super().__init__(pos, width, height, border)
+    # def __init__(self, pos, width, height, border = 2):
+    #     super().__init__(pos, width, height, border)
+    def __init__(self, *params):
+        super().__init__(*params)
     
         self.yellow_rect = pygame.Rect(self.rect)
         self.yellow_clock = Clock(500)
         self.green_rect = pygame.Rect(self.rect)
         self.green_clock = Clock(500)
+
+        self.init()
 
     def init(self):
         self.rect.width = self.max_width
@@ -57,6 +102,7 @@ class FancyHealthBar(HealthBar):
         self.anim_speed = 3
         self.decrease = False
         self.increase = False
+        self.health.reload()
 
     def draw(self, screen):
         pygame.draw.rect(screen, "Yellow", self.yellow_rect)
@@ -71,21 +117,20 @@ class FancyHealthBar(HealthBar):
         self.yellow_rect.midleft = self.rect.midleft
 
     
-    def update_health(self, health):
-        if health != self.health:
-            # if health > self.max_health:
-            #     health = self.max_health
-            ratio = health/self.max_health
+    def update_health(self):
+        if self.prev_health != self.health.health:
 
-            if health < self.health:
+            ratio = self.health.get_ratio()
+
+            if self.health.health < self.prev_health:
                 self.green_rect.width = round(self.max_width * ratio)
                 self.rect.width = self.green_rect.width
                 self.yellow_clock.start()
-            elif health > self.health:
+            elif self.health.health > self.prev_health:
                 self.green_rect.width = round(self.max_width * ratio)
                 self.green_clock.start()
 
-            self.health = round(health)
+            self.prev_health = round(self.health.health)
 
         if self.yellow_clock.end():
             self.decrease = True
@@ -145,7 +190,16 @@ class BulletBar:
             #     break
         self.image_list.append(image)
 
-    def optimization(self, bullets_count):
+    def update_variant_first(self, bullets_count):
+        self.image_list.clear()
+        while bullets_count > self.capacity:
+            self.create_image(bullets_count)
+            bullets_count -= self.capacity
+
+        if bullets_count:
+            self.create_image(bullets_count)
+
+    def update_variant_second(self, bullets_count):
         full_images = bullets_count // self.capacity
         least_bullets = bullets_count % self.capacity
 
@@ -167,20 +221,10 @@ class BulletBar:
 
         # print(f"list_len: {len(self.image_list)}")
         # print()
-        
-
-
 
     def update(self, bullets_count):
-        self.optimization(bullets_count)
-
-        # self.image_list.clear()
-        # while bullets_count > self.capacity:
-        #     self.create_image(bullets_count)
-        #     bullets_count -= self.capacity
-
-        # if bullets_count:
-        #     self.create_image(bullets_count)
+        # self.update_variant_first(bullets_count)
+        self.update_variant_second(bullets_count)
 
 
     def draw(self, screen):
@@ -196,3 +240,5 @@ class BulletBar:
         new_width = int(original_width * (new_height / original_height))
         # print(new_width, new_height)
         self.bullet_image = pygame.transform.scale(self.bullet_image, (new_width, new_height))
+
+

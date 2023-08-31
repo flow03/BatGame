@@ -53,9 +53,8 @@ pygame.display.update()
 # Player
 player = Player(WIDTH//2, HEIGHT//2) # 150, 300
 
-# Margosh
-# Margosh = Dance_Girl(screen)
-Margosh = MyGroup()
+# Girl
+# Girl = MyGroup()
 
 # Jump
 jump = Jump()
@@ -65,13 +64,13 @@ jump = Jump()
 bat_list = MyGroup()
 # killedBats = 0
 BAT_TIMER = pygame.USEREVENT + 1
-# pygame.time.set_timer(BAT_TIMER, 3000)
+pygame.time.set_timer(BAT_TIMER, 3000)
 BULLET_DROP_TIMER = pygame.USEREVENT + 2
 pygame.time.set_timer(BULLET_DROP_TIMER, 3000)
 FOOD_DROP_TIMER = pygame.USEREVENT + 3
-# pygame.time.set_timer(FOOD_DROP_TIMER, 3000)
+pygame.time.set_timer(FOOD_DROP_TIMER, 3000)
 BAT_SP_TIMER = pygame.USEREVENT + 4
-# pygame.time.set_timer(BAT_SP_TIMER, 6000)
+pygame.time.set_timer(BAT_SP_TIMER, 6000)
 
 # Bullet
 bullets = MyGroup() #pygame.sprite.Group()
@@ -84,7 +83,7 @@ def update_objects():
     bat_list.update(player)
     player.update(bulletDrops, foodDrops)
     bullets.update(screen, bat_list, player)
-    Margosh.update(player)
+    # Girl.update(player)
     drops_list.update()
 
 # Draw
@@ -101,7 +100,7 @@ def draw_objects(isBoundRects):
     bat_list.draw(screen, colourRed)
     player.draw(screen, colourGreen)
     bullets.draw(screen, colourGreen)
-    Margosh.draw(screen, colourGreen)
+    # Girl.draw(screen, colourGreen)
 
 
 # Sound
@@ -116,7 +115,7 @@ run = True
 def initialize():
     # gameplay = True
     player.init()
-    Margosh.empty()
+    # Girl.empty()
     bat_list.empty()
     bullets.empty()
     bulletDrops.empty()
@@ -145,10 +144,6 @@ while run:
             player.move('up')
         if (keys[pygame.K_DOWN] or keys[pygame.K_s]) and player.rect.y < (HEIGHT - player.rect.height):
             player.move('down')
-        # if (keys[pygame.K_LEFT]):
-        #     Margosh.move('left')
-        # if (keys[pygame.K_RIGHT]):
-        #     Margosh.move('right')
         
         # Player jump
         if keys[pygame.K_SPACE]:
@@ -162,8 +157,8 @@ while run:
         if isBoundRects:
             text.print_fps(screen, FPS)
             text.print_debug_info(screen, bat_list, foodDrops, drops_list, player)
-            if Margosh:
-                text.print_girl_info(screen, Margosh.sprites()[-1]) # the last one
+            # if Girl:
+            #     text.print_girl_info(screen, Girl.sprites()[-1]) # the last one
 
         # COLLISIONS
         # All in classes
@@ -185,19 +180,19 @@ while run:
         if event.type == pygame.QUIT:
             run = False
             # pygame.quit()
-        if not Margosh:
-            if event.type == BAT_TIMER:
-                bat_list.add(Bat(screen, foodDrops, bulletDrops, drops_list))
-            if event.type == BAT_SP_TIMER:
-                bat_list.add(BatSpecial(screen, foodDrops, bulletDrops, drops_list))
-            if event.type == BULLET_DROP_TIMER:
-                new_bullet_drop = BulletDrop()
-                new_bullet_drop.set_random_coordinates(screen)
-                bulletDrops.add(new_bullet_drop)
-            if event.type == FOOD_DROP_TIMER:
-                new_food = Food()
-                new_food.check_random_coordinates(foodDrops, screen)
-                foodDrops.add(new_food)
+        # if not Girl:
+        if event.type == BAT_TIMER:
+            bat_list.add(Bat(screen, foodDrops, bulletDrops, drops_list))
+        if event.type == BAT_SP_TIMER:
+            bat_list.add(BatSpecial(screen, foodDrops, bulletDrops, drops_list))
+        if event.type == BULLET_DROP_TIMER:
+            new_bullet_drop = BulletDrop()
+            new_bullet_drop.set_random_coordinates(screen)
+            bulletDrops.add(new_bullet_drop)
+        if event.type == FOOD_DROP_TIMER:
+            new_food = Food()
+            new_food.check_random_coordinates(foodDrops, screen)
+            foodDrops.add(new_food)
         if player.gameplay and event.type == pygame.MOUSEBUTTONDOWN:
             # Створення кулі з позиції гравця до позиції миші
             player.shoot(bullets, pygame.mouse.get_pos())
@@ -210,9 +205,9 @@ while run:
                     isBoundRects = True
                 else:
                     isBoundRects = False
-            if event.key == pygame.K_m:
-                if not Margosh:
-                    Margosh.add(Dance_Girl(screen, foodDrops))
+            # if event.key == pygame.K_m:
+            #     if not Girl:
+            #         Girl.add(Dance_Girl(screen, foodDrops))
         # працює незалежно від player.gameplay
         if event.type == pygame.KEYDOWN:
             if event.key == pygame.K_r:

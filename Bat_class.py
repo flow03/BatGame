@@ -2,6 +2,7 @@ import pygame
 import random
 from pygame.math import Vector2
 from HealthBar_class import FancyHealthBar
+from HealthBar_class import Health
 from Path import resource_path
 import Drops_class
 
@@ -81,14 +82,15 @@ class BatSpecial(Bat):
         # self.food_list = food_list
         # self.speed = random.randint(1, 3)
         self.speed = 2
-        self.max_health = random.randint(40, 60) # bullet damage 25
-        self.health = self.max_health
+        max_health = random.randint(40, 60) # bullet damage 25
+        self.health = Health(max_health)
         self.direction = Vector2()
         self.target = None
 
-        self.health_bar = FancyHealthBar(self.rect.midtop, self.rect.width, 5, 1)
-        self.health_bar.set_max_health(self.health)
-        self.health_bar.init()
+        health_bar_rect = pygame.Rect(self.rect.midtop, (self.rect.width, 5))
+        self.health_bar = FancyHealthBar(health_bar_rect, self.health, 1)
+        # self.health_bar.set_max_health(self.health)
+        # self.health_bar.init()
         self.update_bar_pos()
 
     def update(self, player):
@@ -97,7 +99,7 @@ class BatSpecial(Bat):
         self.rect.center += self.direction * self.speed
         
         self.update_bar_pos()
-        self.health_bar.update_health(self.health)
+        self.health_bar.update_health()
         self.collide(player)
         self.collide_food(player)
 
@@ -122,7 +124,7 @@ class BatSpecial(Bat):
         bat_pos = Vector2(self.rect.center)
         player_p = Vector2(player.rect.center)
 
-        if self.health < self.max_health and self.food_list:
+        if not self.health.full() and self.food_list:
             player_d = bat_pos.distance_to(player_p)
             food_d, food_p = self.nearest_food()
 
@@ -136,10 +138,11 @@ class BatSpecial(Bat):
             self.target = player_p
 
     def collide_food(self, player):
-        if self.health != self.max_health and self.food_list:
+        if not self.health.full() and self.food_list:
             food = pygame.sprite.spritecollideany(self, self.food_list)
             if food:
-                self.set_heal(food.heal)
+                self.health.set_heal(food.heal)
+                # self.health_bar.update_health()
                 self.target = Vector2(player.rect.center)
                 food.kill()
 
@@ -148,9 +151,9 @@ class BatSpecial(Bat):
         self.health_bar.draw(screen)
 
     def update_bar_pos(self):
-        self.hp_bar_pos = Vector2(self.rect.midtop)
-        self.hp_bar_pos.y -= 10
-        self.health_bar.update_pos(self.hp_bar_pos)
+        new_pos = Vector2(self.rect.midtop)
+        new_pos.y -= 10
+        self.health_bar.update_pos(new_pos)
 
     def direction_by_point(self, target_pos):
         target_pos = Vector2(target_pos)
@@ -163,14 +166,14 @@ class BatSpecial(Bat):
         return direction
 
     def set_damage(self, player, damage: int):
-        self.health -= int(damage)
-        if self.health <= 0:
+        if not self.health.set_damage(damage):
             super().set_damage(player, damage)
+        # self.health_bar.update_health()
     
-    def set_heal(self, heal: int):
-        self.health += int(heal)
-        if self.health > self.max_health:
-            self.health = self.max_health
+    # def set_heal(self, heal: int):
+    #     self.health += int(heal)
+    #     if self.health > self.max_health:
+    #         self.health = self.max_health
 
     def set_rand_pos(self, screen):
         out_x = [0 - (self.rect.width//2+1), screen.get_width() + (self.rect.width//2+1)]

@@ -3,6 +3,7 @@ from pygame.math import Vector2
 from Spritesheet_class import SpriteSheet
 from HealthBar_class import FancyHealthBar
 from HealthBar_class import BulletBar
+from HealthBar_class import Health
 from Bullet_class import Bullet
 
 class Player:
@@ -17,9 +18,11 @@ class Player:
         self.start_pos = Vector2(x, y)
         self.speed = 3
 
-        self.max_health = 100
+        self.health_new = Health(100)
+        # self.max_health = 100
         # self.max_bullets_count = 32
-        self.health_bar = FancyHealthBar((20, 15), 254, 13) # max_health is 100 as default
+        # self.health_bar = FancyHealthBar((20, 15), 254, 13) # max_health is 100 as default
+        self.health_bar = FancyHealthBar(pygame.Rect((20, 15), (254, 13)), self.health_new)
         self.bullet_bar = BulletBar((20, 32), 254, 16) # 15+13+(2*2)
 
         self.init()
@@ -37,7 +40,8 @@ class Player:
         self.gameplay = True
         self.is_moving = False
 
-        self.health = self.max_health
+        # self.health_new.reload()
+        # self.health = self.max_health
         self.health_bar.init()
         self.bullet_bar.update(self.bullets_count)
 
@@ -62,10 +66,11 @@ class Player:
         if foodDrops:
             food = pygame.sprite.spritecollideany(self, foodDrops)
             if food:
-                self.set_heal(food.heal)
+                self.health_new.set_heal(food.heal)
+                # self.health_bar.update_health()
                 food.kill()
 
-        self.health_bar.update_health(self.health)
+        self.health_bar.update_health()
         # self.bullet_bar.update(self.bullets_count)
 
         if not self.is_moving:
@@ -112,16 +117,15 @@ class Player:
         self.is_moving = True
 
     def set_damage(self, damage: int):
-        self.health -= int(damage)
-        if self.health <= 0:
+        if not self.health_new.set_damage(damage):
             self.gameplay = False
-        # self.health_bar.update_health(self.health)
+        # self.health_bar.update_health()
 
-    def set_heal(self, heal: int):
-        self.health += int(heal)
-        if self.health > self.max_health:
-            self.health = self.max_health
-        # self.health_bar.update_health(self.health)
+    # def set_heal(self, heal: int):
+    #     self.health += int(heal)
+    #     if self.health > self.max_health:
+    #         self.health = self.max_health
+    #     # self.health_bar.update_health(self.health)
 
     def add_bullet(self, new_bullet : int):
         self.bullets_count += new_bullet
