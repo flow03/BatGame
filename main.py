@@ -12,6 +12,8 @@ from Bat_class import BatSpecial
 from Text_class import Text
 from Dance_Girl_class import Dance_Girl
 from Path import resource_path
+from UserEvents import UserEvents
+# from Events import BAT_TIMER
 
 FPS = pygame.time.Clock()
 pygame.init()
@@ -59,20 +61,10 @@ player = Player(WIDTH//2, HEIGHT//2) # 150, 300
 # Jump
 jump = Jump()
 
-# Bat
-# bat_images = get_sprites('img/bat/bat', 11)
-bat_list = MyGroup()
-# killedBats = 0
-BAT_TIMER = pygame.USEREVENT + 1
-pygame.time.set_timer(BAT_TIMER, 3000)
-BULLET_DROP_TIMER = pygame.USEREVENT + 2
-pygame.time.set_timer(BULLET_DROP_TIMER, 3000)
-FOOD_DROP_TIMER = pygame.USEREVENT + 3
-pygame.time.set_timer(FOOD_DROP_TIMER, 3000)
-BAT_SP_TIMER = pygame.USEREVENT + 4
-pygame.time.set_timer(BAT_SP_TIMER, 6000)
+Events = UserEvents()
 
-# Bullet
+# Groups
+bat_list = MyGroup()
 bullets = MyGroup() #pygame.sprite.Group()
 bulletDrops = MyGroup()
 foodDrops = MyGroup()
@@ -101,7 +93,6 @@ def draw_objects(isBoundRects):
     player.draw(screen, colourGreen)
     bullets.draw(screen, colourGreen)
     # Girl.draw(screen, colourGreen)
-
 
 # Sound
 # bg_sound = pygame.mixer.Sound('sounds/Black Sabbath - Paranoid.mp3')
@@ -156,7 +147,7 @@ while run:
         
         if isBoundRects:
             text.print_fps(screen, FPS)
-            text.print_debug_info(screen, bat_list, foodDrops, drops_list, player)
+            text.print_debug_info(screen, bat_list, foodDrops, drops_list, player, Events.isEvents)
             # if Girl:
             #     text.print_girl_info(screen, Girl.sprites()[-1]) # the last one
 
@@ -181,15 +172,15 @@ while run:
             run = False
             # pygame.quit()
         # if not Girl:
-        if event.type == BAT_TIMER:
+        if event.type == Events.BAT_TIMER:
             bat_list.add(Bat(screen, foodDrops, bulletDrops, drops_list))
-        if event.type == BAT_SP_TIMER:
+        if event.type == Events.BAT_SP_TIMER:
             bat_list.add(BatSpecial(screen, foodDrops, bulletDrops, drops_list))
-        if event.type == BULLET_DROP_TIMER:
+        if event.type == Events.BULLET_DROP_TIMER:
             new_bullet_drop = BulletDrop()
             new_bullet_drop.set_random_coordinates(screen)
             bulletDrops.add(new_bullet_drop)
-        if event.type == FOOD_DROP_TIMER:
+        if event.type == Events.FOOD_DROP_TIMER:
             new_food = Food()
             new_food.check_random_coordinates(foodDrops, screen)
             foodDrops.add(new_food)
@@ -205,6 +196,8 @@ while run:
                     isBoundRects = True
                 else:
                     isBoundRects = False
+            if event.key == pygame.K_t:
+                Events.switch()
             # if event.key == pygame.K_m:
             #     if not Girl:
             #         Girl.add(Dance_Girl(screen, foodDrops))
