@@ -154,15 +154,15 @@ class Dance_Girl(pygame.sprite.Sprite):
 
         return flipped_list
 
-    def resize_animations(self, new_y):
-        original_x = 39
-        original_y = 52
+    def resize_animations(self, new_h):
+        original_w = 39
+        original_h = 52
         # new_y = 65 # new_x = 44
-        new_x = int(original_x * (new_y/original_y))
+        new_w = int(original_w * (new_h/original_h))
 
         for animation in self.animations.values():
             for i in range(len(animation)):
-                animation[i] = pygame.transform.scale(animation[i], (new_x, new_y))
+                animation[i] = pygame.transform.scale(animation[i], (new_w, new_h))
 
     def direction_by_player(self, player_pos):
         player_pos = Vector2(player_pos)

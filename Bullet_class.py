@@ -12,6 +12,7 @@ class Bullet(pygame.sprite.Sprite):
         self.image = pygame.transform.scale(self.image, (25, 9))
         self.rect = self.image.get_rect(center=start_pos)
         self.speed = 6
+        self.damage = 25
         # self.angle = 0
         # self.velocity_for_direction(direction)
 
@@ -68,7 +69,7 @@ class Bullet(pygame.sprite.Sprite):
             bat_sprite = pygame.sprite.spritecollideany(self, bat_list)
             if bat_sprite:
                 # player.killedBats += 1
-                bat_sprite.set_damage(player, 25)
+                bat_sprite.set_damage(player, self.damage)
                 self.kill()
 
         # Параметр True вказує, що об'єкти, які зіткнулися,

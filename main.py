@@ -13,7 +13,7 @@ from Text_class import Text
 from Dance_Girl_class import Dance_Girl
 from Path import resource_path
 from UserEvents import UserEvents
-# from Events import BAT_TIMER
+from Dummy import Dummy
 
 FPS = pygame.time.Clock()
 pygame.init()
@@ -70,6 +70,9 @@ bulletDrops = MyGroup()
 foodDrops = MyGroup()
 drops_list = MyGroup()
 
+# Dummy
+dummy = Dummy(WIDTH//2 + 200, HEIGHT//2, bullets)
+
 # Update
 def update_objects():
     bat_list.update(player)
@@ -77,6 +80,7 @@ def update_objects():
     bullets.update(screen, bat_list, player)
     # Girl.update(player)
     drops_list.update()
+    dummy.update()
 
 # Draw
 def draw_objects(isBoundRects):
@@ -87,6 +91,7 @@ def draw_objects(isBoundRects):
         colourGreen = "Green"
         colourRed = "Red"
 
+    dummy.draw(screen, colourRed)
     bulletDrops.draw(screen, colourGreen)
     foodDrops.draw(screen, colourGreen)
     bat_list.draw(screen, colourRed)
@@ -147,7 +152,7 @@ while run:
         
         if isBoundRects:
             text.print_fps(screen, FPS)
-            text.print_debug_info(screen, bat_list, foodDrops, drops_list, player, Events.isEvents)
+            text.print_debug_info(screen, bat_list, foodDrops, drops_list, player)
             # if Girl:
             #     text.print_girl_info(screen, Girl.sprites()[-1]) # the last one
 

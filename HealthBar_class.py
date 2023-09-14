@@ -52,30 +52,39 @@ class HealthBar:
             self.rect.width + border * 2, self.rect.height + border * 2)
 
         self.max_width = self.rect.width
+        self.bound = 0
         self.border = border
         self.health = health
         self.prev_health = self.health.health
+
+        self.bound_rect = pygame.Rect(self.rect)
+        self.bound_rect.width += self.bound
 
     def init(self):
         self.rect.width = self.max_width
 
     def draw(self, screen):
+        pygame.draw.rect(screen, "Black", self.bound_rect, self.bound)
         pygame.draw.rect(screen, "Red", self.rect)
         pygame.draw.rect(screen, "Black", self.bordered_rect, self.border)
 
     def update_pos(self, pos):
         pos = Vector2(pos)
         self.bordered_rect.center = pos
+        # self.bound_rect.midleft = self.bordered_rect.midleft
+
         new_rect_pos = Vector2(self.bordered_rect.midleft)
         new_rect_pos.x += self.border
         self.rect.midleft = new_rect_pos
+        self.bound_rect.midleft = self.rect.midleft
 
     def update_health(self):
         if self.prev_health != self.health.health:
             self.prev_health = round(self.health.health)
             
             ratio = self.health.get_ratio()
-            self.rect.width = round(self.max_width * ratio)    
+            self.rect.width = round(self.max_width * ratio)
+            self.bound_rect.width = self.rect.width + self.bound
 
     # def set_max_health(self, max_health):
     #     self.max_health = round(max_health)
@@ -107,8 +116,9 @@ class FancyHealthBar(HealthBar):
     def draw(self, screen):
         pygame.draw.rect(screen, "Yellow", self.yellow_rect)
         pygame.draw.rect(screen, "Green", self.green_rect)
-        pygame.draw.rect(screen, "Red", self.rect)
-        pygame.draw.rect(screen, "Black", self.bordered_rect, self.border)
+        # pygame.draw.rect(screen, "Red", self.rect, self.border)
+        # pygame.draw.rect(screen, "Black", self.bordered_rect, self.border)
+        super().draw(screen)
 
     def update_pos(self, pos):
         super().update_pos(pos)
@@ -125,6 +135,7 @@ class FancyHealthBar(HealthBar):
             if self.health.health < self.prev_health:
                 self.green_rect.width = round(self.max_width * ratio)
                 self.rect.width = self.green_rect.width
+                # self.bound_rect.width = self.rect.width + self.border
                 self.yellow_clock.start()
             elif self.health.health > self.prev_health:
                 self.green_rect.width = round(self.max_width * ratio)
@@ -146,6 +157,8 @@ class FancyHealthBar(HealthBar):
             self.yellow_rect.width = self.green_rect.width
         if not self.green_clock.nextFrame and not self.increase:
             self.rect.width = self.green_rect.width
+
+        self.bound_rect.width = self.rect.width + self.bound
 
     def yellow_decrease(self):
         if self.yellow_rect.width > self.green_rect.width:

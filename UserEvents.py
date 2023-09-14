@@ -10,7 +10,7 @@ class UserEvents:
         self.isEvents = True
 
         self.set_timer()
-sad
+    def set_timer(self):
         pygame.time.set_timer(self.BAT_TIMER, 3000)
         pygame.time.set_timer(self.BULLET_DROP_TIMER, 3200)
         pygame.time.set_timer(self.FOOD_DROP_TIMER, 3500)

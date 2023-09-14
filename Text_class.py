@@ -32,7 +32,7 @@ class Text:
     def print_fps(self, screen, FPS):
         screen.blit(self.myfont.render('FPS: ' + str(int(FPS.get_fps())), True, "Black"), (self.WIDTH - 85, 15))
 
-    def print_debug_info(self, screen, bat_list, food_list, drops_list, player, isEvents):
+    def print_debug_info(self, screen, bat_list, food_list, drops_list, player):
         self.y = 55
         self.screen = screen
         self.print('bats on screen', len(bat_list))
@@ -41,7 +41,6 @@ class Text:
         self.print('bullets', player.bullets_count)
         self.print('health', player.health_new.health)
         self.print('loot on screen', len(drops_list))
-        self.print('isEvents', isEvents)
         
         # self.print('r_rect_width', player.health_bar.rect.width)
         # self.print('g_rect_width', player.health_bar.green_rect.width)

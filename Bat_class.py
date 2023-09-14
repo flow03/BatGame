@@ -89,8 +89,6 @@ class BatSpecial(Bat):
 
         health_bar_rect = pygame.Rect(self.rect.midtop, (self.rect.width, 5))
         self.health_bar = FancyHealthBar(health_bar_rect, self.health, 1)
-        # self.health_bar.set_max_health(self.health)
-        # self.health_bar.init()
         self.update_bar_pos()
 
     def update(self, player):
