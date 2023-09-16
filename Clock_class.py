@@ -17,10 +17,8 @@ class Clock:
             if (self.clock() >= self.nextFrame):
                 self.nextFrame += self.delay
                 return True
-            else:
-                return False
-        else:
-            return False
+        
+        return False
 
     # set nextFrame
     def start(self):
@@ -29,10 +27,9 @@ class Clock:
 
     # check nextFrame and disable nextFrame if True
     def end(self):
-        result = False
         if self.nextFrame:
             if self.clock() >= self.nextFrame:
                 self.nextFrame = None
-                result = True
+                return True
 
-        return result
+        return False
