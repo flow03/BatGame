@@ -1,8 +1,8 @@
 import pygame
 import random
 from pygame.math import Vector2
-from HealthBar_class import FancyHealthBar
-from HealthBar_class import Health
+from HealthBar import FancyHealthBar
+from HealthBar import Health
 from Path import resource_path
 import Drops_class
 
@@ -82,7 +82,7 @@ class BatSpecial(Bat):
         # self.food_list = food_list
         # self.speed = random.randint(1, 3)
         self.speed = 2
-        max_health = random.randint(40, 60) # bullet damage 25
+        max_health = random.randint(30, 55) # bullet damage 25
         self.health = Health(max_health)
         self.direction = Vector2()
         self.target = None

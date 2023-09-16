@@ -58,13 +58,14 @@ class HealthBar:
         self.border = border
         self.health = health
         self.prev_health = self.health.health
+        self.colour = "Red"
 
        
     def init(self):
         self.rect.width = self.max_width
 
     def draw(self, screen):
-        pygame.draw.rect(screen, "Red", self.rect)
+        pygame.draw.rect(screen, self.colour, self.rect)
         pygame.draw.rect(screen, "Black", self.bordered_rect, self.border)
 
     def update_pos(self, pos):
@@ -84,8 +85,8 @@ class HealthBar:
             self.rect.width = round(self.max_width * ratio)
             # self.bound_rect.width = self.rect.width + self.bound
 
-    # def set_max_health(self, max_health):
-    #     self.max_health = round(max_health)
+    def change_colour(self, colour):
+        self.colour = colour
 
 
 class FancyHealthBar(HealthBar):
@@ -176,8 +177,14 @@ class FancyBoundHealthBar(FancyHealthBar):
         self.bound_rect.width += self.bound
 
     def draw(self, screen):
+        pygame.draw.rect(screen, "Yellow", self.yellow_rect)
+        pygame.draw.rect(screen, "Green", self.green_rect)
+
         pygame.draw.rect(screen, "Black", self.bound_rect, self.bound)
-        super().draw(screen)
+        # super().draw(screen)
+        
+        pygame.draw.rect(screen, self.colour, self.rect)
+        pygame.draw.rect(screen, "Black", self.bordered_rect, self.border)
 
     def update_health(self):
         super().update_health()

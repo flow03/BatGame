@@ -1,10 +1,11 @@
 import pygame
 from pygame.math import Vector2
 from Spritesheet_class import SpriteSheet
-from HealthBar_class import FancyHealthBar
-from HealthBar_class import BulletBar
-from HealthBar_class import Health
+from HealthBar import FancyHealthBar
+from HealthBar import BulletBar
+from HealthBar import Health
 from Bullet_class import Bullet
+from Effects import PoisonEffect
 
 class Player:
     def __init__(self, x, y):
@@ -17,6 +18,7 @@ class Player:
         self.load_animation_frames()
         self.start_pos = Vector2(x, y)
         self.speed = 3
+        self.effects = []
 
         self.health_new = Health(100)
         # self.max_health = 100
@@ -39,11 +41,16 @@ class Player:
         self.killedBats = 0
         self.gameplay = True
         self.is_moving = False
+        self.effects.clear()
 
-        # self.health_new.reload()
-        # self.health = self.max_health
         self.health_bar.init()
         self.bullet_bar.update(self.bullets_count)
+
+    def poisoned(self):
+        if not self.effects:
+            self.effects.append(PoisonEffect(self.health_bar))
+        else:
+            self.effects.pop()
 
     def load_animation_frames(self):
         # Завантаження всіх кадрів анімацій для кожного напрямку руху
@@ -72,6 +79,12 @@ class Player:
 
         self.health_bar.update_health()
         # self.bullet_bar.update(self.bullets_count)
+
+        for effect in self.effects:
+            effect.update()
+
+        if self.health_new.empty():
+            self.gameplay = False
 
         if not self.is_moving:
             self.current_animation = "idle"
@@ -117,15 +130,8 @@ class Player:
         self.is_moving = True
 
     def set_damage(self, damage: int):
-        if not self.health_new.set_damage(damage):
-            self.gameplay = False
-        # self.health_bar.update_health()
-
-    # def set_heal(self, heal: int):
-    #     self.health += int(heal)
-    #     if self.health > self.max_health:
-    #         self.health = self.max_health
-    #     # self.health_bar.update_health(self.health)
+        self.health_new.set_damage(damage)
+            # self.gameplay = False
 
     def add_bullet(self, new_bullet : int):
         self.bullets_count += new_bullet

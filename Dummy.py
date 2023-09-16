@@ -1,9 +1,9 @@
 import pygame
 from pygame.math import Vector2
-from HealthBar_class import Health
-# from HealthBar_class import HealthBar
-from HealthBar_class import FancyHealthBar
-from HealthBar_class import FancyBoundHealthBar
+from HealthBar import Health
+# from HealthBar import HealthBar
+from HealthBar import FancyHealthBar
+from HealthBar import FancyBoundHealthBar
 from Path import resource_path
 from Clock_class import Clock
 
@@ -25,6 +25,9 @@ class Dummy(pygame.sprite.Sprite):
         health_bar_rect = pygame.Rect(bar_pos, (100, 6))
         self.health_bar = FancyBoundHealthBar(health_bar_rect, self.health, 1)
         self.health_bar.update_pos(bar_pos)
+
+    def init(self):
+        self.health_bar.init()
 
     def update(self):
         self.collide_bullet()
@@ -64,6 +67,6 @@ class Dummy(pygame.sprite.Sprite):
         original_w = self.image.get_width()
         original_h = self.image.get_height()
         new_w = int(original_w * (new_h/original_h))
-        print(f"new_h: {new_h}, new_w: {new_w}")
+        # print(f"new_h: {new_h}, new_w: {new_w}")
 
         self.image = pygame.transform.scale(self.image, (new_w, new_h))

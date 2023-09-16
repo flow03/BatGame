@@ -111,6 +111,7 @@ run = True
 def initialize():
     # gameplay = True
     player.init()
+    dummy.init()
     # Girl.empty()
     bat_list.empty()
     bullets.empty()
@@ -203,6 +204,8 @@ while run:
                     isBoundRects = False
             if event.key == pygame.K_t:
                 Events.switch()
+            if event.key == pygame.K_p:
+                player.poisoned()
             # if event.key == pygame.K_m:
             #     if not Girl:
             #         Girl.add(Dance_Girl(screen, foodDrops))
