@@ -5,7 +5,7 @@ from HealthBar import FancyHealthBar
 from HealthBar import BulletBar
 from HealthBar import Health
 from Bullet_class import Bullet
-from Effects import PoisonEffect
+import Effects
 
 class Player:
     def __init__(self, x, y):
@@ -18,7 +18,7 @@ class Player:
         self.load_animation_frames()
         self.start_pos = Vector2(x, y)
         self.speed = 3
-        self.effects = []
+        self.effects = Effects.EffectQueue(self)
 
         self.health_new = Health(100)
         # self.max_health = 100
@@ -47,10 +47,10 @@ class Player:
         self.bullet_bar.update(self.bullets_count)
 
     def poisoned(self):
-        if not self.effects:
-            self.effects.append(PoisonEffect(self.health_bar))
-        else:
-            self.effects.pop()
+        self.effects.add("poison")
+
+    def speed_up(self):
+        self.effects.add("speed")
 
     def load_animation_frames(self):
         # Завантаження всіх кадрів анімацій для кожного напрямку руху
@@ -80,8 +80,12 @@ class Player:
         self.health_bar.update_health()
         # self.bullet_bar.update(self.bullets_count)
 
-        for effect in self.effects:
-            effect.update()
+        self.effects.update()
+        # for effect in self.effects:
+        #     effect.update()
+        #     if effect.off():
+        #         # self.effects.pop()
+        #         self.effects.remove(effect)
 
         if self.health_new.empty():
             self.gameplay = False

@@ -40,7 +40,18 @@ class Text:
         self.print('killed bats', player.killedBats)
         self.print('bullets', player.bullets_count)
         self.print('health', player.health_new.health)
-        self.print('loot on screen', len(drops_list))
+        self.print('speed', player.speed)
+
+        # speed_effect = player.effects.queue.get("speed")
+        # if speed_effect:
+        #     self.print('speed', speed_effect.time())
+
+        if player.effects.queue:
+            for key in player.effects.queue.keys():
+                self.print(key + " effect", player.effects.queue[key].time())
+
+             
+        # self.print('loot on screen', len(drops_list))
         
         # self.print('r_rect_width', player.health_bar.rect.width)
         # self.print('g_rect_width', player.health_bar.green_rect.width)

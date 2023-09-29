@@ -206,6 +206,8 @@ while run:
                 Events.switch()
             if event.key == pygame.K_p:
                 player.poisoned()
+            if event.key == pygame.K_o:
+                player.speed_up()
             # if event.key == pygame.K_m:
             #     if not Girl:
             #         Girl.add(Dance_Girl(screen, foodDrops))
