@@ -117,10 +117,9 @@ def initialize():
     bullets.empty()
     bulletDrops.empty()
     foodDrops.empty()
-    # bullets_count = 5
-    # killedBats = 0
     jump.is_jump = False
     # nextFrame = clock() + anim_delay
+    Events.set_timer()
 
 # Main loop
 while run:

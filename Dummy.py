@@ -2,7 +2,7 @@ import pygame
 from pygame.math import Vector2
 from HealthBar import Health
 # from HealthBar import HealthBar
-from HealthBar import FancyHealthBar
+# from HealthBar import FancyHealthBar
 from HealthBar import FancyBoundHealthBar
 from Path import resource_path
 from Clock_class import Clock
@@ -61,7 +61,6 @@ class Dummy(pygame.sprite.Sprite):
         self.health.set_damage(damage)
         if self.health.empty():
             self.re_delay.start()
-            # self.health.reload()
 
     def resize_image(self, new_h):
         original_w = self.image.get_width()

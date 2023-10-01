@@ -2,6 +2,7 @@ import pygame
 from pygame.math import Vector2
 from Spritesheet_class import SpriteSheet
 from HealthBar import FancyHealthBar
+from HealthBar import FancyBoundHealthBar
 from HealthBar import BulletBar
 from HealthBar import Health
 from Bullet_class import Bullet
@@ -24,7 +25,7 @@ class Player:
         # self.max_health = 100
         # self.max_bullets_count = 32
         # self.health_bar = FancyHealthBar((20, 15), 254, 13) # max_health is 100 as default
-        self.health_bar = FancyHealthBar(pygame.Rect((20, 15), (254, 13)), self.health_new)
+        self.health_bar = FancyBoundHealthBar(pygame.Rect((20, 15), (254, 13)), self.health_new, 1)
         self.bullet_bar = BulletBar((20, 32), 254, 16) # 15+13+(2*2)
 
         self.init()

@@ -15,17 +15,17 @@ class UserEvents:
         pygame.time.set_timer(self.BULLET_DROP_TIMER, 3200)
         pygame.time.set_timer(self.FOOD_DROP_TIMER, 3500)
         pygame.time.set_timer(self.BAT_SP_TIMER, 6000)
+        self.isEvents = True
 
     def stop_timer(self):
         pygame.time.set_timer(self.BAT_TIMER, 0)
         pygame.time.set_timer(self.BULLET_DROP_TIMER, 0)
         pygame.time.set_timer(self.FOOD_DROP_TIMER, 0)
-        pygame.time.set_timer(self.BAT_SP_TIMER, 0) 
+        pygame.time.set_timer(self.BAT_SP_TIMER, 0)
+        self.isEvents = False 
 
     def switch(self):
         if self.isEvents:
             self.stop_timer()
-            self.isEvents = False
         else:
             self.set_timer()
-            self.isEvents = True

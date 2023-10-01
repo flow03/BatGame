@@ -2,6 +2,7 @@ import pygame
 import random
 from pygame.math import Vector2
 from HealthBar import FancyHealthBar
+from HealthBar import FancyBoundHealthBar
 from HealthBar import Health
 from Path import resource_path
 import Drops_class
@@ -88,7 +89,7 @@ class BatSpecial(Bat):
         self.target = None
 
         health_bar_rect = pygame.Rect(self.rect.midtop, (self.rect.width, 5))
-        self.health_bar = FancyHealthBar(health_bar_rect, self.health, 1)
+        self.health_bar = FancyBoundHealthBar(health_bar_rect, self.health, 1)
         self.update_bar_pos()
 
     def update(self, player):
