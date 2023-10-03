@@ -1,10 +1,7 @@
 import pygame
 from pygame.math import Vector2
 from Spritesheet_class import SpriteSheet
-from HealthBar import FancyHealthBar
-from HealthBar import FancyBoundHealthBar
-from HealthBar import BulletBar
-from HealthBar import Health
+import HealthBar
 from Bullet_class import Bullet
 import Effects
 
@@ -21,13 +18,13 @@ class Player:
         self.speed = 3
         self.effects = Effects.EffectQueue_draw(self)
 
-        self.health_new = Health(100)
+        self.health_new = HealthBar.Health(100)
         # self.max_health = 100
         # self.max_bullets_count = 32
         health_rect = pygame.Rect((20, 15), (254, 13))
         # self.health_bar = FancyHealthBar(health_rect) # max_health is 100 as default
-        self.health_bar = FancyBoundHealthBar(health_rect, self.health_new, 1)
-        self.bullet_bar = BulletBar((20, 32), 254, 16) # 15+13+(2*2)
+        self.health_bar = HealthBar.FancyBoundHealthBar(health_rect, self.health_new, 2)
+        self.bullet_bar = HealthBar.BulletBar((20, 32), 254, 16) # 15+13+(2*2)
 
         self.init()
 

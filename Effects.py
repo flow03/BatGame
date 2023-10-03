@@ -1,7 +1,6 @@
 import pygame
 from pygame.math import Vector2
-from HealthBar import Health
-from HealthBar import HealthBar
+import HealthBar
 from Clock_class import Clock
 
 class EffectQueue:
@@ -69,7 +68,7 @@ class EffectQueue_draw(EffectQueue):
     def createBar(self, effect_key):
         max_time = self.queue[effect_key].duration()
         status_bar_rect = pygame.Rect((0,0), (60, 5))   # pos (0,0)
-        status_bar = HealthBar(status_bar_rect, Health(max_time), 1)
+        status_bar = HealthBar.BoundHealthBar(status_bar_rect, HealthBar.Health(max_time), 1)
         status_bar.change_colour("Yellow")
 
         return status_bar
@@ -175,7 +174,7 @@ class PoisonEffect(Effect):
 
 class SpeedEffect(Effect):
     def __init__(self, player):
-        time = 4000
+        time = 5000
         super().__init__(player, time)
 
         self.speed_bonus = 3

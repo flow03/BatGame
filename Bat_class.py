@@ -1,9 +1,7 @@
 import pygame
 import random
 from pygame.math import Vector2
-from HealthBar import FancyHealthBar
-from HealthBar import FancyBoundHealthBar
-from HealthBar import Health
+import HealthBar
 from Path import resource_path
 import Drops_class
 
@@ -84,12 +82,12 @@ class BatSpecial(Bat):
         # self.speed = random.randint(1, 3)
         self.speed = 2
         max_health = random.randint(30, 55) # bullet damage 25
-        self.health = Health(max_health)
+        self.health = HealthBar.Health(max_health)
         self.direction = Vector2()
         self.target = None
 
         health_bar_rect = pygame.Rect(self.rect.midtop, (self.rect.width, 5))
-        self.health_bar = FancyBoundHealthBar(health_bar_rect, self.health, 1)
+        self.health_bar = HealthBar.FancyBoundHealthBar(health_bar_rect, self.health, 1)
         self.update_bar_pos()
 
     def update(self, player):

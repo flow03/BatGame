@@ -91,6 +91,11 @@ class HealthBar:
     def change_colour(self, colour):
         self.colour = colour
 
+    def set_damage(self, damage: int):
+        return self.health.set_damage(damage)
+
+    def set_heal(self, heal: int):
+        self.health.set_heal(heal)
 
 class FancyHealthBar(HealthBar):
     # def __init__(self, pos, width, height, border = 2):
@@ -170,6 +175,26 @@ class FancyHealthBar(HealthBar):
         else:
             self.rect.width = self.green_rect.width
             self.increase = False
+
+class BoundHealthBar(HealthBar):
+    def __init__(self, *params):
+        super().__init__(*params)
+
+        self.bound = 1
+        self.bound_rect = pygame.Rect(self.rect)
+        self.bound_rect.width += self.bound
+
+    def draw(self, screen):
+        pygame.draw.rect(screen, "Black", self.bound_rect, self.bound)
+        super().draw(screen)
+        
+    def update_health(self):
+        super().update_health()
+        self.bound_rect.width = self.rect.width + self.bound
+
+    def update_pos(self, pos):
+        super().update_pos(pos)
+        self.bound_rect.midleft = self.rect.midleft
 
 class FancyBoundHealthBar(FancyHealthBar):
     def __init__(self, *params):
