@@ -51,30 +51,44 @@ class EffectQueue:
             effect = SpeedEffect(self.player)
         return effect
 
-class PoisonEffect:
-    def __init__(self, player):
-        self.healthBar = player.health_bar
-        self.healthBar.change_colour("forestgreen")
-        self.default_damage = 2
-        self.poison_damage = self.default_damage
+class Effect:
+    def __init__(self, player, time : int):
+        self.player = player
 
-        self.timer = Clock(20000)
-        self.tick_timer = Clock(900)
+        self.timer = Clock(time)
         self.timer.start()
-        self.tick_timer.start()
 
     def update(self):
-        if self.tick_timer.isNextFrame():
-            self.healthBar.health.set_damage(self.poison_damage)    
+        ...
+
+    def increase(self):
+        ...
 
     def off(self):
         if self.timer.end():
             return True
         return False
-    
+
     def time(self):
         return self.timer.time()
-    
+
+class PoisonEffect(Effect):
+    def __init__(self, player):
+        time = 20000
+        super().__init__(player, time)
+
+        self.healthBar = self.player.health_bar
+        self.healthBar.change_colour("forestgreen")
+        self.default_damage = 2
+        self.poison_damage = self.default_damage
+
+        self.tick_timer = Clock(900)
+        self.tick_timer.start()
+
+    def update(self):
+        if self.tick_timer.isNextFrame():
+            self.healthBar.health.set_damage(self.poison_damage)        
+ 
     def increase(self):
         self.poison_damage += self.default_damage
         # self.timer.restart()
@@ -82,26 +96,14 @@ class PoisonEffect:
     def __del__(self):
         self.healthBar.change_colour("red")
 
-class SpeedEffect:
+class SpeedEffect(Effect):
     def __init__(self, player):
-        self.player = player
+        time = 4000
+        super().__init__(player, time)
+
         self.speed_bonus = 3
         self.default_speed = self.player.speed
         self.player.speed += self.speed_bonus
-
-        self.timer = Clock(4000)
-        self.timer.start()
-
-    def time(self):
-        return self.timer.time()    
-
-    def update(self):
-        ...
-    
-    def off(self):
-        if self.timer.end():
-            return True
-        return False
 
     def increase(self):
         self.player.speed += self.speed_bonus
