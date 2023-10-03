@@ -83,7 +83,10 @@ class HealthBar:
             
             ratio = self.health.get_ratio()
             self.rect.width = round(self.max_width * ratio)
-            # self.bound_rect.width = self.rect.width + self.bound
+
+    def set_health(self, health):
+        self.health.health = health
+        self.update_health()
 
     def change_colour(self, colour):
         self.colour = colour

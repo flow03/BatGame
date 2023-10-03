@@ -19,13 +19,14 @@ class Player:
         self.load_animation_frames()
         self.start_pos = Vector2(x, y)
         self.speed = 3
-        self.effects = Effects.EffectQueue(self)
+        self.effects = Effects.EffectQueue_draw(self)
 
         self.health_new = Health(100)
         # self.max_health = 100
         # self.max_bullets_count = 32
-        # self.health_bar = FancyHealthBar((20, 15), 254, 13) # max_health is 100 as default
-        self.health_bar = FancyBoundHealthBar(pygame.Rect((20, 15), (254, 13)), self.health_new, 1)
+        health_rect = pygame.Rect((20, 15), (254, 13))
+        # self.health_bar = FancyHealthBar(health_rect) # max_health is 100 as default
+        self.health_bar = FancyBoundHealthBar(health_rect, self.health_new, 1)
         self.bullet_bar = BulletBar((20, 32), 254, 16) # 15+13+(2*2)
 
         self.init()
@@ -37,6 +38,7 @@ class Player:
         self.animation_speed = 0.2  # Швидкість анімації (затримка між кадрами)
         self.image = self.animation_frames[self.current_animation][int(self.frame_index)]
         self.rect = self.image.get_rect(center=self.start_pos)
+        # self.effects = Effects.EffectQueue_draw(self) # need rect
 
         self.bullets_count = 32 # self.max_bullets_count
         self.killedBats = 0
@@ -46,6 +48,7 @@ class Player:
 
         self.health_bar.init()
         self.bullet_bar.update(self.bullets_count)
+
 
     def poisoned(self):
         self.effects.add("poison")
@@ -112,6 +115,10 @@ class Player:
 
         self.health_bar.draw(screen)
         self.bullet_bar.draw(screen)
+        
+        if self.effects:
+            if isinstance(self.effects, Effects.EffectQueue_draw):
+                self.effects.draw(screen)    
             
     def get_colour_rect(self, colour):
         colour_rect = pygame.Surface(self.rect.size)
