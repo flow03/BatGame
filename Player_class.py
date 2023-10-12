@@ -63,16 +63,16 @@ class Player:
         idle_sheet = SpriteSheet('img/spritesheets/hero_idle.png')
         self.animation_frames['idle'] = idle_sheet.get_anim()
 
-    def update(self, bulletDrops, foodDrops):
-        if bulletDrops:
-            sprite = pygame.sprite.spritecollideany(self, bulletDrops)
+    def update(self, drops):
+        if drops.bulletDrops:
+            sprite = pygame.sprite.spritecollideany(self, drops.bulletDrops)
             if sprite:
                 self.add_bullet(2)
                 sprite.kill()
             # pygame.sprite.spritecollide(player, bulletDrops, True)
 
-        if foodDrops:
-            food = pygame.sprite.spritecollideany(self, foodDrops)
+        if drops.foodDrops:
+            food = pygame.sprite.spritecollideany(self, drops.foodDrops)
             if food:
                 self.health_new.set_heal(food.heal)
                 # self.health_bar.update_health()

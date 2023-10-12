@@ -7,6 +7,7 @@ class EffectQueue:
     def __init__(self, player):
         self.player = player
         self.queue = {}
+        # self.isDraw = False
 
     def add(self, effect_key):
         if not self.queue.get(effect_key):

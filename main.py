@@ -4,8 +4,9 @@ import pygame
 from Player_class import Player
 from Jump_class import Jump
 # from Bullet_class import Bullet
-from Drops_class import BulletDrop
-from Drops_class import Food
+# from Drops_class import BulletDrop
+# from Drops_class import Food
+import Drops_class
 from MyGroup_class import MyGroup
 from Bat_class import Bat
 from Bat_class import BatSpecial
@@ -63,12 +64,14 @@ jump = Jump()
 
 Events = UserEvents()
 
-# Groups
+# Groups---
 bat_list = MyGroup()
 bullets = MyGroup() #pygame.sprite.Group()
-bulletDrops = MyGroup()
-foodDrops = MyGroup()
-drops_list = MyGroup()
+
+drops = Drops_class.Drops()
+# bulletDrops = MyGroup()
+# foodDrops = MyGroup()
+# drops_list = MyGroup()
 
 # Dummy
 dummy = Dummy(WIDTH//2 + 200, HEIGHT//2, bullets)
@@ -76,10 +79,10 @@ dummy = Dummy(WIDTH//2 + 200, HEIGHT//2, bullets)
 # Update
 def update_objects():
     bat_list.update(player)
-    player.update(bulletDrops, foodDrops)
-    bullets.update(screen, bat_list, player)
+    player.update(drops)
+    bullets.update(screen)
     # Girl.update(player)
-    drops_list.update()
+    drops.update()
     dummy.update()
 
 # Draw
@@ -92,8 +95,9 @@ def draw_objects(isBoundRects):
         colourRed = "Red"
 
     dummy.draw(screen, colourRed)
-    bulletDrops.draw(screen, colourGreen)
-    foodDrops.draw(screen, colourGreen)
+    # bulletDrops.draw(screen, colourGreen)
+    # foodDrops.draw(screen, colourGreen)
+    drops.draw(screen, colourGreen)
     bat_list.draw(screen, colourRed)
     player.draw(screen, colourGreen)
     bullets.draw(screen, colourGreen)
@@ -115,8 +119,7 @@ def initialize():
     # Girl.empty()
     bat_list.empty()
     bullets.empty()
-    bulletDrops.empty()
-    foodDrops.empty()
+    drops.empty()
     jump.is_jump = False
     # nextFrame = clock() + anim_delay
     Events.set_timer()
@@ -142,9 +145,9 @@ while run:
             player.move('down')
         
         # Player jump
-        if keys[pygame.K_SPACE]:
-            jump.jump_start(player)
-        jump.jump_end(player)
+        # if keys[pygame.K_SPACE]:
+        #     jump.jump_start(player)
+        # jump.jump_end(player)
 
         update_objects()
         draw_objects(isBoundRects)
@@ -152,7 +155,7 @@ while run:
         
         if isBoundRects:
             text.print_fps(screen, FPS)
-            text.print_debug_info(screen, bat_list, foodDrops, drops_list, player)
+            text.print_debug_info(screen, bat_list, drops, player)
             # if Girl:
             #     text.print_girl_info(screen, Girl.sprites()[-1]) # the last one
 
@@ -178,17 +181,13 @@ while run:
             # pygame.quit()
         # if not Girl:
         if event.type == Events.BAT_TIMER:
-            bat_list.add(Bat(screen, foodDrops, bulletDrops, drops_list))
+            bat_list.add(Bat(screen, drops, bullets))
         if event.type == Events.BAT_SP_TIMER:
-            bat_list.add(BatSpecial(screen, foodDrops, bulletDrops, drops_list))
+            bat_list.add(BatSpecial(screen, drops, bullets))
         if event.type == Events.BULLET_DROP_TIMER:
-            new_bullet_drop = BulletDrop()
-            new_bullet_drop.set_random_coordinates(screen)
-            bulletDrops.add(new_bullet_drop)
+            drops.create_bulletDrop()
         if event.type == Events.FOOD_DROP_TIMER:
-            new_food = Food()
-            new_food.check_random_coordinates(foodDrops, screen)
-            foodDrops.add(new_food)
+            drops.create_foodDrop()
         if player.gameplay and event.type == pygame.MOUSEBUTTONDOWN:
             # Створення кулі з позиції гравця до позиції миші
             player.shoot(bullets, pygame.mouse.get_pos())

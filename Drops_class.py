@@ -3,6 +3,7 @@ import random
 import math
 from pygame.math import Vector2
 from Spritesheet_class import SpriteSheet
+from MyGroup_class import MyGroup
 from Path import resource_path
 
 class BulletDrop(pygame.sprite.Sprite):
@@ -23,7 +24,6 @@ class BulletDrop(pygame.sprite.Sprite):
     def draw(self, screen):
         screen.blit(self.image, self.rect)
             
-
 class Food(pygame.sprite.Sprite):
     def __init__(self):
         super().__init__()
@@ -89,26 +89,76 @@ class Food(pygame.sprite.Sprite):
     def draw(self, screen): # MyGroup required screen param
         screen.blit(self.image, self.rect)
 
+
 class Drop(pygame.sprite.Sprite):
-    def __init__(self, drop_obj, obj_group, start_pos, dest_pos):
+    def __init__(self, drop_obj, start_pos, dest_pos):
         super().__init__()
         self.drop_obj = drop_obj # object reference
-        self.obj_group = obj_group # object group reference
+        # self.obj_group = obj_group # object group reference
         self.drop_obj.rect.center = start_pos
         # self.position = Vector2(start_pos)
         self.dest_pos = Vector2(dest_pos) # destination
         self.speed = 3
 
     def update(self):
-        if self.obj_group.has(self.drop_obj):
+        # if self.obj_group.has(self.drop_obj):
         # if self.drop_obj in self.obj_group:
-            direction = self.dest_pos - self.drop_obj.rect.center
+        direction = self.dest_pos - self.drop_obj.rect.center
 
-            if direction.length() <= self.speed:
-                self.drop_obj.rect.center = self.dest_pos
-                self.kill()
-            else:
-                direction.normalize_ip()
-                self.drop_obj.rect.center += direction * self.speed
-        else:
+        if direction.length() <= self.speed:
+            self.drop_obj.rect.center = self.dest_pos
             self.kill()
+        else:
+            direction.normalize_ip()
+            self.drop_obj.rect.center += direction * self.speed
+        # else:
+        #     self.kill()
+
+class Drops():
+    def __init__(self, screen):
+        self.bulletDrops = MyGroup()
+        self.foodDrops = MyGroup()
+        self.fallen_drops = MyGroup()
+
+        self.screen = screen
+
+    def createFallenDrop(self, start_pos):
+        rand_drop = random.randint(0, 1)
+        new_drop = None
+        # drop_group = None
+        if rand_drop:
+            new_drop = Food()
+            self.foodDrops.add(new_drop)
+            # drop_group = self.food_list
+        else:
+            new_drop = BulletDrop()
+            self.bulletDrops.add(new_drop)
+            # drop_group = self.bullet_list
+
+        start_pos = Vector2(start_pos)
+        dest_pos = Vector2()
+        dest_pos.x = start_pos.x
+        dest_pos.y = random.randint(start_pos.y, self.screen.get_height() - new_drop.rect.width//2)
+        
+        self.drops_list.add(Drop(new_drop, start_pos, dest_pos))
+
+    def update(self):
+        ...
+
+    def draw(self, screen, colour):
+        self.bulletDrops.draw(screen, colour)
+        self.foodDrops.draw(screen, colour)
+
+    def create_bulletDrop(self):
+        new_bullet_drop = BulletDrop()
+        new_bullet_drop.set_random_coordinates(self.screen)
+        self.bulletDrops.add(new_bullet_drop)
+
+    def create_foodDrop(self):
+        new_food = Food()
+        new_food.check_random_coordinates(self.foodDrops, self.screen)
+        self.foodDrops.add(new_food)
+
+    def empty(self):
+        self.bulletDrops.empty()
+        self.foodDrops.empty()

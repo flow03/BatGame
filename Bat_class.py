@@ -6,13 +6,15 @@ from Path import resource_path
 import Drops_class
 
 class Bat(pygame.sprite.Sprite):
-    def __init__(self, screen, food_list, bullet_list, drops_list):
+    def __init__(self, screen, drops, bullets):
         super().__init__()
 
         self.screen = screen
-        self.food_list = food_list
-        self.bullet_list = bullet_list
-        self.drops_list = drops_list
+        self.drops = drops
+        self.bullet_list = bullets
+
+        # self.food_list = food_list
+        # self.drops_list = drops_list
 
         WIDTH = screen.get_width()
         HEIGHT = screen.get_height()
@@ -47,10 +49,18 @@ class Bat(pygame.sprite.Sprite):
         if self.rect.colliderect(player.rect):
             player.set_damage(self.damage)
             self.kill()
+        # Перевірка колізій з ворогами
+        if self.bullet_list:
+            bullet = pygame.sprite.spritecollideany(self, self.bullet_list)
+            if bullet:
+                # player.killedBats += 1
+                self.set_damage(player, bullet.damage)
+                bullet.kill()
 
     def set_damage(self, player, damage: int):
         player.killedBats += 1
-        self.createDrops()
+        # self.createDrops()
+        self.drops.createFallenDrop(self.rect.center)
         self.kill()
 
     def createDrops(self):
@@ -74,8 +84,8 @@ class Bat(pygame.sprite.Sprite):
 
 
 class BatSpecial(Bat):
-    def __init__(self, screen, food_list, bullet_list, drops_list):
-        super().__init__(screen, food_list, bullet_list, drops_list)
+    def __init__(self, screen, drops, bullet_list):
+        super().__init__(screen, drops, bullet_list)
 
         self.set_rand_pos(screen)
         # self.food_list = food_list
@@ -103,9 +113,9 @@ class BatSpecial(Bat):
     def nearest_food(self):
         nearest_d = None # distance
         nearest_pos = Vector2()
-        if self.food_list:
+        if self.drops.foodDrops:
             bat_pos = Vector2(self.rect.center)
-            for food in self.food_list:
+            for food in self.drops.foodDrops:
                 food_pos = Vector2(food.rect.center)
                 distance = bat_pos.distance_to(food_pos)
                 if not nearest_d:
@@ -121,7 +131,7 @@ class BatSpecial(Bat):
         bat_pos = Vector2(self.rect.center)
         player_p = Vector2(player.rect.center)
 
-        if not self.health.full() and self.food_list:
+        if not self.health.full() and self.drops.foodDrops:
             player_d = bat_pos.distance_to(player_p)
             food_d, food_p = self.nearest_food()
 
@@ -135,8 +145,8 @@ class BatSpecial(Bat):
             self.target = player_p
 
     def collide_food(self, player):
-        if not self.health.full() and self.food_list:
-            food = pygame.sprite.spritecollideany(self, self.food_list)
+        if not self.health.full() and self.drops.foodDrops:
+            food = pygame.sprite.spritecollideany(self, self.drops.foodDrops)
             if food:
                 self.health.set_heal(food.heal)
                 # self.health_bar.update_health()
