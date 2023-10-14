@@ -13,9 +13,6 @@ class Bat(pygame.sprite.Sprite):
         self.drops = drops
         self.bullet_list = bullets
 
-        # self.food_list = food_list
-        # self.drops_list = drops_list
-
         WIDTH = screen.get_width()
         HEIGHT = screen.get_height()
         self.image = self.load_random_frame()
@@ -46,14 +43,14 @@ class Bat(pygame.sprite.Sprite):
         screen.blit(self.image, self.rect)
 
     def collide(self, player):
+        # Перевірка колізій з гравцем
         if self.rect.colliderect(player.rect):
             player.set_damage(self.damage)
             self.kill()
-        # Перевірка колізій з ворогами
+        # Перевірка колізій з кулями
         if self.bullet_list:
             bullet = pygame.sprite.spritecollideany(self, self.bullet_list)
             if bullet:
-                # player.killedBats += 1
                 self.set_damage(player, bullet.damage)
                 bullet.kill()
 
@@ -63,29 +60,9 @@ class Bat(pygame.sprite.Sprite):
         self.drops.createFallenDrop(self.rect.center)
         self.kill()
 
-    def createDrops(self):
-        rand_drop = random.randint(0, 1)
-        new_drop = None
-        drop_group = None
-        if rand_drop:
-            new_drop = Drops_class.Food()
-            self.food_list.add(new_drop)
-            drop_group = self.food_list
-        else:
-            new_drop = Drops_class.BulletDrop()
-            self.bullet_list.add(new_drop)
-            drop_group = self.bullet_list
-
-        dest = Vector2()
-        dest.x = self.rect.centerx
-        dest.y = random.randint(self.rect.centery, self.screen.get_height() - 15)
-        
-        self.drops_list.add(Drops_class.Drop(new_drop, drop_group, self.rect.center, dest))
-
-
 class BatSpecial(Bat):
-    def __init__(self, screen, drops, bullet_list):
-        super().__init__(screen, drops, bullet_list)
+    def __init__(self, screen, drops, bullets):
+        super().__init__(screen, drops, bullets)
 
         self.set_rand_pos(screen)
         # self.food_list = food_list
@@ -145,7 +122,7 @@ class BatSpecial(Bat):
             self.target = player_p
 
     def collide_food(self, player):
-        if not self.health.full() and self.drops.foodDrops:
+        if not self.health.full() and self.drops.foodDrops and not self.health.empty():
             food = pygame.sprite.spritecollideany(self, self.drops.foodDrops)
             if food:
                 self.health.set_heal(food.heal)

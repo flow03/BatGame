@@ -68,7 +68,7 @@ Events = UserEvents()
 bat_list = MyGroup()
 bullets = MyGroup() #pygame.sprite.Group()
 
-drops = Drops_class.Drops()
+drops = Drops_class.Drops(screen)
 # bulletDrops = MyGroup()
 # foodDrops = MyGroup()
 # drops_list = MyGroup()
@@ -204,7 +204,7 @@ while run:
                 Events.switch()
             if event.key == pygame.K_p:
                 player.poisoned()
-            if event.key == pygame.K_o:
+            if event.key == pygame.K_LSHIFT:
                 player.speed_up()
             # if event.key == pygame.K_m:
             #     if not Girl:

@@ -7,14 +7,16 @@ from MyGroup_class import MyGroup
 from Path import resource_path
 
 class BulletDrop(pygame.sprite.Sprite):
-    def __init__(self):
+    def __init__(self, group):
         super().__init__()
         img_url = resource_path('img/bullet.png')
         self.image = pygame.image.load(img_url).convert_alpha()
         self.image = pygame.transform.scale(self.image, (25, 9))
         self.image = pygame.transform.rotate(self.image, 90)
         self.rect = self.image.get_rect()
-    
+        self.group = group
+        self.group.add(self)
+
     def set_random_coordinates(self, screen, offset = 30):
         coords = Vector2()
         coords.x = random.randint(offset, screen.get_width() - offset)
@@ -25,13 +27,15 @@ class BulletDrop(pygame.sprite.Sprite):
         screen.blit(self.image, self.rect)
             
 class Food(pygame.sprite.Sprite):
-    def __init__(self):
+    def __init__(self, group):
         super().__init__()
         
         size = 30
         self.image = self.get_image(size)
         self.rect = self.image.get_rect()
         self.heal = random.randint(10, 20)
+        self.group = group
+        self.group.add(self)
 
     def get_image(self, size):
         sprite_sheet = SpriteSheet('img/spritesheets/food_spritesheet_30.png')
@@ -56,23 +60,31 @@ class Food(pygame.sprite.Sprite):
 
     def set_random_coordinates(self, screen):
         offset = 30 # self.image.get_width()//2 + 10
+        offset = self.rect.width
+        # print("Food self.rect.width: ", self.rect.width)
         coords = Vector2()
         coords.x = random.randint(offset, screen.get_width() - offset)
         coords.y = random.randint(offset, screen.get_height() - offset)
         self.rect.center = coords
         # return (x, y)
 
-    def check_random_coordinates(self, food_list, screen):
+    def check_random_coordinates(self, screen):
+        # exclude self collide
+        if self.group.has(self):
+            self.group.remove(self) 
+
         self.set_random_coordinates(screen)
         count = 0
-        while pygame.sprite.spritecollideany(self, food_list):
+        while pygame.sprite.spritecollideany(self, self.group):
             self.set_random_coordinates(screen)
             count += 1
             if count >= 15:
                 break
+        
+        self.group.add(self)
 
-        # if count:
-        #     print(f"coord_collisions: {count}")
+        if count:
+            print(f"Food coord_collisions: {count}")
 
     def check_circle_coordinates(self, food_list, center, radius, c_offset = 0):
         self.set_circle_coordinates(center, radius, c_offset)
@@ -94,25 +106,23 @@ class Drop(pygame.sprite.Sprite):
     def __init__(self, drop_obj, start_pos, dest_pos):
         super().__init__()
         self.drop_obj = drop_obj # object reference
-        # self.obj_group = obj_group # object group reference
         self.drop_obj.rect.center = start_pos
-        # self.position = Vector2(start_pos)
         self.dest_pos = Vector2(dest_pos) # destination
         self.speed = 3
 
     def update(self):
-        # if self.obj_group.has(self.drop_obj):
-        # if self.drop_obj in self.obj_group:
-        direction = self.dest_pos - self.drop_obj.rect.center
+        if self.drop_obj.group.has(self.drop_obj):  # Group method
+        # if self.drop_obj in self.drop_obj.group:
+            direction = self.dest_pos - self.drop_obj.rect.center
 
-        if direction.length() <= self.speed:
-            self.drop_obj.rect.center = self.dest_pos
-            self.kill()
+            if direction.length() <= self.speed:
+                self.drop_obj.rect.center = self.dest_pos
+                self.kill()
+            else:
+                direction.normalize_ip()
+                self.drop_obj.rect.center += direction * self.speed
         else:
-            direction.normalize_ip()
-            self.drop_obj.rect.center += direction * self.speed
-        # else:
-        #     self.kill()
+            self.kill()
 
 class Drops():
     def __init__(self, screen):
@@ -121,44 +131,47 @@ class Drops():
         self.fallen_drops = MyGroup()
 
         self.screen = screen
+        # self.fallen_count = 0
 
     def createFallenDrop(self, start_pos):
         rand_drop = random.randint(0, 1)
         new_drop = None
-        # drop_group = None
+
         if rand_drop:
-            new_drop = Food()
-            self.foodDrops.add(new_drop)
-            # drop_group = self.food_list
+            new_drop = Food(self.foodDrops)
         else:
-            new_drop = BulletDrop()
-            self.bulletDrops.add(new_drop)
-            # drop_group = self.bullet_list
+            new_drop = BulletDrop(self.bulletDrops)
 
         start_pos = Vector2(start_pos)
         dest_pos = Vector2()
         dest_pos.x = start_pos.x
         dest_pos.y = random.randint(start_pos.y, self.screen.get_height() - new_drop.rect.width//2)
         
-        self.drops_list.add(Drop(new_drop, start_pos, dest_pos))
+        self.fallen_drops.add(Drop(new_drop, start_pos, dest_pos))
+
+        # self.fallen_count += 1
+        # print(type(new_drop), " created ", self.fallen_count)
 
     def update(self):
-        ...
+        if self.fallen_drops:
+            for drop in self.fallen_drops:
+                drop.update()
 
     def draw(self, screen, colour):
         self.bulletDrops.draw(screen, colour)
         self.foodDrops.draw(screen, colour)
 
     def create_bulletDrop(self):
-        new_bullet_drop = BulletDrop()
+        new_bullet_drop = BulletDrop(self.bulletDrops)
         new_bullet_drop.set_random_coordinates(self.screen)
-        self.bulletDrops.add(new_bullet_drop)
+        # self.bulletDrops.add(new_bullet_drop)
 
     def create_foodDrop(self):
-        new_food = Food()
-        new_food.check_random_coordinates(self.foodDrops, self.screen)
-        self.foodDrops.add(new_food)
+        new_food = Food(self.foodDrops)
+        new_food.check_random_coordinates(self.screen)  # collide before add
+        # self.foodDrops.add(new_food)
 
     def empty(self):
         self.bulletDrops.empty()
         self.foodDrops.empty()
+        self.fallen_drops.empty()
