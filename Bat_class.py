@@ -6,11 +6,12 @@ from Path import resource_path
 import Drops_class
 
 class Bat(pygame.sprite.Sprite):
-    def __init__(self, screen, drops, bullets):
+    def __init__(self, screen, drops : Drops_class.Drops, player, bullets):
         super().__init__()
 
         self.screen = screen
         self.drops = drops
+        self.player = player
         self.bullet_list = bullets
 
         WIDTH = screen.get_width()
@@ -31,10 +32,10 @@ class Bat(pygame.sprite.Sprite):
         
         return frame
 
-    def update(self, player):
+    def update(self):
         self.rect = self.rect.move(-self.speed, 0)
 
-        self.collide(player)
+        self.collide()
 
         if self.rect.right < 0:
             self.kill()
@@ -42,27 +43,27 @@ class Bat(pygame.sprite.Sprite):
     def draw(self, screen):
         screen.blit(self.image, self.rect)
 
-    def collide(self, player):
+    def collide(self):
         # Перевірка колізій з гравцем
-        if self.rect.colliderect(player.rect):
-            player.set_damage(self.damage)
+        if self.rect.colliderect(self.player.rect):
+            self.player.set_damage(self.damage)
             self.kill()
         # Перевірка колізій з кулями
         if self.bullet_list:
             bullet = pygame.sprite.spritecollideany(self, self.bullet_list)
             if bullet:
-                self.set_damage(player, bullet.damage)
+                self.set_damage(bullet.damage)
                 bullet.kill()
 
-    def set_damage(self, player, damage: int):
-        player.killedBats += 1
+    def set_damage(self, damage: int):
+        self.player.killedBats += 1
         # self.createDrops()
         self.drops.createFallenDrop(self.rect.center)
         self.kill()
 
 class BatSpecial(Bat):
-    def __init__(self, screen, drops, bullets):
-        super().__init__(screen, drops, bullets)
+    def __init__(self, screen, *args):
+        super().__init__(screen, *args)
 
         self.set_rand_pos(screen)
         # self.food_list = food_list
@@ -77,15 +78,15 @@ class BatSpecial(Bat):
         self.health_bar = HealthBar.FancyBoundHealthBar(health_bar_rect, self.health, 1)
         self.update_bar_pos()
 
-    def update(self, player):
-        self.changeTarget(player) # player position as default
+    def update(self):
+        self.changeTarget() # player position as default
         self.direction = self.direction_by_point(self.target)
         self.rect.center += self.direction * self.speed
         
         self.update_bar_pos()
         self.health_bar.update_health()
-        self.collide(player)
-        self.collide_food(player)
+        self.collide()
+        self.collide_food()
 
     def nearest_food(self):
         nearest_d = None # distance
@@ -104,9 +105,9 @@ class BatSpecial(Bat):
 
         return nearest_d, nearest_pos
 
-    def changeTarget(self, player):
+    def changeTarget(self):
         bat_pos = Vector2(self.rect.center)
-        player_p = Vector2(player.rect.center)
+        player_p = Vector2(self.player.rect.center)
 
         if not self.health.full() and self.drops.foodDrops:
             player_d = bat_pos.distance_to(player_p)
@@ -121,13 +122,13 @@ class BatSpecial(Bat):
         else:
             self.target = player_p
 
-    def collide_food(self, player):
+    def collide_food(self):
         if not self.health.full() and self.drops.foodDrops and not self.health.empty():
             food = pygame.sprite.spritecollideany(self, self.drops.foodDrops)
             if food:
                 self.health.set_heal(food.heal)
                 # self.health_bar.update_health()
-                self.target = Vector2(player.rect.center)
+                self.target = Vector2(self.player.rect.center)
                 food.kill()
 
     def draw(self, screen):
@@ -149,9 +150,9 @@ class BatSpecial(Bat):
 
         return direction
 
-    def set_damage(self, player, damage: int):
+    def set_damage(self, damage: int):
         if not self.health.set_damage(damage):
-            super().set_damage(player, damage)
+            super().set_damage(damage)
         # self.health_bar.update_health()
     
     # def set_heal(self, heal: int):

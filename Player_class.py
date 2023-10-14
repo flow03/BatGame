@@ -6,7 +6,7 @@ from Bullet_class import Bullet
 import Effects
 
 class Player:
-    def __init__(self, x, y):
+    def __init__(self, x, y, drops):
         self.animation_frames = {
             'down': [],
             'up': [],
@@ -17,6 +17,7 @@ class Player:
         self.start_pos = Vector2(x, y)
         self.speed = 3
         self.effects = Effects.EffectQueue_draw(self)
+        self.drops = drops
 
         self.health_new = HealthBar.Health(100)
         # self.max_health = 100
@@ -63,47 +64,41 @@ class Player:
         idle_sheet = SpriteSheet('img/spritesheets/hero_idle.png')
         self.animation_frames['idle'] = idle_sheet.get_anim()
 
-    def update(self, drops):
-        if drops.bulletDrops:
-            sprite = pygame.sprite.spritecollideany(self, drops.bulletDrops)
+    def update(self):
+        if self.drops.bulletDrops:
+            sprite = pygame.sprite.spritecollideany(self, self.drops.bulletDrops)
             if sprite:
                 self.add_bullet(2)
                 sprite.kill()
             # pygame.sprite.spritecollide(player, bulletDrops, True)
 
-        if drops.foodDrops:
-            food = pygame.sprite.spritecollideany(self, drops.foodDrops)
+        if self.drops.foodDrops:
+            food = pygame.sprite.spritecollideany(self, self.drops.foodDrops)
             if food:
                 self.health_new.set_heal(food.heal)
                 # self.health_bar.update_health()
                 food.kill()
 
         self.health_bar.update_health()
-        # self.bullet_bar.update(self.bullets_count)
 
         self.effects.update()
-        # for effect in self.effects:
-        #     effect.update()
-        #     if effect.off():
-        #         # self.effects.pop()
-        #         self.effects.remove(effect)
 
         if self.health_new.empty():
             self.gameplay = False
 
+        self.update_animations()
+        
+    # оновлення кадрів анімації
+    def update_animations(self):
         if not self.is_moving:
             self.current_animation = "idle"
 
-        self.update_animations()
-        
-        self.is_moving = False
-
-    def update_animations(self):
-        # оновлення кадрів анімації
         self.frame_index += self.animation_speed
         if self.frame_index >= len(self.animation_frames[self.current_animation]):
             self.frame_index = 0
         self.image = self.animation_frames[self.current_animation][int(self.frame_index)]
+
+        self.is_moving = False
 
     def draw(self, screen, colour = None):
         screen.blit(self.image, self.rect)
@@ -151,9 +146,9 @@ class Player:
         self.bullet_bar.update(self.bullets_count)
 
     # target is direction as default
-    def shoot(self, bullet_group, target = None):
+    def shoot(self, screen, bullet_group, target = None):
         if self.bullets_count > 0:
-            new_bullet = Bullet(self.rect.center)
+            new_bullet = Bullet(screen, self.rect.center)
             if target:
                 new_bullet.velocity_by_mouse(target)
             else:

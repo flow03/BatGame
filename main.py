@@ -53,12 +53,6 @@ screen.blit(bg, (bg_x, bg_y))
 text.blit_loading_text(screen)
 pygame.display.update()
 
-# Player
-player = Player(WIDTH//2, HEIGHT//2) # 150, 300
-
-# Girl
-# Girl = MyGroup()
-
 # Jump
 jump = Jump()
 
@@ -73,14 +67,20 @@ drops = Drops_class.Drops(screen)
 # foodDrops = MyGroup()
 # drops_list = MyGroup()
 
+# Player
+player = Player(WIDTH//2, HEIGHT//2, drops) # 150, 300
+
+# Girl
+# Girl = MyGroup()
+
 # Dummy
 dummy = Dummy(WIDTH//2 + 200, HEIGHT//2, bullets)
 
 # Update
 def update_objects():
-    bat_list.update(player)
-    player.update(drops)
-    bullets.update(screen)
+    bat_list.update()
+    player.update()
+    bullets.update()
     # Girl.update(player)
     drops.update()
     dummy.update()
@@ -181,20 +181,20 @@ while run:
             # pygame.quit()
         # if not Girl:
         if event.type == Events.BAT_TIMER:
-            bat_list.add(Bat(screen, drops, bullets))
+            bat_list.add(Bat(screen, drops, player, bullets))
         if event.type == Events.BAT_SP_TIMER:
-            bat_list.add(BatSpecial(screen, drops, bullets))
+            bat_list.add(BatSpecial(screen, drops, player, bullets))
         if event.type == Events.BULLET_DROP_TIMER:
             drops.create_bulletDrop()
         if event.type == Events.FOOD_DROP_TIMER:
             drops.create_foodDrop()
         if player.gameplay and event.type == pygame.MOUSEBUTTONDOWN:
             # Створення кулі з позиції гравця до позиції миші
-            player.shoot(bullets, pygame.mouse.get_pos())
+            player.shoot(screen, bullets, pygame.mouse.get_pos())
         if player.gameplay and event.type == pygame.KEYDOWN:
             if event.key == pygame.K_e or event.key == pygame.K_q:
                 # Створення кулі, яка летітиме у напрямку player.direction
-                player.shoot(bullets)
+                player.shoot(screen, bullets)
             if event.key == pygame.K_TAB:
                 if not isBoundRects:
                     isBoundRects = True

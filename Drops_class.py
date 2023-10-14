@@ -83,8 +83,8 @@ class Food(pygame.sprite.Sprite):
         
         self.group.add(self)
 
-        if count:
-            print(f"Food coord_collisions: {count}")
+        # if count:
+        #     print(f"Food coord_collisions: {count}")
 
     def check_circle_coordinates(self, food_list, center, radius, c_offset = 0):
         self.set_circle_coordinates(center, radius, c_offset)
