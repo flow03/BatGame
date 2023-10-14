@@ -69,15 +69,15 @@ class Dance:
     def update(self, girl):
         self.changeDance(girl)
         if self.food_clock.isNextFrame():
-            new_food = Food()
-            new_food.check_circle_coordinates(girl.food_list, girl.rect.center, 70, 60)
-            girl.food_list.add(new_food)
+            new_food = Food(girl.food_list)
+            new_food.check_circle_coordinates(girl.rect.center, 70, 60)
+            # girl.food_list.add(new_food)
 
     def isDanceOver(self):
         return self.dance_over.end()
 
 class Dance_Girl(pygame.sprite.Sprite):
-    def __init__(self, screen, food_list : MyGroup):
+    def __init__(self, screen, player, actors, food_list : MyGroup):
         super().__init__()
         self.animations = {
             'balancing': [],
@@ -90,6 +90,8 @@ class Dance_Girl(pygame.sprite.Sprite):
         self.screen = screen
         self.speed = 3
 
+        self.player = player
+        self.actors = actors
         self.food_list = food_list
         self.circle = Circle()
         self.dance = None
@@ -174,8 +176,8 @@ class Dance_Girl(pygame.sprite.Sprite):
 
         return direction
 
-    def update(self, player):
-        player_pos = Vector2(player.rect.center)
+    def update(self):
+        player_pos = Vector2(self.player.rect.center)
         # Рух до гравця з-за меж екрану
         if self.state == "move_to_player":
             distance = Vector2(self.rect.center).distance_to(player_pos)
@@ -222,7 +224,8 @@ class Dance_Girl(pygame.sprite.Sprite):
             self.move(self.away_direction)
             # Перевірка, чи вийшов персонаж за межі екрану
             if not self.screen.get_rect().colliderect(self.rect):
-                self.kill()
+                # self.kill()
+                self.actors.actors['girl'] = None
 
         # Оновлюємо напрямок анімації руху
         # self.update_direction(direction)

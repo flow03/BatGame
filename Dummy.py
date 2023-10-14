@@ -37,11 +37,8 @@ class Dummy(pygame.sprite.Sprite):
 
         self.health_bar.update_health()
 
-    def draw(self, screen, colour = None):
+    def draw(self, screen):
         screen.blit(self.image, self.rect)
-        if colour:
-            pygame.draw.rect(screen, colour, self.rect, 2)
-
         self.health_bar.draw(screen)
 
     def collide_bullet(self):

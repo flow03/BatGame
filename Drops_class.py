@@ -86,17 +86,23 @@ class Food(pygame.sprite.Sprite):
         # if count:
         #     print(f"Food coord_collisions: {count}")
 
-    def check_circle_coordinates(self, food_list, center, radius, c_offset = 0):
+    def check_circle_coordinates(self, center, radius, c_offset = 0):
+        # exclude self collide
+        if self.group.has(self):
+            self.group.remove(self) 
+
         self.set_circle_coordinates(center, radius, c_offset)
         count = 0
-        while pygame.sprite.spritecollideany(self, food_list):
+        while pygame.sprite.spritecollideany(self, self.group):
             self.set_circle_coordinates(center, radius, c_offset)
             count += 1
             if count >= 20:
                 break
 
-        # if count:
-        #     print(f"circle_coord_collisions: {count}")
+        self.group.add(self)
+
+        if count:
+            print(f"Food circle collisions: {count}")
 
     def draw(self, screen): # MyGroup required screen param
         screen.blit(self.image, self.rect)

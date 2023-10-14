@@ -2,7 +2,7 @@ import pygame
 # import random
 # import spritesheet
 from Player_class import Player
-from Jump_class import Jump
+# from Jump_class import Jump
 # from Bullet_class import Bullet
 # from Drops_class import BulletDrop
 # from Drops_class import Food
@@ -15,6 +15,7 @@ from Dance_Girl_class import Dance_Girl
 from Path import resource_path
 from UserEvents import UserEvents
 from Dummy import Dummy
+from Actors import Actors
 
 FPS = pygame.time.Clock()
 pygame.init()
@@ -54,7 +55,7 @@ text.blit_loading_text(screen)
 pygame.display.update()
 
 # Jump
-jump = Jump()
+# jump = Jump()
 
 Events = UserEvents()
 
@@ -74,16 +75,18 @@ player = Player(WIDTH//2, HEIGHT//2, drops) # 150, 300
 # Girl = MyGroup()
 
 # Dummy
-dummy = Dummy(WIDTH//2 + 200, HEIGHT//2, bullets)
+# dummy = Dummy(WIDTH//2 + 200, HEIGHT//2, bullets)
+
+actors = Actors()
+actors.add('dummy', Dummy(WIDTH//2 + 200, HEIGHT//2, bullets))
 
 # Update
 def update_objects():
     bat_list.update()
     player.update()
     bullets.update()
-    # Girl.update(player)
     drops.update()
-    dummy.update()
+    actors.update()
 
 # Draw
 def draw_objects(isBoundRects):
@@ -94,14 +97,11 @@ def draw_objects(isBoundRects):
         colourGreen = "Green"
         colourRed = "Red"
 
-    dummy.draw(screen, colourRed)
-    # bulletDrops.draw(screen, colourGreen)
-    # foodDrops.draw(screen, colourGreen)
+    actors.draw(screen, colourRed)
     drops.draw(screen, colourGreen)
     bat_list.draw(screen, colourRed)
-    player.draw(screen, colourGreen)
     bullets.draw(screen, colourGreen)
-    # Girl.draw(screen, colourGreen)
+    player.draw(screen, colourGreen)
 
 # Sound
 # bg_sound = pygame.mixer.Sound('sounds/Black Sabbath - Paranoid.mp3')
@@ -113,15 +113,12 @@ isBoundRects = False
 run = True
 
 def initialize():
-    # gameplay = True
     player.init()
-    dummy.init()
-    # Girl.empty()
+    actors.init()
     bat_list.empty()
     bullets.empty()
     drops.empty()
-    jump.is_jump = False
-    # nextFrame = clock() + anim_delay
+    # jump.is_jump = False
     Events.set_timer()
 
 # Main loop
@@ -206,9 +203,8 @@ while run:
                 player.poisoned()
             if event.key == pygame.K_LSHIFT:
                 player.speed_up()
-            # if event.key == pygame.K_m:
-            #     if not Girl:
-            #         Girl.add(Dance_Girl(screen, foodDrops))
+            if event.key == pygame.K_m:
+                actors.add('girl', Dance_Girl(screen, player, actors, drops.foodDrops))
         # працює незалежно від player.gameplay
         if event.type == pygame.KEYDOWN:
             if event.key == pygame.K_r:
