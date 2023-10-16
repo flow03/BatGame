@@ -101,8 +101,8 @@ class Food(pygame.sprite.Sprite):
 
         self.group.add(self)
 
-        if count:
-            print(f"Food circle collisions: {count}")
+        # if count:
+        #     print(f"Food circle collisions: {count}")
 
     def draw(self, screen): # MyGroup required screen param
         screen.blit(self.image, self.rect)

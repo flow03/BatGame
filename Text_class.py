@@ -32,15 +32,17 @@ class Text:
     def print_fps(self, screen, FPS):
         screen.blit(self.myfont.render('FPS: ' + str(int(FPS.get_fps())), True, "Black"), (self.WIDTH - 85, 15))
 
-    def print_debug_info(self, screen, bat_list, drops, player):
+    def print_debug_info(self, screen, actors, drops, player):
         self.y = 55
         self.screen = screen
-        self.print('bats on screen', len(bat_list))
+        self.print('bats on screen', len(actors['bats']))
         self.print('food on screen', len(drops.foodDrops))
         self.print('killed bats', player.killedBats)
         self.print('bullets', player.bullets_count)
         self.print('health', player.health_new.health)
         self.print('speed', player.speed)
+        self.print('loot on screen', len(drops.fallen_drops))
+        self.print('actors on screen', len(actors['actors']))
 
         # speed_effect = player.effects.queue.get("speed")
         # if speed_effect:
@@ -50,9 +52,6 @@ class Text:
             for key in player.effects.queue.keys():
                 self.print(key + " effect", player.effects.queue[key].time())
 
-             
-        self.print('loot on screen', len(drops.fallen_drops))
-        
         # self.print('r_rect_width', player.health_bar.rect.width)
         # self.print('g_rect_width', player.health_bar.green_rect.width)
         # self.print('y_rect_width', player.health_bar.yellow_rect.width)

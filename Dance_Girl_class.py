@@ -224,8 +224,8 @@ class Dance_Girl(pygame.sprite.Sprite):
             self.move(self.away_direction)
             # Перевірка, чи вийшов персонаж за межі екрану
             if not self.screen.get_rect().colliderect(self.rect):
-                # self.kill()
-                self.actors.actors['girl'] = None
+                self.kill()
+                # self.actors.actors['girl'] = None
 
         # Оновлюємо напрямок анімації руху
         # self.update_direction(direction)

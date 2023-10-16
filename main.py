@@ -15,7 +15,7 @@ from Dance_Girl_class import Dance_Girl
 from Path import resource_path
 from UserEvents import UserEvents
 from Dummy import Dummy
-from Actors import Actors
+import Actors
 
 FPS = pygame.time.Clock()
 pygame.init()
@@ -60,8 +60,8 @@ pygame.display.update()
 Events = UserEvents()
 
 # Groups---
-bat_list = MyGroup()
-bullets = MyGroup() #pygame.sprite.Group()
+# bat_list = MyGroup()
+# bullets = MyGroup() #pygame.sprite.Group()
 
 drops = Drops_class.Drops(screen)
 # bulletDrops = MyGroup()
@@ -77,30 +77,26 @@ player = Player(WIDTH//2, HEIGHT//2, drops) # 150, 300
 # Dummy
 # dummy = Dummy(WIDTH//2 + 200, HEIGHT//2, bullets)
 
-actors = Actors()
-actors.add('dummy', Dummy(WIDTH//2 + 200, HEIGHT//2, bullets))
+actors = Actors.Actors_()
+# 3 variants of add
+actors['actors'].add(Dummy(WIDTH//2 + 200, HEIGHT//2, actors['bullets']))
+# actors['actors'] = Dummy(WIDTH//2 + 200, HEIGHT//2, actors['bullets'])
+# actors.add('actors', Dummy(WIDTH//2 + 200, HEIGHT//2, actors['bullets']))
 
 # Update
 def update_objects():
-    bat_list.update()
+    # bat_list.update()
     player.update()
-    bullets.update()
+    # bullets.update()
     drops.update()
     actors.update()
 
 # Draw
 def draw_objects(isBoundRects):
-    if not isBoundRects:
-        colourGreen = None
-        colourRed = None
-    else:
-        colourGreen = "Green"
-        colourRed = "Red"
+    colourGreen, colourRed = Actors.get_colour(isBoundRects)
 
-    actors.draw(screen, colourRed)
     drops.draw(screen, colourGreen)
-    bat_list.draw(screen, colourRed)
-    bullets.draw(screen, colourGreen)
+    actors.draw(screen, isBoundRects)
     player.draw(screen, colourGreen)
 
 # Sound
@@ -114,9 +110,9 @@ run = True
 
 def initialize():
     player.init()
-    actors.init()
-    bat_list.empty()
-    bullets.empty()
+    actors.clear()
+    # bat_list.empty()
+    # bullets.empty()
     drops.empty()
     # jump.is_jump = False
     Events.set_timer()
@@ -152,7 +148,7 @@ while run:
         
         if isBoundRects:
             text.print_fps(screen, FPS)
-            text.print_debug_info(screen, bat_list, drops, player)
+            text.print_debug_info(screen, actors, drops, player)
             # if Girl:
             #     text.print_girl_info(screen, Girl.sprites()[-1]) # the last one
 
@@ -178,20 +174,20 @@ while run:
             # pygame.quit()
         # if not Girl:
         if event.type == Events.BAT_TIMER:
-            bat_list.add(Bat(screen, drops, player, bullets))
+            actors['bats'].add(Bat(screen, drops, player, actors['bullets']))
         if event.type == Events.BAT_SP_TIMER:
-            bat_list.add(BatSpecial(screen, drops, player, bullets))
+            actors['bats'].add(BatSpecial(screen, drops, player, actors['bullets']))
         if event.type == Events.BULLET_DROP_TIMER:
             drops.create_bulletDrop()
         if event.type == Events.FOOD_DROP_TIMER:
             drops.create_foodDrop()
         if player.gameplay and event.type == pygame.MOUSEBUTTONDOWN:
             # Створення кулі з позиції гравця до позиції миші
-            player.shoot(screen, bullets, pygame.mouse.get_pos())
+            player.shoot(screen, actors['bullets'], pygame.mouse.get_pos())
         if player.gameplay and event.type == pygame.KEYDOWN:
             if event.key == pygame.K_e or event.key == pygame.K_q:
                 # Створення кулі, яка летітиме у напрямку player.direction
-                player.shoot(screen, bullets)
+                player.shoot(screen, actors['bullets'])
             if event.key == pygame.K_TAB:
                 if not isBoundRects:
                     isBoundRects = True
@@ -204,7 +200,7 @@ while run:
             if event.key == pygame.K_LSHIFT:
                 player.speed_up()
             if event.key == pygame.K_m:
-                actors.add('girl', Dance_Girl(screen, player, actors, drops.foodDrops))
+                actors.add('actors', Dance_Girl(screen, player, actors, drops.foodDrops))
         # працює незалежно від player.gameplay
         if event.type == pygame.KEYDOWN:
             if event.key == pygame.K_r:
