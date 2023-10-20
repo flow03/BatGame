@@ -68,20 +68,16 @@ drops = Drops_class.Drops(screen)
 # foodDrops = MyGroup()
 # drops_list = MyGroup()
 
+actors = Actors.Actors_()
+
 # Player
 player = Player(WIDTH//2, HEIGHT//2, drops) # 150, 300
+dummy = Dummy(WIDTH//2 + 200, HEIGHT//2, actors['bullets'])
 
-# Girl
-# Girl = MyGroup()
-
-# Dummy
-# dummy = Dummy(WIDTH//2 + 200, HEIGHT//2, bullets)
-
-actors = Actors.Actors_()
 # 3 variants of add
-actors['actors'].add(Dummy(WIDTH//2 + 200, HEIGHT//2, actors['bullets']))
-# actors['actors'] = Dummy(WIDTH//2 + 200, HEIGHT//2, actors['bullets'])
-# actors.add('actors', Dummy(WIDTH//2 + 200, HEIGHT//2, actors['bullets']))
+actors['actors'].add(dummy)
+# actors['actors'] = dummy
+# actors.add('actors', dummy)
 
 # test_group = MyGroup()
 # print('test_group empty ', bool(test_group))
@@ -116,8 +112,8 @@ run = True
 def initialize():
     player.init()
     actors.clear()
-    # bat_list.empty()
-    # bullets.empty()
+    dummy.init()
+    actors['actors'].add(dummy)
     drops.empty()
     # jump.is_jump = False
     Events.set_timer()

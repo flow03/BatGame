@@ -2,7 +2,7 @@ import pygame
 from pygame.math import Vector2
 from Clock_class import Clock
 from Path import resource_path
-
+from Effects import Effect
 
 class Health:
     def __init__(self, max_health):
@@ -302,4 +302,22 @@ class BulletBar:
         # print(new_width, new_height)
         self.bullet_image = pygame.transform.scale(self.bullet_image, (new_width, new_height))
 
+class EffectBar:
+    def __init__(self, effect : Effect):
+        self.effect = effect
+        max_time = self.effect.duration()
+        status_bar_rect = pygame.Rect((0,0), (60, 5))   # pos (0,0)
+        self.effect_bar = BoundHealthBar(status_bar_rect, Health(max_time), 1)
+        self.effect_bar.change_colour("Yellow")
+        
+    def update_pos(self, position):
+        self.effect_bar.update_pos(position)
+
+    def update(self):
+        time = self.effect.time()
+        if time:
+            self.effect_bar.set_health(time)
+
+    def draw(self, screen):
+        self.effect_bar.draw(screen)
 

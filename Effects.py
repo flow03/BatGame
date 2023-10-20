@@ -14,16 +14,17 @@ class EffectQueue:
             effect = self.createEffect(effect_key)
             if effect:
                 self.queue[effect_key] = effect
-            #     print(effect_key, "added to queue")
+                print(effect_key, "added to queue")
             # else:
             #     print(effect_key, "not valid key")
         else: 
             self.queue[effect_key].increase()
-            # print(effect_key, "increased")
+            print(effect_key, "increased")
 
-    def remove(self, effect_key):
-        self.queue.pop(effect_key)
-        # print(effect_key, "removed")
+    def remove(self, key):
+        self.queue[key].__del__()
+        self.queue.pop(key)
+        print(key, "removed")
 
     def check(self):
         del_keys = []
@@ -38,8 +39,10 @@ class EffectQueue:
     def update(self):
         self.check() # +cycle
 
-        for key in self.queue.keys():
-            self.queue[key].update()
+        # for key in self.queue.keys():
+        #     self.queue[key].update()
+        for effect in self.queue.values():
+            effect.update()
 
     def draw(self, screen):
         ...
@@ -47,6 +50,7 @@ class EffectQueue:
     def clear(self):
         self.queue.clear()
 
+    # factory method
     def createEffect(self, effect_key):
         effect = None
         if effect_key == "poison":
@@ -59,78 +63,50 @@ class EffectQueue_draw(EffectQueue):
     def __init__(self, player):
         super().__init__(player)
 
-        #rect
-        self.effect_bars = {}
-        # self.bars_init()
-
-    # def bars_init(self):
-    #     for key in self.queue.keys():
-    #         self.effect_bars[key] = self.createBar(key)
-
-    #     self.update_pos()
-
-    def createBar(self, effect_key):
-        max_time = self.queue[effect_key].duration()
-        status_bar_rect = pygame.Rect((0,0), (60, 5))   # pos (0,0)
-        status_bar = HealthBar.BoundHealthBar(status_bar_rect, HealthBar.Health(max_time), 1)
-        status_bar.change_colour("Yellow")
-
-        return status_bar
-
     def add(self, key):
         super().add(key)
 
-        self.effect_bars[key] = self.createBar(key)
+        if not self.queue[key].effect_bar:
+            # warning! cyclic references
+            # GC will not delete this object while it is referenced
+            self.queue[key].effect_bar = HealthBar.EffectBar(self.queue[key])     
 
     # super.check calls
-    def remove(self, key):
-        super().remove(key)
-
-        self.effect_bars.pop(key)
+    # def remove(self, key):
+    #     self.queue[key].effect_bar = None
+    #     super().remove(key)
 
     def update_pos(self):
-        if self.effect_bars:
+        if self.queue:
             position = Vector2(self.player.rect.midbottom)
             position.y += 10
             shift = 0
-            for key in self.queue.keys():
+            for effect in self.queue.values():
                 position.y += shift   
-                self.effect_bars[key].update_pos(position)
+                effect.effect_bar.update_pos(position)
                 shift += 10    
-
-    # def check(self):
-    #     del_keys = []
-    #     for key in self.queue.keys():
-    #         if self.queue[key].off():
-    #             del_keys.append(key)
-
-    #     if del_keys:
-    #         for key in del_keys:
-    #             self.queue.pop(key)
-    #             if self.effect_bars.get(key):
-    #                 self.effect_bars.pop(key)
 
     def update(self):
         super().update() # super check or current???
 
-        for key in self.effect_bars.keys():
-            health = self.queue[key].time() # warning
-            self.effect_bars[key].set_health(health)
+        for effect in self.queue.values():
+            effect.effect_bar.update()
         
         self.update_pos()  
 
     def draw(self, screen):
-        if self.effect_bars:
-            for key in self.effect_bars.keys():
-                self.effect_bars[key].draw(screen)
+        if self.queue:
+            for effect in self.queue.values():
+                effect.effect_bar.draw(screen)
 
     def clear(self):
+
         super().clear()
-        self.effect_bars.clear()    
 
 class Effect:
     def __init__(self, player, time : int):
         self.player = player
+        self.effect_bar = None
 
         self.timer = Clock(time)
         self.timer.start()
