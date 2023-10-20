@@ -66,15 +66,18 @@ class Actors_:
             if group:   # not empty
                 group.update()
 
-    def draw(self, screen, isBoundRects = False):
-        colourGreen, colourRed = get_colour(isBoundRects)
-        self.actors['bats'].draw(screen, colourRed)
-        self.actors['bullets'].draw(screen, colourGreen)
-        self.actors['actors'].draw(screen, colourRed)
+    def draw(self, screen, colour = None):
+        # colourGreen, colourRed = get_colour(isBoundRects)
+        # self.actors['bats'].draw(screen, colourRed)
+        # self.actors['bullets'].draw(screen, colourGreen)
+        # self.actors['actors'].draw(screen, colourRed)
 
-        # for group in self.actors.values():
-        #     if group:   # not empty
-        #         group.draw(screen, colour)
+        for group in self.actors.values():
+            if group:   # not empty
+                if colour and group == self.actors['bullets']:
+                    self.actors['bullets'].draw(screen, 'Green')
+                else:
+                    group.draw(screen, colour)
 
     def init(self):
         if self.actors['actors']: # not empty

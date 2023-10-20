@@ -41,6 +41,9 @@ class EffectQueue:
         for key in self.queue.keys():
             self.queue[key].update()
 
+    def draw(self, screen):
+        ...
+
     def clear(self):
         self.queue.clear()
 
@@ -60,11 +63,11 @@ class EffectQueue_draw(EffectQueue):
         self.effect_bars = {}
         # self.bars_init()
 
-    def bars_init(self):
-        for key in self.queue.keys():
-            self.effect_bars[key] = self.createBar(key)
+    # def bars_init(self):
+    #     for key in self.queue.keys():
+    #         self.effect_bars[key] = self.createBar(key)
 
-        self.update_pos()
+    #     self.update_pos()
 
     def createBar(self, effect_key):
         max_time = self.queue[effect_key].duration()

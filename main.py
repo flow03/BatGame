@@ -83,6 +83,12 @@ actors['actors'].add(Dummy(WIDTH//2 + 200, HEIGHT//2, actors['bullets']))
 # actors['actors'] = Dummy(WIDTH//2 + 200, HEIGHT//2, actors['bullets'])
 # actors.add('actors', Dummy(WIDTH//2 + 200, HEIGHT//2, actors['bullets']))
 
+# test_group = MyGroup()
+# print('test_group empty ', bool(test_group))
+
+# test_group.add(Dummy(WIDTH//2 + 200, HEIGHT//2, actors['bullets']))
+# print('test_group not empty ', bool(test_group))
+
 # Update
 def update_objects():
     # bat_list.update()
@@ -94,9 +100,8 @@ def update_objects():
 # Draw
 def draw_objects(isBoundRects):
     colourGreen, colourRed = Actors.get_colour(isBoundRects)
-
     drops.draw(screen, colourGreen)
-    actors.draw(screen, isBoundRects)
+    actors.draw(screen, colourRed)
     player.draw(screen, colourGreen)
 
 # Sound

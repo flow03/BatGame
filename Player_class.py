@@ -109,8 +109,7 @@ class Player:
         self.bullet_bar.draw(screen)
         
         if self.effects:
-            if isinstance(self.effects, Effects.EffectQueue_draw):
-                self.effects.draw(screen)    
+            self.effects.draw(screen)    
             
     def get_colour_rect(self, colour):
         colour_rect = pygame.Surface(self.rect.size)
