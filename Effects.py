@@ -57,6 +57,8 @@ class EffectQueue:
             effect = PoisonEffect(self.player)
         if effect_key == "speed":
             effect = SpeedEffect(self.player)
+        if effect_key == "iron":
+            effect = IronEffect(self.player)
         return effect
 
 class EffectQueue_draw(EffectQueue):
@@ -79,12 +81,10 @@ class EffectQueue_draw(EffectQueue):
     def update_pos(self):
         if self.queue:
             position = Vector2(self.player.rect.midbottom)
-            position.y += 10
-            shift = 0
+            shift = 10
             for effect in self.queue.values():
-                position.y += shift   
+                position.y += shift
                 effect.effect_bar.update_pos(position)
-                shift += 10    
 
     def update(self):
         super().update() # super check or current???
@@ -99,9 +99,8 @@ class EffectQueue_draw(EffectQueue):
             for effect in self.queue.values():
                 effect.effect_bar.draw(screen)
 
-    def clear(self):
-
-        super().clear()
+    # def clear(self):
+    #     super().clear()
 
 class Effect:
     def __init__(self, player, time : int):
@@ -143,7 +142,7 @@ class PoisonEffect(Effect):
 
     def update(self):
         if self.tick_timer.isNextFrame():
-            self.healthBar.health.set_damage(self.poison_damage)        
+            self.healthBar.health.set_damage(self.poison_damage) # directly, without defence        
  
     def increase(self):
         self.poison_damage += self.default_damage
@@ -167,3 +166,19 @@ class SpeedEffect(Effect):
     
     def __del__(self):
         self.player.speed = self.default_speed
+
+class IronEffect(Effect):
+    def __init__(self, player):
+        time = 8000
+        super().__init__(player, time)
+
+        self.default_defence = self.player.defence
+        self.player.defence += 60
+
+    def increase(self):
+        if self.player.defence < 90:
+            self.player.defence += 10
+        self.timer.restart()
+    
+    def __del__(self):
+        self.player.defence = self.default_defence

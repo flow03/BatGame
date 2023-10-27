@@ -35,14 +35,15 @@ class Text:
     def print_debug_info(self, screen, actors, drops, player):
         self.y = 55
         self.screen = screen
-        self.print('bats on screen', len(actors['bats']))
-        self.print('food on screen', len(drops.foodDrops))
+        # self.print('bats on screen', len(actors['bats']))
+        # self.print('food on screen', len(drops.foodDrops))
         self.print('killed bats', player.killedBats)
         self.print('bullets', player.bullets_count)
         self.print('health', player.health_new.health)
         self.print('speed', player.speed)
-        self.print('loot on screen', len(drops.fallen_drops))
-        self.print('actors on screen', len(actors['actors']))
+        self.print('defence', player.defence)
+        # self.print('loot on screen', len(drops.fallen_drops))
+        # self.print('actors on screen', len(actors['actors']))
 
         # speed_effect = player.effects.queue.get("speed")
         # if speed_effect:

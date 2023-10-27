@@ -197,10 +197,12 @@ while run:
             if event.key == pygame.K_t:
                 Events.switch()
             if event.key == pygame.K_p:
-                player.poisoned()
-            if event.key == pygame.K_LSHIFT:
-                player.speed_up()
-            if event.key == pygame.K_m:
+                player.effects.add("poison")
+            if event.key == pygame.K_i:
+                player.effects.add("iron")
+            if event.key == pygame.K_LSHIFT or event.key == pygame.K_o:
+                player.effects.add("speed")
+            if event.key == pygame.K_m: # unlimited
                 actors.add('actors', Dance_Girl(screen, player, actors, drops.foodDrops))
         # працює незалежно від player.gameplay
         if event.type == pygame.KEYDOWN:

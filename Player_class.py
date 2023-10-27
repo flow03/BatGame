@@ -16,6 +16,7 @@ class Player:
         self.load_animation_frames()
         self.start_pos = Vector2(x, y)
         self.speed = 3
+        self.defence = 0
         self.effects = Effects.EffectQueue_draw(self)
         self.drops = drops
 
@@ -36,7 +37,6 @@ class Player:
         self.animation_speed = 0.2  # Швидкість анімації (затримка між кадрами)
         self.image = self.animation_frames[self.current_animation][int(self.frame_index)]
         self.rect = self.image.get_rect(center=self.start_pos)
-        # self.effects = Effects.EffectQueue_draw(self) # need rect
 
         self.bullets_count = 32 # self.max_bullets_count
         self.killedBats = 0
@@ -47,12 +47,11 @@ class Player:
         self.health_bar.init()
         self.bullet_bar.update(self.bullets_count)
 
+    # def poisoned(self):
+    #     self.effects.add("poison")
 
-    def poisoned(self):
-        self.effects.add("poison")
-
-    def speed_up(self):
-        self.effects.add("speed")
+    # def speed_up(self):
+    #     self.effects.add("speed")
 
     def load_animation_frames(self):
         # Завантаження всіх кадрів анімацій для кожного напрямку руху
@@ -132,7 +131,15 @@ class Player:
 
         self.is_moving = True
 
+    def defence_damage(self, damage):
+        # new_damage = damage
+        if self.defence < 100:
+            damage = (1 - self.defence/100) * damage # 0/100 = 0
+            print(f"defence_damage: {damage}")
+        return round(damage)
+
     def set_damage(self, damage: int):
+        damage = self.defence_damage(damage)
         self.health_new.set_damage(damage)
             # self.gameplay = False
 
