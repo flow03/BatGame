@@ -197,11 +197,13 @@ while run:
             if event.key == pygame.K_t:
                 Events.switch()
             if event.key == pygame.K_p:
-                player.effects.add("poison")
+                player.add_effect("poison")
             if event.key == pygame.K_i:
-                player.effects.add("iron")
-            if event.key == pygame.K_LSHIFT or event.key == pygame.K_o:
-                player.effects.add("speed")
+                player.add_effect("iron")
+            if event.key == pygame.K_LSHIFT:
+                player.add_effect("speed")
+            if event.key == pygame.K_o:
+                player.add_effect("onepunch")
             if event.key == pygame.K_m: # unlimited
                 actors.add('actors', Dance_Girl(screen, player, actors, drops.foodDrops))
         # працює незалежно від player.gameplay

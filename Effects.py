@@ -14,17 +14,17 @@ class EffectQueue:
             effect = self.createEffect(effect_key)
             if effect:
                 self.queue[effect_key] = effect
-                print(effect_key, "added to queue")
+                # print(effect_key, "added to queue")
             # else:
             #     print(effect_key, "not valid key")
         else: 
             self.queue[effect_key].increase()
-            print(effect_key, "increased")
+            # print(effect_key, "increased")
 
     def remove(self, key):
         self.queue[key].__del__()
         self.queue.pop(key)
-        print(key, "removed")
+        # print(key, "removed")
 
     def check(self):
         del_keys = []
@@ -59,6 +59,8 @@ class EffectQueue:
             effect = SpeedEffect(self.player)
         if effect_key == "iron":
             effect = IronEffect(self.player)
+        if effect_key == "onepunch":
+            effect = OnepunchEffect(self.player)
         return effect
 
 class EffectQueue_draw(EffectQueue):
@@ -153,7 +155,7 @@ class PoisonEffect(Effect):
 
 class SpeedEffect(Effect):
     def __init__(self, player):
-        time = 5000
+        time = 6000
         super().__init__(player, time)
 
         self.speed_bonus = 3
@@ -182,3 +184,16 @@ class IronEffect(Effect):
     
     def __del__(self):
         self.player.defence = self.default_defence
+
+class OnepunchEffect(Effect):
+    def __init__(self, player):
+        time = 8000
+        super().__init__(player, time)
+
+        self.player.onepunch = True
+
+    def increase(self):
+        self.timer.restart()
+    
+    def __del__(self):
+        self.player.onepunch = False

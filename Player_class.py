@@ -42,13 +42,14 @@ class Player:
         self.killedBats = 0
         self.gameplay = True
         self.is_moving = False
+        self.onepunch = False
         self.effects.clear()
 
         self.health_bar.init()
         self.bullet_bar.update(self.bullets_count)
 
-    # def poisoned(self):
-    #     self.effects.add("poison")
+    def add_effect(self, effect_key : str):
+        self.effects.add(effect_key)
 
     # def speed_up(self):
     #     self.effects.add("speed")
@@ -135,7 +136,7 @@ class Player:
         # new_damage = damage
         if self.defence < 100:
             damage = (1 - self.defence/100) * damage # 0/100 = 0
-            print(f"defence_damage: {damage}")
+            # print(f"defence_damage: {damage}")
         return round(damage)
 
     def set_damage(self, damage: int):
@@ -153,14 +154,21 @@ class Player:
 
     # target is direction as default
     def shoot(self, screen, bullet_group, target = None):
-        if self.bullets_count > 0:
+        if self.bullets_count > 0 or self.onepunch:
             new_bullet = Bullet(screen, self.rect.center)
+            if self.onepunch:
+                new_bullet.damage = 10000
+                # print("onepunch bullet")
+
             if target:
                 new_bullet.velocity_by_mouse(target)
             else:
                 new_bullet.velocity_by_direction(self.direction)
+
             bullet_group.add(new_bullet)
-            self.add_bullet(-1)
+
+            if not self.onepunch:
+                self.add_bullet(-1)
 
             # # if type(target) == str:
             # if isinstance(target, str):
