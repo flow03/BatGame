@@ -1,9 +1,7 @@
 import pygame
 from pygame.math import Vector2
 from HealthBar import Health
-# from HealthBar import HealthBar
-# from HealthBar import FancyHealthBar
-from HealthBar import FancyBoundHealthBar
+import HealthBar
 from Path import resource_path
 from Clock_class import Clock
 
@@ -17,13 +15,14 @@ class Dummy(pygame.sprite.Sprite):
         self.rect = self.image.get_rect(center=(x, y))
 
         self.bullet_list = bullet_list
-        self.re_delay = Clock(600)
+        self.re_delay = Clock(1000)
 
-        self.health = Health(110)
         bar_pos = Vector2(self.rect.midtop)
         bar_pos.y -= 10
+        self.health = Health(16)
         health_bar_rect = pygame.Rect(bar_pos, (100, 6))
-        self.health_bar = FancyBoundHealthBar(health_bar_rect, self.health, 1)
+        # self.health_bar = HealthBar.FancyBoundHealthBar(health_bar_rect, self.health, 1)
+        self.health_bar = HealthBar.CellHealthBar(health_bar_rect, self.health)
         self.health_bar.update_pos(bar_pos)
 
     def init(self):
