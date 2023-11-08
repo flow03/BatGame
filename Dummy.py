@@ -19,7 +19,7 @@ class Dummy(pygame.sprite.Sprite):
 
         bar_pos = Vector2(self.rect.midtop)
         bar_pos.y -= 10
-        self.health = Health(16)
+        self.health = Health(10)
         health_bar_rect = pygame.Rect(bar_pos, (100, 6))
         # self.health_bar = HealthBar.FancyBoundHealthBar(health_bar_rect, self.health, 1)
         self.health_bar = HealthBar.CellHealthBar(health_bar_rect, self.health)
@@ -54,7 +54,7 @@ class Dummy(pygame.sprite.Sprite):
                 bullet.kill()
 
     def set_damage(self, damage):
-        self.health.set_damage(damage)
+        self.health_bar.set_damage(damage)
         if self.health.empty():
             self.re_delay.start()
 

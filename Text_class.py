@@ -44,10 +44,9 @@ class Text:
         self.print('defence', player.defence)
         # self.print('loot on screen', len(drops.fallen_drops))
         # self.print('actors on screen', len(actors['actors']))
-
-        # speed_effect = player.effects.queue.get("speed")
-        # if speed_effect:
-        #     self.print('speed', speed_effect.time())
+        if actors['actors']:
+            for actor in actors['actors']:
+               self.print('actor health', actor.health.health) 
 
         if player.effects.queue:
             for key in player.effects.queue.keys():

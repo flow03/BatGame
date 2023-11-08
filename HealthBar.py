@@ -21,6 +21,9 @@ class Health:
         self.health += int(heal)
         if self.health > self.max_health:
             self.health = self.max_health
+            return False
+        else:
+            return True
 
     def get_ratio(self):
         return self.health/self.max_health
@@ -47,7 +50,7 @@ class HealthBar:
     #     self.set_max_health(100)
     #     self.health = self.max_health
 
-    def __init__(self, rect : pygame.Rect, health : Health, border = 2):
+    def __init__(self, rect : pygame.Rect, health : Health, border = 1):
         self.health = health
         self.rect = rect        
         self.bordered_rect = pygame.Rect(self.rect.x - border, self.rect.y - border, 
@@ -101,7 +104,7 @@ class HealthBar:
         return self.health.set_damage(damage)
 
     def set_heal(self, heal: int):
-        self.health.set_heal(heal)
+        return self.health.set_heal(heal)
 
 class FancyHealthBar(HealthBar):
     # def __init__(self, pos, width, height, border = 2):
@@ -347,7 +350,7 @@ class CellHealthBar:
 
         self.cell_list = self.createCellList()
         self.update_pos(self.rect.center)
-        # self.last_cell = None
+        self.index = len(self.cell_list) - 1
 
     def init(self):
         pass
@@ -374,8 +377,19 @@ class CellHealthBar:
         for cell in self.cell_list:
             cell.draw(screen)
 
-        pygame.draw.rect(screen, "Green", self.rect, 1)
+        # pygame.draw.rect(screen, "Green", self.rect, 1)
 
     def update_health(self):
-        # self.update_pos()
-        pass
+        for cell in self.cell_list:
+            cell.update_health()
+
+    def set_damage(self, damage : int):
+        if self.health.set_damage(1): # bounds check
+            self.cell_list[self.index].health.set_damage(1)
+            self.index -= 1
+        
+    def set_heal(self, heal : int):
+        if self.health.set_heal(1): # bounds check
+            self.index += 1
+            self.cell_list[self.index].health.set_heal(1)
+        
