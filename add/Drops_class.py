@@ -2,7 +2,7 @@ import pygame
 import random
 import math
 from pygame.math import Vector2
-from Spritesheet_class import SpriteSheet
+from add.Spritesheet_class import SpriteSheet
 from MyGroup_class import MyGroup
 from Path import resource_path
 

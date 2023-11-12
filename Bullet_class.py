@@ -1,7 +1,7 @@
 import pygame
 import math
 from pygame.math import Vector2
-from Path import resource_path
+from add.Path import resource_path
 
 # Клас, що представляє кулю
 class Bullet(pygame.sprite.Sprite):

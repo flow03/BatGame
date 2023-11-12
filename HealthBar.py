@@ -1,7 +1,7 @@
 import pygame
 from pygame.math import Vector2
-from Clock_class import Clock
-from Path import resource_path
+from add.Clock_class import Clock
+from add.Path import resource_path
 from Effects import Effect
 
 class Health:
@@ -348,12 +348,15 @@ class CellHealthBar:
         self.border = border
         self.colour = "Red"
 
-        self.cell_list = self.createCellList()
-        self.update_pos(self.rect.center)
-        self.index = len(self.cell_list) - 1
+        self.init()
 
     def init(self):
-        pass
+        self.health.reload()
+        
+        self.cell_list = self.createCellList()
+        self.update_pos(self.rect.center)
+
+        self.index = len(self.cell_list) - 1
 
     def createCellList(self):
         cell_list = list() # []

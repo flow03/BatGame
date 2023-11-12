@@ -6,14 +6,14 @@ from Player_class import Player
 # from Bullet_class import Bullet
 # from Drops_class import BulletDrop
 # from Drops_class import Food
-import Drops_class
-from MyGroup_class import MyGroup
+import add.Drops_class as Drops_class
+from add.MyGroup_class import MyGroup
 from Bat_class import Bat
 from Bat_class import BatSpecial
-from Text_class import Text
+from add.Text_class import Text
 from Dance_Girl_class import Dance_Girl
-from Path import resource_path
-from UserEvents import UserEvents
+from add.Path import resource_path
+from add.UserEvents import UserEvents
 from Dummy import Dummy
 import Actors
 

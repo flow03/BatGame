@@ -1,7 +1,7 @@
 import pygame
 from pygame.math import Vector2
 import HealthBar
-from Clock_class import Clock
+from add.Clock_class import Clock
 
 class EffectQueue:
     def __init__(self, player):
