@@ -1,13 +1,13 @@
 # import pygame
 import math
 from pygame.math import Vector2
-from Clock_class import Clock
-from add.Drops_class import Food
-from Dance_Girl_class import Dance_Girl
+from add.Clock import Clock
+from add.Drops import Food
+# from Dance_Girl_class import Dance_Girl
 
 class Circle:
-    def __init__(self):
-        self.circle_radius = 80
+    def __init__(self, radius):
+        self.circle_radius = radius
         self.init()
 
     def init(self):
@@ -42,8 +42,8 @@ class Circle:
             self.is_circle = False
 
 class Dance:
-    def __init__(self):
-        # self.dance_delay = 2200
+    def __init__(self, girl):
+        self.girl = girl
         self.danceList = ['hips','slide','snap']
         self.d_clock = Clock(2200) # dance clock
         self.food_clock = Clock(500)
@@ -57,18 +57,18 @@ class Dance:
         self.d_clock.start()
         self.food_clock.start()
 
-    def changeDance(self, girl):
+    def changeDance(self):
         if self.d_clock.isNextFrame():
             self.currentDance += 1
-            girl.idle_animation = self.danceList[self.currentDance % len(self.danceList)]
+            self.girl.idle_animation = self.danceList[self.currentDance % len(self.danceList)]
 
-        girl.current_animation = girl.idle_animation
+        self.girl.current_animation = self.girl.idle_animation
 
-    def update(self, girl):
-        self.changeDance(girl)
+    def update(self):
+        self.changeDance()
         if self.food_clock.isNextFrame():
-            new_food = Food(girl.food_list)
-            new_food.check_circle_coordinates(girl.rect.center, 70, 60)
+            new_food = Food(self.girl.food_list)
+            new_food.check_circle_coordinates(self.girl.rect.center, 70, 60)
             # girl.food_list.add(new_food)
 
     def isDanceOver(self):
@@ -76,21 +76,23 @@ class Dance:
 
 
 class IState:
-    def __init__(self, npc : Dance_Girl):
+    def __init__(self, npc): # npc : Dance_Girl
         self.npc = npc
         self.player_pos = Vector2(self.npc.player.rect.center)
         # self.circle = Circle()
+        self.circle_radius = 80
         # self.dance = Dance()
         # self.dance = None
     
-    def init(self):
-        self.circle.init()
+    # def init(self):
+    #     pass
+        # self.circle.init()
 
     def doState(self):
         return self
 
     def direction_by_player(self):
-        # player_pos = Vector2(player_pos)
+        self.player_pos = Vector2(self.npc.player.rect.center) # update player position
         character_pos = Vector2(self.npc.rect.center)
 
         direction = self.player_pos - character_pos
@@ -105,8 +107,8 @@ class move_to_player(IState):
     
     def doState(self):
         distance = Vector2(self.npc.rect.center).distance_to(self.player_pos)
-        if distance > self.npc.circle.circle_radius:
-            direction = self.direction_by_player(self.player_pos)
+        if distance > self.circle_radius:
+            direction = self.direction_by_player()
             self.npc.move_by_direction(direction)
 
             return self
@@ -117,31 +119,31 @@ class move_to_player(IState):
 class move_around_player(IState):
     def __init__(self, npc):
         super().__init__(npc)
-        self.circle = Circle()
-        self.npc.circle.is_circle = True
+        self.circle = Circle(self.circle_radius)
+        self.circle.is_circle = True
     
     def doState(self):
         if self.circle.is_circle:
             self.circle.move_around_point(self.npc.rect, self.player_pos, self.npc.speed)
-            direction = self.direction_by_player(self.player_pos)
+            direction = self.direction_by_player()
             self.npc.is_moving = True
             self.npc.update_direction(direction)
             # print("move_around_point")
             return self
         else:
-            return dance(self.npc)
+            return danceState(self.npc)
 
-class dance(IState):
+class danceState(IState):
     def __init__(self, npc):
         super().__init__(npc)
-        self.dance = Dance()
+        self.dance = Dance(npc)
     
     def doState(self):
         # if not self.dance:
         #     self.dance = Dance()
         if not self.dance.isDanceOver():
-            self.dance.update(self)
-            self.is_moving = False
+            self.dance.update()
+            # self.is_moving = False
             # print("dance")
             return self
         else:
@@ -162,6 +164,8 @@ class move_away(IState):
         # Перевірка, чи вийшов персонаж за межі екрану
         if not self.screen.get_rect().colliderect(self.rect):
             self.npc.kill()
+        
+        return self
 
     # Визначає напрям до найближчої межі екрану
     def get_min_direction(self):

@@ -2,9 +2,9 @@ import pygame
 # import math
 import random
 from pygame.math import Vector2
-from add.Spritesheet_class import SpriteSheet
+from add.Spritesheet import SpriteSheet
 # from Clock_class import Clock
-from add.MyGroup_class import MyGroup
+from add.MyGroup import MyGroup
 # from Drops_class import Food
 from HealthBar import Health
 import add.State
@@ -22,7 +22,7 @@ class Dance_Girl(pygame.sprite.Sprite):
         self.load_animations_from_sheet()
         self.screen = screen
         self.speed = 3
-        self.health = Health(10)
+        self.health = Health(12)
 
         self.player = player
         self.actors = actors

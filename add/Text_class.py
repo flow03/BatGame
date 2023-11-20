@@ -1,5 +1,5 @@
 import pygame
-from Path import resource_path
+from add.Path import resource_path
 
 # Text
 class Text:

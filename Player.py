@@ -1,8 +1,8 @@
 import pygame
 from pygame.math import Vector2
-from add.Spritesheet_class import SpriteSheet
+from add.Spritesheet import SpriteSheet
 import HealthBar
-from Bullet_class import Bullet
+from Bullet import Bullet
 import Effects
 
 class Player:

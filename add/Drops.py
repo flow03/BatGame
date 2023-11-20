@@ -2,9 +2,9 @@ import pygame
 import random
 import math
 from pygame.math import Vector2
-from add.Spritesheet_class import SpriteSheet
-from MyGroup_class import MyGroup
-from Path import resource_path
+from add.Spritesheet import SpriteSheet
+from add.MyGroup import MyGroup
+from add.Path import resource_path
 
 class BulletDrop(pygame.sprite.Sprite):
     def __init__(self, group):

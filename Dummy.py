@@ -3,7 +3,7 @@ from pygame.math import Vector2
 from HealthBar import Health
 import HealthBar
 from add.Path import resource_path
-from add.Clock_class import Clock
+from add.Clock import Clock
 
 class Dummy(pygame.sprite.Sprite):
     def __init__(self, x, y, bullet_list):

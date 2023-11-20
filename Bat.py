@@ -3,10 +3,10 @@ import random
 from pygame.math import Vector2
 import HealthBar
 from add.Path import resource_path
-import add.Drops_class as Drops_class
+import add.Drops as Drops
 
 class Bat(pygame.sprite.Sprite):
-    def __init__(self, screen, drops : Drops_class.Drops, player, bullets):
+    def __init__(self, screen, drops : Drops.Drops, player, bullets):
         super().__init__()
 
         self.screen = screen

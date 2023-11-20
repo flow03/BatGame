@@ -1,19 +1,16 @@
 import pygame
 # import random
 # import spritesheet
-from Player_class import Player
-# from Jump_class import Jump
-# from Bullet_class import Bullet
-# from Drops_class import BulletDrop
-# from Drops_class import Food
-import add.Drops_class as Drops_class
-from add.MyGroup_class import MyGroup
-from Bat_class import Bat
-from Bat_class import BatSpecial
+from Player import Player
+# from add.Jump import Jump
+import add.Drops as Drops
+# from add.MyGroup import MyGroup
 from add.Text_class import Text
-from Dance_Girl_class import Dance_Girl
 from add.Path import resource_path
 from add.UserEvents import UserEvents
+from Dance_Girl import Dance_Girl
+import Bat
+# from Bullet_class import Bullet
 from Dummy import Dummy
 import Actors
 
@@ -63,7 +60,7 @@ Events = UserEvents()
 # bat_list = MyGroup()
 # bullets = MyGroup() #pygame.sprite.Group()
 
-drops = Drops_class.Drops(screen)
+drops = Drops.Drops(screen)
 # bulletDrops = MyGroup()
 # foodDrops = MyGroup()
 # drops_list = MyGroup()
@@ -175,9 +172,9 @@ while run:
             # pygame.quit()
         # if not Girl:
         if event.type == Events.BAT_TIMER:
-            actors['bats'].add(Bat(screen, drops, player, actors['bullets']))
+            actors['bats'].add(Bat.Bat(screen, drops, player, actors['bullets']))
         if event.type == Events.BAT_SP_TIMER:
-            actors['bats'].add(BatSpecial(screen, drops, player, actors['bullets']))
+            actors['bats'].add(Bat.BatSpecial(screen, drops, player, actors['bullets']))
         if event.type == Events.BULLET_DROP_TIMER:
             drops.create_bulletDrop()
         if event.type == Events.FOOD_DROP_TIMER:

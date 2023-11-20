@@ -1,6 +1,6 @@
 import pygame
 from pygame.math import Vector2
-from add.Clock_class import Clock
+from add.Clock import Clock
 from add.Path import resource_path
 from Effects import Effect
 
@@ -362,7 +362,7 @@ class CellHealthBar:
         cell_list = list() # []
         width = round(self.rect.width/self.health.max_health)
         # width = (self.rect.width - self.health.max_health + 1)//self.health.max_health + 1
-        print(width)
+        # print(width)
         cell_rect = pygame.Rect((0,0), (width, self.rect.height))
         for i in range(self.health.max_health):
             cell_list.append(FancyHealthBar(pygame.Rect(cell_rect), Health(1), self.border))

@@ -1,5 +1,5 @@
 from pygame import draw
-from MyGroup_class import MyGroup
+from add.MyGroup import MyGroup
 
 class Actors:
     def __init__(self):
