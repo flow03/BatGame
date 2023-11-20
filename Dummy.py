@@ -6,23 +6,28 @@ from add.Path import resource_path
 from add.Clock import Clock
 
 class Dummy(pygame.sprite.Sprite):
-    def __init__(self, x, y, bullet_list):
+    def __init__(self, x, y, bullet_list, health = 100):
         super().__init__()
         
         img_url = resource_path('img/training_dummy.png')
         self.image = pygame.image.load(img_url).convert_alpha()
         # self.resize_image(80)
         self.rect = self.image.get_rect(center=(x, y))
-
         self.bullet_list = bullet_list
         self.re_delay = Clock(1000)
 
+        self.health = Health(health)
+        self.healthBarCreate()
+
+    def healthBarCreate(self, type = None):
         bar_pos = Vector2(self.rect.midtop)
         bar_pos.y -= 10
-        self.health = Health(10)
         health_bar_rect = pygame.Rect(bar_pos, (100, 6))
-        # self.health_bar = HealthBar.FancyBoundHealthBar(health_bar_rect, self.health, 1)
-        self.health_bar = HealthBar.CellHealthBar(health_bar_rect, self.health)
+        if type == "cell":
+            self.health_bar = HealthBar.CellHealthBar(health_bar_rect, self.health)
+        else:
+            self.health_bar = HealthBar.FancyBoundHealthBar(health_bar_rect, self.health, 1)
+
         self.health_bar.update_pos(bar_pos)
 
     def init(self):

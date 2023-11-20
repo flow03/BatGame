@@ -57,7 +57,7 @@ class Actors_:
             'actors': MyGroup()
         }
 
-    # add item to group
+    # add item to a group
     def add(self, name, object):
         self.actors[name].add(object)
 

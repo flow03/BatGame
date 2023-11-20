@@ -5,7 +5,7 @@ from Player import Player
 # from add.Jump import Jump
 import add.Drops as Drops
 # from add.MyGroup import MyGroup
-from add.Text_class import Text
+from add.Text import Text
 from add.Path import resource_path
 from add.UserEvents import UserEvents
 from Dance_Girl import Dance_Girl
@@ -69,10 +69,13 @@ actors = Actors.Actors_()
 
 # Player
 player = Player(WIDTH//2, HEIGHT//2, drops) # 150, 300
-dummy = Dummy(WIDTH//2 + 200, HEIGHT//2, actors['bullets'])
+dummy = Dummy(WIDTH//2 - 200, HEIGHT//2, actors['bullets'], 100)
+cell_dummy = Dummy(WIDTH//2 + 200, HEIGHT//2, actors['bullets'], 10)
+cell_dummy.healthBarCreate("cell")
 
 # 3 variants of add
 actors['actors'].add(dummy)
+actors['actors'].add(cell_dummy)
 # actors['actors'] = dummy
 # actors.add('actors', dummy)
 
@@ -111,6 +114,8 @@ def initialize():
     actors.clear()
     dummy.init()
     actors['actors'].add(dummy)
+    cell_dummy.init()
+    actors['actors'].add(cell_dummy)
     drops.empty()
     # jump.is_jump = False
     Events.set_timer()

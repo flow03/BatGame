@@ -15,7 +15,7 @@ class Player:
         }
         self.load_animation_frames()
         self.start_pos = Vector2(x, y)
-        self.speed = 3
+        self.speed = 4
         self.defence = 0
         self.effects = Effects.EffectQueue_draw(self)
         self.drops = drops
