@@ -26,7 +26,7 @@ class Bat(pygame.sprite.Sprite):
         self.damage = random.randint(15, 30)
   
     def load_random_frame(self):
-        i = random.randint(0, 14) # max bat index
+        i = random.randint(0, 17) # max bat index
         img_url = resource_path(f'img/bat/bat{i}.png')
         frame = pygame.image.load(img_url)
         

@@ -13,7 +13,7 @@ class Health:
         self.health -= int(damage)
         if self.health <= 0:
             self.health = 0
-            return False
+            return False # overdamage
         else:
             return True
 
@@ -21,7 +21,7 @@ class Health:
         self.health += int(heal)
         if self.health > self.max_health:
             self.health = self.max_health
-            return False
+            return False # overheal
         else:
             return True
 
@@ -383,16 +383,31 @@ class CellHealthBar:
         # pygame.draw.rect(screen, "Green", self.rect, 1)
 
     def update_health(self):
+        # if not self.health.empty(): # and not self.health.full()
+        #     full_cells = self.health.health
+
+        # check full cells
+        if not self.health.empty():
+            for full_index in range(self.health.health):
+                if self.cell_list[full_index].health.empty():
+                    self.cell_list[full_index].health.set_heal(1)
+                    # self.set_heal(1)
+                    self.index = full_index
+
         for cell in self.cell_list:
             cell.update_health()
 
     def set_damage(self, damage : int):
+        self.cell_list[self.index].health.set_damage(1)
         if self.health.set_damage(1): # bounds check
-            self.cell_list[self.index].health.set_damage(1)
             self.index -= 1
         
     def set_heal(self, heal : int):
+        self.cell_list[self.index].health.set_heal(1)
         if self.health.set_heal(1): # bounds check
-            self.index += 1
-            self.cell_list[self.index].health.set_heal(1)
+            self.index += 1 # warning
+        
+        # if not self.health.full(): # bounds check
+        #     self.index += 1
+        # self.health.set_heal(1)
         

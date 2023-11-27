@@ -69,15 +69,21 @@ actors = Actors.Actors_()
 
 # Player
 player = Player(WIDTH//2, HEIGHT//2, drops) # 150, 300
-dummy = Dummy(WIDTH//2 - 200, HEIGHT//2, actors['bullets'], 100)
-cell_dummy = Dummy(WIDTH//2 + 200, HEIGHT//2, actors['bullets'], 10)
-cell_dummy.healthBarCreate("cell")
+
+def createDummies(actors_param):
+    dummy = Dummy(WIDTH//2 - 200, HEIGHT//2, actors_param['bullets'], 100)
+    cell_dummy = Dummy(WIDTH//2 + 200, HEIGHT//2, actors_param['bullets'], 5)
+    cell_dummy.healthBarCreate("cell")
+
+    actors_param['actors'].add(dummy)
+    actors_param['actors'].add(cell_dummy)
 
 # 3 variants of add
-actors['actors'].add(dummy)
-actors['actors'].add(cell_dummy)
+# actors['actors'].add(dummy)
 # actors['actors'] = dummy
 # actors.add('actors', dummy)
+
+createDummies(actors)
 
 # test_group = MyGroup()
 # print('test_group empty ', bool(test_group))
@@ -112,13 +118,10 @@ run = True
 def initialize():
     player.init()
     actors.clear()
-    dummy.init()
-    actors['actors'].add(dummy)
-    cell_dummy.init()
-    actors['actors'].add(cell_dummy)
+    createDummies(actors)
     drops.empty()
     # jump.is_jump = False
-    Events.set_timer()
+    Events.stop_timer()
 
 # Main loop
 while run:
