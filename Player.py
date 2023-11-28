@@ -34,9 +34,10 @@ class Player:
         self.direction = 'down'  # Початковий напрямок руху
         self.current_animation = 'idle'
         self.frame_index = 0  # Початковий індекс кадру
-        self.animation_speed = 0.2  # Швидкість анімації (затримка між кадрами)
+        self.animation_speed = 0.2  # Швидкість анімації (кількість фреймів за один update)
         self.image = self.animation_frames[self.current_animation][int(self.frame_index)]
         self.rect = self.image.get_rect(center=self.start_pos)
+        self.velocity = Vector2(0,0)
 
         self.bullets_count = 32 # self.max_bullets_count
         self.killedBats = 0
@@ -65,6 +66,12 @@ class Player:
         self.animation_frames['idle'] = idle_sheet.get_anim()
 
     def update(self):
+        # moving
+        if self.is_moving and self.velocity:
+            self.rect.center += self.velocity * self.speed
+            self.velocity = Vector2(0,0)
+            # print()
+
         if self.drops.bulletDrops:
             sprite = pygame.sprite.spritecollideany(self, self.drops.bulletDrops)
             if sprite:
@@ -117,20 +124,44 @@ class Player:
         colour_rect.set_alpha(100)
         return colour_rect
 
+    # def move(self, direction):
+    #     self.direction = direction
+    #     self.current_animation = self.direction
+
+    #     if direction == 'down':
+    #         self.rect.centery += self.speed
+    #     elif direction == 'up':
+    #         self.rect.centery += -self.speed
+    #     elif direction == 'left':
+    #         self.rect.centerx += -self.speed
+    #     elif direction == 'right':
+    #         self.rect.centerx += self.speed
+
+    #     self.is_moving = True
+
     def move(self, direction):
         self.direction = direction
         self.current_animation = self.direction
 
         if direction == 'down':
-            self.rect.centery += self.speed
+            self.velocity.y = 1
         elif direction == 'up':
-            self.rect.centery += -self.speed
-        elif direction == 'left':
-            self.rect.centerx += -self.speed
+            self.velocity.y = -1
         elif direction == 'right':
-            self.rect.centerx += self.speed
+            self.velocity.x = 1
+        elif direction == 'left':
+            self.velocity.x = -1
 
+        # normalize diagonal moving (not Null)
+        if self.velocity.x and self.velocity.y:
+            self.velocity.normalize_ip()
+
+        # move
+        # self.rect.center += direction_vec * self.speed
         self.is_moving = True
+
+        # print("direction: ", self.direction)
+        # print("velocity: ",self.velocity)
 
     def defence_damage(self, damage):
         # new_damage = damage

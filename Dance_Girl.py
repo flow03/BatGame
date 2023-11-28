@@ -125,7 +125,7 @@ class Dance_Girl(pygame.sprite.Sprite):
     def draw(self, screen):
         screen.blit(self.image, self.rect)
 
-    def move(self, direction):
+    def move(self, direction : str):
         if direction == 'down':
             # self.rect.move_ip(0, self.speed)
             direction_vec = Vector2(0, 1)
@@ -141,26 +141,30 @@ class Dance_Girl(pygame.sprite.Sprite):
             # self.current_animation = self.move_right_anim
             direction_vec = Vector2(1, 0)
 
-        self.move_by_direction(direction_vec)
+        self.move_by_vector(direction_vec)
 
-    def move_by_direction(self, direction : Vector2):
+    def move_by_vector(self, direction : Vector2):
         self.rect.center += direction * self.speed
         self.is_moving = True
         # Оновлюємо напрямок анімації руху
-        self.update_direction(direction)
+        self.update_anim(direction)
 
     # єдина фунція, яка залежить від self.is_moving
-    def update_direction(self, direction):
+    def update_anim(self, direction : Vector2):
         if self.is_moving:
+            # move left
             if direction.x < 0:
                 self.current_animation = self.move_left_anim
+            # move right
             elif direction.x > 0:
                 self.current_animation = self.move_right_anim
             elif direction.x == 0:
+                # move up
                 if direction.y < 0:
-                    self.current_animation = self.move_right_anim
-                elif direction.y > 0:
                     self.current_animation = self.move_left_anim
+                # move down
+                elif direction.y > 0:
+                    self.current_animation = self.move_right_anim
 
     def set_rand_pos(self):
         new_x = random.randint(0, self.screen.get_width())

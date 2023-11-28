@@ -48,7 +48,9 @@ class EffectQueue:
         ...
 
     def clear(self):
-        self.queue.clear()
+        for effect in self.queue.values():
+            effect.__del__()
+        self.queue.clear() # does not call effect destructors of effects
 
     # factory method
     def createEffect(self, effect_key):
@@ -158,12 +160,12 @@ class SpeedEffect(Effect):
         time = 6000
         super().__init__(player, time)
 
-        self.speed_bonus = 3
+        self.speed_bonus = 2
         self.default_speed = self.player.speed
         self.player.speed += self.speed_bonus
 
     def increase(self):
-        self.player.speed += self.speed_bonus
+        self.player.speed += self.speed_bonus - 1
         self.timer.restart()
     
     def __del__(self):

@@ -91,12 +91,12 @@ class IState:
     def doState(self):
         return self
 
-    def direction_by_player(self):
+    def direction_by_player(self) -> Vector2:
         self.player_pos = Vector2(self.npc.player.rect.center) # update player position
         character_pos = Vector2(self.npc.rect.center)
 
         direction = self.player_pos - character_pos
-        if direction:   # not Zero
+        if direction:   # not Null
             direction = direction.normalize()
 
         return direction
@@ -109,7 +109,7 @@ class move_to_player(IState):
         distance = Vector2(self.npc.rect.center).distance_to(self.player_pos)
         if distance > self.circle_radius:
             direction = self.direction_by_player()
-            self.npc.move_by_direction(direction)
+            self.npc.move_by_vector(direction)
 
             return self
         else:
@@ -127,7 +127,7 @@ class move_around_player(IState):
             self.circle.move_around_point(self.npc.rect, self.player_pos, self.npc.speed)
             direction = self.direction_by_player()
             self.npc.is_moving = True
-            self.npc.update_direction(direction)
+            self.npc.update_anim(direction)
             # print("move_around_point")
             return self
         else:

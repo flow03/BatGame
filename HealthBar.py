@@ -383,19 +383,30 @@ class CellHealthBar:
         # pygame.draw.rect(screen, "Green", self.rect, 1)
 
     def update_health(self):
-        # if not self.health.empty(): # and not self.health.full()
-        #     full_cells = self.health.health
+        for index in range(self.health.max_health):
+            # if not self.health.empty():
+                # full cells
+            if index < self.health.health:
+                if self.cell_list[index].health.empty():
+                    self.cell_list[index].health.set_heal(1)
+                    self.index = index
+            # empty cells
+            else:
+                if self.cell_list[index].health.full(): # or not empty()
+                    self.cell_list[index].health.set_damage(1)
+            # always update health
+            self.cell_list[index].update_health()
 
         # check full cells
-        if not self.health.empty():
-            for full_index in range(self.health.health):
-                if self.cell_list[full_index].health.empty():
-                    self.cell_list[full_index].health.set_heal(1)
-                    # self.set_heal(1)
-                    self.index = full_index
+        # if not self.health.empty():
+        #     for full_index in range(self.health.health):
+        #         if self.cell_list[full_index].health.empty():
+        #             self.cell_list[full_index].health.set_heal(1)
+        #             # self.set_heal(1)
+        #             self.index = full_index
 
-        for cell in self.cell_list:
-            cell.update_health()
+        # for cell in self.cell_list:
+        #     cell.update_health()
 
     def set_damage(self, damage : int):
         self.cell_list[self.index].health.set_damage(1)
