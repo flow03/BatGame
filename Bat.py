@@ -22,7 +22,7 @@ class Bat(pygame.sprite.Sprite):
         HEIGHT - self.image.get_height()//2)
         self.rect = self.image.get_rect(midleft=(WIDTH, bat_y))
 
-        self.speed = random.randint(3, 6)
+        self.speed = random.randint(2, 4)
         self.damage = random.randint(15, 30)
   
     def load_random_frame(self):
@@ -77,11 +77,12 @@ class BatSpecial(Bat):
         health_bar_rect = pygame.Rect(self.rect.midtop, (self.rect.width, 5))
         self.health_bar = HealthBar.FancyBoundHealthBar(health_bar_rect, self.health, 1)
         self.update_bar_pos()
+        # print("bat ", self.health_bar.bordered_rect.width, self.health_bar.bordered_rect.height)
 
     def update(self):
         self.changeTarget() # player position as default
         self.direction = self.direction_by_point(self.target)
-        self.rect.center += self.direction * self.speed
+        self.rect.center += round(self.direction * self.speed)
         
         self.update_bar_pos()
         self.health_bar.update_health()

@@ -72,7 +72,7 @@ player = Player(WIDTH//2, HEIGHT//2, drops) # 150, 300
 
 def createDummies(actors_param):
     dummy = Dummy(WIDTH//2 - 200, HEIGHT//2, actors_param['bullets'], 100)
-    cell_dummy = Dummy(WIDTH//2 + 200, HEIGHT//2, actors_param['bullets'], 5)
+    cell_dummy = Dummy(WIDTH//2 + 200, HEIGHT//2, actors_param['bullets'], 10)
     cell_dummy.healthBarCreate("cell")
 
     actors_param['actors'].add(dummy)

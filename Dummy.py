@@ -18,6 +18,7 @@ class Dummy(pygame.sprite.Sprite):
 
         self.health = Health(health)
         self.healthBarCreate()
+        # print("dummy ", self.health_bar.bordered_rect.width, self.health_bar.bordered_rect.height)
 
     def healthBarCreate(self, type = None):
         bar_pos = Vector2(self.rect.midtop)
@@ -46,17 +47,17 @@ class Dummy(pygame.sprite.Sprite):
         self.health_bar.draw(screen)
 
     def collide_bullet(self):
-        # if self.bullet_list:
-        #     for bullet in self.bullet_list:
-        #         if self.rect.colliderect(bullet.rect):
-        #             self.set_damage(bullet.damage)
-        #             bullet.kill()
-
         if self.bullet_list:
             bullet = pygame.sprite.spritecollideany(self, self.bullet_list)
             if bullet:
                 self.set_damage(bullet.damage)
                 bullet.kill()
+
+        # if self.bullet_list:
+        #     for bullet in self.bullet_list:
+        #         if self.rect.colliderect(bullet.rect):
+        #             self.set_damage(bullet.damage)
+        #             bullet.kill()
 
     def set_damage(self, damage):
         self.health_bar.set_damage(damage)
