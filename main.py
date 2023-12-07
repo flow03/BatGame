@@ -210,7 +210,15 @@ while run:
             if event.key == pygame.K_o:
                 player.add_effect("onepunch")
             if event.key == pygame.K_m: # unlimited
-                actors.add('actors', Dance_Girl(screen, player, actors, drops.foodDrops))
+                actors.add("actors", Dance_Girl(screen, player, actors, drops.foodDrops))
+            if event.key == pygame.K_h:
+                for actor in actors["actors"]:
+                    actor.set_heal(10)
+
+            if event.key == pygame.K_k:
+                for actor in actors["actors"]:
+                    actor.set_damage(10)
+
         # працює незалежно від player.gameplay
         if event.type == pygame.KEYDOWN:
             if event.key == pygame.K_r:

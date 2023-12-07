@@ -64,6 +64,9 @@ class Dummy(pygame.sprite.Sprite):
         if self.health.empty():
             self.re_delay.start()
 
+    def set_heal(self, heal : int):
+        self.health_bar.set_heal(heal) # decreace to 1
+
     def resize_image(self, new_h):
         original_w = self.image.get_width()
         original_h = self.image.get_height()
