@@ -26,14 +26,19 @@ class EffectQueue:
         self.queue.pop(key)
         # print(key, "removed")
 
-    def check(self):
-        del_keys = []
-        for key in self.queue.keys():
-            if self.queue[key].off():
-                del_keys.append(key)
+    # def check_old(self):
+    #     del_keys = []
+    #     for key in self.queue.keys():
+    #         if self.queue[key].off():
+    #             del_keys.append(key)
 
-        if del_keys:
-            for key in del_keys:
+    #     if del_keys:
+    #         for key in del_keys:
+    #             self.remove(key)
+
+    def check(self):
+        for key in list(self.queue.keys()):
+            if self.queue[key].off():
                 self.remove(key)
 
     def update(self):

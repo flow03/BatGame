@@ -77,6 +77,7 @@ class Dance:
 
 class IState:
     def __init__(self, npc): # npc : Dance_Girl
+        self.name = None
         self.npc = npc
         self.player_pos = Vector2(self.npc.player.rect.center)
         # self.circle = Circle()
@@ -104,6 +105,7 @@ class IState:
 class move_to_player(IState):
     def __init__(self, npc):
         super().__init__(npc)
+        self.name = "move_to_player"
     
     def doState(self):
         distance = Vector2(self.npc.rect.center).distance_to(self.player_pos)
@@ -115,10 +117,10 @@ class move_to_player(IState):
         else:
             return move_around_player(self.npc)
 
-
 class move_around_player(IState):
     def __init__(self, npc):
         super().__init__(npc)
+        self.name = "move_around_player"
         self.circle = Circle(self.circle_radius)
         self.circle.is_circle = True
     
@@ -136,6 +138,7 @@ class move_around_player(IState):
 class danceState(IState):
     def __init__(self, npc):
         super().__init__(npc)
+        self.name = "dance"
         self.dance = Dance(npc)
     
     def doState(self):
@@ -153,6 +156,7 @@ class danceState(IState):
 class move_away(IState):
     def __init__(self, npc):
         super().__init__(npc)
+        self.name = "move_away"
         self.screen = self.npc.screen
         self.rect = self.npc.rect
         self.away_direction = self.get_min_direction()
@@ -163,7 +167,7 @@ class move_away(IState):
         self.npc.move(self.away_direction)
         # Перевірка, чи вийшов персонаж за межі екрану
         if not self.screen.get_rect().colliderect(self.rect):
-            self.npc.kill()
+            self.npc.live = False
         
         return self
 

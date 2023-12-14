@@ -135,7 +135,9 @@ class Groups:
     def update(self):
         self.bats.update()
         self.bullets.update()
-        for actor in self.actors.values():
+        # for actor in self.actors.values():
+        #     actor.update()
+        for actor in list(self.actors.values()):
             actor.update()
 
     def draw(self, screen, colour = None):

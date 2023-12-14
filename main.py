@@ -13,6 +13,7 @@ import Bat
 # from Bullet_class import Bullet
 from Dummy import Dummy
 import Actors
+import gc # garbage collector
 
 FPS = pygame.time.Clock()
 pygame.init()
@@ -66,7 +67,7 @@ drops = Drops.Drops(screen)
 # drops_list = MyGroup()
 
 # actors = Actors.Actors_()
-actors_new = Actors.Groups()
+groups = Actors.Groups()
 
 # Player
 player = Player(WIDTH//2, HEIGHT//2, drops) # 150, 300
@@ -84,7 +85,7 @@ def createDummies(actors_param):
 # actors['actors'] = dummy
 # actors.add('actors', dummy)
 
-createDummies(actors_new)
+createDummies(groups)
 
 # test_group = MyGroup()
 # print('test_group empty ', bool(test_group))
@@ -98,13 +99,13 @@ def update_objects():
     player.update()
     # bullets.update()
     drops.update()
-    actors_new.update()
+    groups.update()
 
 # Draw
 def draw_objects(isBoundRects):
     colourGreen, colourRed = Actors.get_colour(isBoundRects)
     drops.draw(screen, colourGreen)
-    actors_new.draw(screen, colourRed)
+    groups.draw(screen, colourRed)
     player.draw(screen, colourGreen)
 
 # Sound
@@ -118,8 +119,8 @@ run = True
 
 def initialize():
     player.init()
-    actors_new.clear()
-    createDummies(actors_new)
+    groups.clear()
+    createDummies(groups)
     drops.empty()
     # jump.is_jump = False
     Events.stop_timer()
@@ -155,9 +156,12 @@ while run:
         
         if isBoundRects:
             text.print_fps(screen, FPS)
-            text.print_debug_info(screen, actors_new, drops, player)
+            text.print_debug_info(screen, groups, drops, player)
             # if Girl:
             #     text.print_girl_info(screen, Girl.sprites()[-1]) # the last one
+            girl = groups.get_actor("girl")
+            if girl:
+                text.print_girl_info(screen, girl)
 
         # COLLISIONS
         # All in classes
@@ -181,20 +185,20 @@ while run:
             # pygame.quit()
         # if not Girl:
         if event.type == Events.BAT_TIMER:
-            actors_new.add_bat(Bat.Bat(screen, drops, player, actors_new.bullets))
+            groups.add_bat(Bat.Bat(screen, drops, player, groups.bullets))
         if event.type == Events.BAT_SP_TIMER:
-            actors_new.add_bat(Bat.BatSpecial(screen, drops, player, actors_new.bullets))
+            groups.add_bat(Bat.BatSpecial(screen, drops, player, groups.bullets))
         if event.type == Events.BULLET_DROP_TIMER:
             drops.create_bulletDrop()
         if event.type == Events.FOOD_DROP_TIMER:
             drops.create_foodDrop()
         if player.gameplay and event.type == pygame.MOUSEBUTTONDOWN:
             # Створення кулі з позиції гравця до позиції миші
-            player.shoot(screen, actors_new.bullets, pygame.mouse.get_pos())
+            player.shoot(screen, groups.bullets, pygame.mouse.get_pos())
         if player.gameplay and event.type == pygame.KEYDOWN:
             if event.key == pygame.K_e or event.key == pygame.K_q:
                 # Створення кулі, яка летітиме у напрямку player.direction
-                player.shoot(screen, actors_new.bullets)
+                player.shoot(screen, groups.bullets)
             if event.key == pygame.K_TAB:
                 if not isBoundRects:
                     isBoundRects = True
@@ -211,20 +215,20 @@ while run:
             if event.key == pygame.K_o:
                 player.add_effect("onepunch")
             if event.key == pygame.K_m: # unlimited
-                actors_new.add_actor("girl", Dance_Girl(screen, player, drops.foodDrops))
+                groups.add_actor("girl", Dance_Girl(screen, player, groups.actors, drops.foodDrops))
             if event.key == pygame.K_h:
-                dummy = actors_new.get_actor("dummy")
+                dummy = groups.get_actor("dummy")
                 if dummy:
                     dummy.set_heal(10)
-                dummy = actors_new.get_actor("cell_dummy")
+                dummy = groups.get_actor("cell_dummy")
                 if dummy:
                     dummy.set_heal(10)
 
             if event.key == pygame.K_k:
-                dummy = actors_new.get_actor("dummy")
+                dummy = groups.get_actor("dummy")
                 if dummy:
                     dummy.set_damage(10)
-                dummy = actors_new.get_actor("cell_dummy")
+                dummy = groups.get_actor("cell_dummy")
                 if dummy:
                     dummy.set_damage(10)
 
@@ -232,6 +236,9 @@ while run:
         if event.type == pygame.KEYDOWN:
             if event.key == pygame.K_r:
                 initialize()
+            if event.key == pygame.K_g:
+                gc.collect()
+                print(gc.get_stats())
 
 pygame.quit()
 

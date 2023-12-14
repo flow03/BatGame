@@ -10,7 +10,7 @@ from HealthBar import Health
 import add.State
 
 class Dance_Girl(pygame.sprite.Sprite):
-    def __init__(self, screen, player, food_list : MyGroup):
+    def __init__(self, screen, player, actors, food_list : MyGroup):
         super().__init__()
         self.animations = {
             'balancing': [],
@@ -25,7 +25,7 @@ class Dance_Girl(pygame.sprite.Sprite):
         self.health = Health(12)
 
         self.player = player
-        # self.actors = actors
+        self.actors = actors
         self.food_list = food_list
         
         self.init()
@@ -39,7 +39,8 @@ class Dance_Girl(pygame.sprite.Sprite):
         self.image = self.animations[self.current_animation][int(self.frame_index)]
         self.rect = self.image.get_rect()
         self.set_rand_pos() # rect
-
+        
+        self.live = True
         self.is_moving = False
         self.state = add.State.move_to_player(self)
         self.health.reload()
@@ -114,6 +115,12 @@ class Dance_Girl(pygame.sprite.Sprite):
         # if not self.is_moving and (self.current_animation.startswith('skip') or self.current_animation.startswith('balancing')):
         #     self.current_animation = self.idle_animation
         self.is_moving = False  # скидаємо прапор руху після оновлення кадру
+
+        if not self.live:
+            # for gc
+            self.actors.pop("girl")
+            # del self.actors["girl"]
+            # self.__del__()
     
     def update_animations(self):
         # оновлення кадрів анімації

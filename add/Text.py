@@ -32,23 +32,23 @@ class Text:
     def print_fps(self, screen, FPS):
         screen.blit(self.myfont.render('FPS: ' + str(int(FPS.get_fps())), True, "Black"), (self.WIDTH - 85, 15))
 
-    def print_debug_info(self, screen, actors, drops, player):
+    def print_debug_info(self, screen, groups, drops, player):
         self.y = 55
         self.screen = screen
         # self.print('bats on screen', len(actors['bats']))
         # self.print('food on screen', len(drops.foodDrops))
-        self.print('killed bats', player.killedBats)
-        self.print('bullets', player.bullets_count)
-        self.print('health', player.health_new.health)
-        self.print('speed', player.speed)
-        self.print('defence', player.defence)
+        # self.print('killed bats', player.killedBats)
+        # self.print('bullets', player.bullets_count)
+        # self.print('health', player.health_new.health)
+        # self.print('speed', player.speed)
+        # self.print('defence', player.defence)
         # self.print('loot on screen', len(drops.fallen_drops))
-        self.print('bats', len(actors.bats))
-        self.print('bullets', len(actors.bullets))
-        self.print('actors', len(actors.actors))
-        if actors.actors:
-            for key in actors.actors:
-               self.print(key +' health', actors.actors[key].health.health) 
+        self.print('bats', len(groups.bats))
+        self.print('bullets', len(groups.bullets))
+        self.print('actors', len(groups.actors))
+        if groups.actors:
+            for key in list(groups.actors.keys()):
+               self.print(key +' health', groups.actors[key].health.health) 
 
         if player.effects.queue:
             for key in player.effects.queue.keys():
@@ -67,19 +67,20 @@ class Text:
         self.screen.blit(self.myfont.render("Girl", True, "Black"), (self.x_offset, self.y))
         self.y += self.y_offset
 
-        self.print('state', girl.state)
+        self.print('state', girl.state.name)
         self.print('current', girl.current_animation)
-        if girl.state == "move_around_player":
-            self.print('angle', girl.circle.angle)
-            self.print('start_angle', girl.circle.start_angle)
-            self.print('laps_completed', girl.circle.laps_completed)
-        if girl.state == "dance" and girl.dance:
-            # self.y += self.y_offset
-            self.print('idle', girl.idle_animation)
-            self.print('currentDance', girl.dance.currentDance)
-            self.print('dance_clock', girl.dance.d_clock.clock())
-            self.print('nextDance', girl.dance.d_clock.nextFrame)
-            self.print('dance_over', girl.dance.dance_over.nextFrame)
+        # if girl.state == "move_around_player":
+        #     self.print('angle', girl.circle.angle)
+        #     self.print('start_angle', girl.circle.start_angle)
+        #     self.print('laps_completed', girl.circle.laps_completed)
+        # if girl.state == "dance" and girl.dance:
+        #     # self.y += self.y_offset
+        #     self.print('idle', girl.idle_animation)
+        #     self.print('currentDance', girl.dance.currentDance)
+        #     self.print('dance_clock', girl.dance.d_clock.clock())
+        #     self.print('nextDance', girl.dance.d_clock.nextFrame)
+        #     self.print('dance_over', girl.dance.dance_over.nextFrame)
+
             # self.print('food_clock', girl.dance.food_clock.clock())
             # self.print('nextFood', girl.dance.food_clock.nextFrame)
             
