@@ -43,10 +43,12 @@ class Text:
         self.print('speed', player.speed)
         self.print('defence', player.defence)
         # self.print('loot on screen', len(drops.fallen_drops))
-        # self.print('actors on screen', len(actors['actors']))
-        if actors['actors']:
-            for actor in actors['actors']:
-               self.print('actor health', actor.health.health) 
+        self.print('bats', len(actors.bats))
+        self.print('bullets', len(actors.bullets))
+        self.print('actors', len(actors.actors))
+        if actors.actors:
+            for key in actors.actors:
+               self.print(key +' health', actors.actors[key].health.health) 
 
         if player.effects.queue:
             for key in player.effects.queue.keys():

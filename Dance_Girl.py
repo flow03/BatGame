@@ -10,7 +10,7 @@ from HealthBar import Health
 import add.State
 
 class Dance_Girl(pygame.sprite.Sprite):
-    def __init__(self, screen, player, actors, food_list : MyGroup):
+    def __init__(self, screen, player, food_list : MyGroup):
         super().__init__()
         self.animations = {
             'balancing': [],
@@ -25,7 +25,7 @@ class Dance_Girl(pygame.sprite.Sprite):
         self.health = Health(12)
 
         self.player = player
-        self.actors = actors
+        # self.actors = actors
         self.food_list = food_list
         
         self.init()

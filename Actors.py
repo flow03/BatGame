@@ -1,5 +1,7 @@
 from pygame import draw
 from add.MyGroup import MyGroup
+import Bat
+import Bullet
 
 class Actors:
     def __init__(self):
@@ -106,3 +108,51 @@ class Actors_:
 
     def __setitem__(self, index, value):
         self.add(index, value)
+
+class Groups:
+    def __init__(self):
+        self.bats = MyGroup()
+        self.bullets = MyGroup()
+        self.actors = {} # dict
+
+    # add bat to a group
+    def add_bat(self, object : Bat.Bat):
+        self.bats.add(object)
+
+    def add_bullet(self, object : Bullet.Bullet):
+        self.bullets.add(object)
+
+    def add_actor(self, key, value):
+        self.actors[key] = value
+
+    def get_actor(self, key):
+        return self.actors.get(key, None)
+
+    def init_actors(self):
+        for actor in self.actors.values():
+            actor.init()
+
+    def update(self):
+        self.bats.update()
+        self.bullets.update()
+        for actor in self.actors.values():
+            actor.update()
+
+    def draw(self, screen, colour = None):
+        self.bats.draw(screen, colour)
+        self.bullets.draw(screen, colour)
+
+        for actor in self.actors.values():
+            actor.draw(screen)
+
+    # def remove(self, name):
+    #     ...
+
+    # def empty(self, name):
+    #     if self.actors.get(name):
+    #         self.actors[name].empty()
+
+    def clear(self):
+        self.bats.empty()
+        self.bullets.empty()
+        self.actors.clear()
