@@ -43,7 +43,7 @@ class Health:
         return self.health == 0
 
 class HealthBar:
-    def __init__(self, rect : pygame.Rect, health : Health, border = 1):
+    def __init__(self, rect : pygame.Rect, health : Health, border = 1, colour = "Red"):
         self.health = health
         self.rect = rect        
         self.bordered_rect = pygame.Rect(self.rect.x - border, self.rect.y - border, 
@@ -55,7 +55,7 @@ class HealthBar:
         self.max_width = self.rect.width
         self.border = border
         self.prev_health = self.health.health
-        self.colour = "Red"
+        self.colour = colour
 
        
     def init(self):
@@ -131,6 +131,7 @@ class FancyHealthBar(HealthBar):
         pygame.draw.rect(screen, "Green", self.green_rect)
         super().draw(screen)
 
+    # for pos methods
     def fit_to_left(self):
         self.green_rect.midleft = self.rect.midleft
         self.yellow_rect.midleft = self.rect.midleft
@@ -339,11 +340,11 @@ class EffectBar:
 #         self.cell = FancyHealthBar(rect, 1, 1)
 
 class CellHealthBar:
-    def __init__(self, rect : pygame.Rect, health : Health, border = 1):
+    def __init__(self, rect : pygame.Rect, health : Health, border = 1, colour = "Red"):
         self.rect = rect
         self.health = health
         self.border = border
-        self.colour = "Red"
+        self.colour = colour
 
         self.init()
 
@@ -363,7 +364,7 @@ class CellHealthBar:
         # print(width)
         cell_rect = pygame.Rect((0,0), (width, self.rect.height))
         for i in range(self.health.max_health):
-            cell_list.append(FancyHealthBar(pygame.Rect(cell_rect), Health(1), self.border))
+            cell_list.append(FancyHealthBar(pygame.Rect(cell_rect), Health(1), self.border, self.colour))
 
         return cell_list
 

@@ -25,7 +25,7 @@ class Dummy(pygame.sprite.Sprite):
         bar_pos.y -= 10
         health_bar_rect = pygame.Rect(bar_pos, (100, 6))
         if type == "cell":
-            self.health_bar = HealthBar.CellHealthBar(health_bar_rect, self.health)
+            self.health_bar = HealthBar.CellHealthBar(health_bar_rect, self.health, 1, "Blue")
         else:
             self.health_bar = HealthBar.FancyBoundHealthBar(health_bar_rect, self.health, 1)
 

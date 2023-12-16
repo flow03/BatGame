@@ -167,6 +167,7 @@ class move_away(IState):
         self.npc.move(self.away_direction)
         # Перевірка, чи вийшов персонаж за межі екрану
         if not self.screen.get_rect().colliderect(self.rect):
+            # self.npc.kill() # no group
             self.npc.live = False
         
         return self

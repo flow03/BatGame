@@ -190,6 +190,7 @@ class Player:
             new_bullet = Bullet(screen, self.rect.center)
             if self.onepunch:
                 new_bullet.damage = 10000
+                new_bullet.speed = 11
                 # print("onepunch bullet")
 
             if target:
