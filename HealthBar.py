@@ -109,9 +109,9 @@ class FancyHealthBar(HealthBar):
         super().__init__(*params)
     
         self.yellow_rect = pygame.Rect(self.rect)
-        self.yellow_clock = Clock(500)
+        self.yellow_clock = Clock(500)  # delay before decrease
         self.green_rect = pygame.Rect(self.rect)
-        self.green_clock = Clock(500)
+        self.green_clock = Clock(500)   # delay before increase
 
         self.init()
 
@@ -396,28 +396,13 @@ class CellHealthBar:
             # always update health
             self.cell_list[index].update_health()
 
-        # check full cells
-        # if not self.health.empty():
-        #     for full_index in range(self.health.health):
-        #         if self.cell_list[full_index].health.empty():
-        #             self.cell_list[full_index].health.set_heal(1)
-        #             # self.set_heal(1)
-        #             self.index = full_index
+    def change_colour(self, colour):
+        for cell in self.cell_list:
+            cell.change_colour(colour)
 
-        # for cell in self.cell_list:
-        #     cell.update_health()
+    def set_damage(self, damage: int):
+        return self.health.set_damage(damage)
 
-    def set_damage(self, damage : int):
-        self.cell_list[self.index].health.set_damage(1)
-        if self.health.set_damage(1): # bounds check
-            self.index -= 1
-        
-    def set_heal(self, heal : int):
-        self.cell_list[self.index].health.set_heal(1)
-        if self.health.set_heal(1): # bounds check
-            self.index += 1 # warning
-        
-        # if not self.health.full(): # bounds check
-        #     self.index += 1
-        # self.health.set_heal(1)
+    def set_heal(self, heal: int):
+        return self.health.set_heal(heal)
         

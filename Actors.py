@@ -132,6 +132,16 @@ class Groups:
         for actor in self.actors.values():
             actor.init()
 
+    def set_damage(self, actor_key, damage):
+        actor = self.get_actor(actor_key)
+        if actor:
+            actor.set_damage(damage)
+
+    def set_heal(self, actor_key, heal):
+        actor = self.get_actor(actor_key)
+        if actor:
+            actor.set_heal(heal)
+
     def update(self):
         self.bats.update()
         self.bullets.update()
@@ -157,4 +167,4 @@ class Groups:
     def clear(self):
         self.bats.empty()
         self.bullets.empty()
-        self.actors.clear()
+        self.actors.clear() # dictionary

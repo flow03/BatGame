@@ -24,6 +24,39 @@ class AllHealthBars:
 class BlueShield(HealthBar.CellHealthBar):
     def __init__(self, rect : pygame.Rect, health : HealthBar.Health, border = 1):
         super().__init__(rect, health, border, "Blue")
+        self.visible = False
+        # self.change_colour("Blue")
+    
+    def set_damage(self, damage : int):
+        self.cell_list[self.index].health.set_damage(1)
+        if self.health.set_damage(1): # bounds check
+            self.index -= 1
         
-        # for cell in self.cell_list:
-        #     cell.change_colour("Blue")
+    def set_heal(self, heal : int):
+        self.cell_list[self.index].health.set_heal(1)
+        if self.health.set_heal(1): # bounds check
+            self.index += 1 # warning
+
+    def draw(self, screen):
+        for cell in self.cell_list:
+            if self.visible:
+                cell.draw(screen)
+            elif not cell.health.empty():
+                cell.draw(screen)
+            elif cell.decrease or cell.yellow_clock.nextFrame:
+                cell.draw(screen)
+
+class GrayShield(HealthBar.HealthBar):
+    def __init__(self, rect : pygame.Rect, health : HealthBar.Health, border = 1):
+        super().__init__(rect, health, border, "Gray")
+        self.start_width = rect.width
+
+    def update_health(self):
+        super().update_health()
+        if not self.health.empty():
+            self.bordered_rect.width = self.rect.width + self.border * 2
+        else:
+            self.bordered_rect.width = 0
+
+    def set_heal(self, heal : int):
+        pass

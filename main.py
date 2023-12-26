@@ -73,12 +73,13 @@ groups = Actors.Groups()
 player = Player(WIDTH//2, HEIGHT//2, drops) # 150, 300
 
 def createDummies(actors_param):
-    dummy = Dummy(WIDTH//2 - 200, HEIGHT//2, actors_param.bullets, 100)
-    cell_dummy = Dummy(WIDTH//2 + 200, HEIGHT//2, actors_param.bullets, 10)
-    cell_dummy.healthBarCreate("cell")
+    left_dummy = Dummy(WIDTH//2 - 200, HEIGHT//2, actors_param.bullets, 3, "blue")
+    right_dummy = Dummy(WIDTH//2 + 200, HEIGHT//2, actors_param.bullets, 25, "cell")
+    down_dummy = Dummy(WIDTH//2, HEIGHT//2 + 200, actors_param.bullets, 25, "gray")
 
-    actors_param.add_actor("dummy", dummy)
-    actors_param.add_actor("cell_dummy", cell_dummy)
+    actors_param.add_actor("left_dummy", left_dummy)
+    actors_param.add_actor("right_dummy", right_dummy)
+    actors_param.add_actor("down_dummy", down_dummy)
 
 # 3 variants of add
 # actors['actors'].add(dummy)
@@ -217,20 +218,14 @@ while run:
             if event.key == pygame.K_m: # unlimited
                 groups.add_actor("girl", Dance_Girl(screen, player, groups.actors, drops.foodDrops))
             if event.key == pygame.K_h:
-                dummy = groups.get_actor("dummy")
-                if dummy:
-                    dummy.set_heal(10)
-                dummy = groups.get_actor("cell_dummy")
-                if dummy:
-                    dummy.set_heal(10)
+                groups.set_heal("left_dummy", 5)
+                groups.set_heal("right_dummy", 5)
+                groups.set_heal("down_dummy", 5)
 
             if event.key == pygame.K_k:
-                dummy = groups.get_actor("dummy")
-                if dummy:
-                    dummy.set_damage(10)
-                dummy = groups.get_actor("cell_dummy")
-                if dummy:
-                    dummy.set_damage(10)
+                groups.set_damage("left_dummy", 5)
+                groups.set_damage("right_dummy", 5)
+                groups.set_damage("down_dummy", 5)
 
         # працює незалежно від player.gameplay
         if event.type == pygame.KEYDOWN:

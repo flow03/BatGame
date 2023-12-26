@@ -2,11 +2,12 @@ import pygame
 from pygame.math import Vector2
 from HealthBar import Health
 import HealthBar
+import add.Shields
 from add.Path import resource_path
 from add.Clock import Clock
 
 class Dummy(pygame.sprite.Sprite):
-    def __init__(self, x, y, bullet_list, health = 100):
+    def __init__(self, x, y, bullet_list, health = 100, health_type = None):
         super().__init__()
         
         img_url = resource_path('img/training_dummy.png')
@@ -17,15 +18,20 @@ class Dummy(pygame.sprite.Sprite):
         self.re_delay = Clock(1000)
 
         self.health = Health(health)
-        self.healthBarCreate()
+        self.healthBarCreate(health_type)
         # print("dummy ", self.health_bar.bordered_rect.width, self.health_bar.bordered_rect.height)
 
-    def healthBarCreate(self, type = None):
+    def healthBarCreate(self, health_type = None):
         bar_pos = Vector2(self.rect.midtop)
         bar_pos.y -= 10
         health_bar_rect = pygame.Rect(bar_pos, (100, 6))
-        if type == "cell":
-            self.health_bar = HealthBar.CellHealthBar(health_bar_rect, self.health, 1, "Blue")
+
+        if health_type == "cell":
+            self.health_bar = HealthBar.CellHealthBar(health_bar_rect, self.health, 1)
+        elif health_type == "blue":
+            self.health_bar = add.Shields.BlueShield(health_bar_rect, self.health, 1)
+        elif health_type == "gray":
+            self.health_bar = add.Shields.GrayShield(health_bar_rect, self.health, 1)
         else:
             self.health_bar = HealthBar.FancyBoundHealthBar(health_bar_rect, self.health, 1)
 
