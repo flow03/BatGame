@@ -17,18 +17,20 @@ class Health:
     def set_damage(self, damage: int):
         self.health -= int(damage)
         if self.health <= 0:
+            overdamage = abs(self.health) # absolute_value
             self.health = 0
-            return False # overdamage
+            return overdamage
         else:
-            return True
+            return False
 
     def set_heal(self, heal: int):
         self.health += int(heal)
         if self.health > self.max_health:
+            overheal = self.health - self.max_health
             self.health = self.max_health
-            return False # overheal
+            return overheal
         else:
-            return True
+            return False
 
     def get_ratio(self):
         return self.health/self.max_health
@@ -44,8 +46,8 @@ class Health:
 
 class HealthBar:
     def __init__(self, rect : pygame.Rect, health : Health, border = 1, colour = "Red"):
-        self.health = health
-        self.rect = rect        
+        self.health = health # reference
+        self.rect = pygame.Rect(rect)        
         self.bordered_rect = pygame.Rect(self.rect.x - border, self.rect.y - border, 
             self.rect.width + border * 2, self.rect.height + border * 2)
         # self.bordered_rect = rect        
@@ -70,26 +72,21 @@ class HealthBar:
         if self.get_pos() != pos:
             self.bordered_rect.center = pos
             # self.bound_rect.midleft = self.bordered_rect.midleft
-            print(self.get_pos())
             new_rect_pos = Vector2(self.bordered_rect.midleft)
-            print(self.get_pos())
             new_rect_pos.x += self.border
-            print(self.get_pos())
             self.rect.midleft = Vector2(new_rect_pos)
-            print(self.get_pos())
-            print()
 
     def update_pos_left(self, pos):
         pos = Vector2(pos)
-        if Vector2(self.bordered_rect.midleft) != pos:
-            self.bordered_rect.midleft = pos
+        # if Vector2(self.bordered_rect.midleft) != pos:
+        self.bordered_rect.midleft = pos
 
-            new_rect_pos = Vector2(self.bordered_rect.midleft)
-            new_rect_pos.x += self.border
-            self.rect.midleft = new_rect_pos
+        new_rect_pos = Vector2(self.bordered_rect.midleft)
+        new_rect_pos.x += self.border
+        self.rect.midleft = new_rect_pos
 
     def get_pos(self):
-        return Vector2(self.rect.center)
+        return Vector2(self.bordered_rect.center)
     
     def update_health(self):
         if self.prev_health != self.health.health:
@@ -350,8 +347,8 @@ class EffectBar:
 
 class CellHealthBar:
     def __init__(self, rect : pygame.Rect, health : Health, border = 1, colour = "Red"):
-        self.rect = rect
-        self.health = health
+        self.rect = pygame.Rect(rect)
+        self.health = health # reference
         self.border = border
         self.colour = colour
 

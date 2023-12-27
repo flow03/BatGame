@@ -57,7 +57,6 @@ class Bat(pygame.sprite.Sprite):
 
     def set_damage(self, damage: int):
         self.player.killedBats += 1
-        # self.createDrops()
         self.drops.createFallenDrop(self.rect.center)
         self.kill()
 
@@ -88,6 +87,8 @@ class BatSpecial(Bat):
         self.health_bar.update_health()
         self.collide()
         self.collide_food()
+        if self.health.empty():
+            self.kill()
 
     def nearest_food(self):
         nearest_d = None # distance
@@ -152,9 +153,11 @@ class BatSpecial(Bat):
         return direction
 
     def set_damage(self, damage: int):
-        if not self.health.set_damage(damage):
-            super().set_damage(damage)
-        # self.health_bar.update_health()
+        self.health.set_damage(damage)
+        if self.health.empty():
+            self.player.killedBats += 1
+            self.drops.createFallenDrop(self.rect.center)
+            self.kill()
     
     # def set_heal(self, heal: int):
     #     self.health += int(heal)

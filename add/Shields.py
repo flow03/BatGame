@@ -6,7 +6,7 @@ class AllHealthBars:
     def __init__(self, healthbar : HealthBar, shieldbar):
         self.healthbar = healthbar
         self.shieldbar = shieldbar
-        self.update_pos(self.healthbar.get_pos())
+        # self.update_pos(self.healthbar.get_pos())
 
     # healthbar pos as parameter
     def update_pos(self, health_pos):
@@ -14,18 +14,9 @@ class AllHealthBars:
         self.healthbar.update_pos(health_pos)
         
         if self.shieldbar:
-            shield_pos = Vector2(self.healthbar.get_pos()) # not a link
-            # print(self.healthbar.get_pos())
+            shield_pos = self.healthbar.get_pos() # not a link
             shield_pos.y -= 10
-            # print(self.healthbar.get_pos())
-            # self.shieldbar.update_pos_left(shield_pos)
             self.shieldbar.update_pos(shield_pos)
-            # print(self.healthbar.get_pos())
-            # print()
-
-        # new_pos = Vector2(self.rect.midtop)
-        # new_pos.y -= 10
-        # self.health_bar.update_pos(new_pos)
     
     def update_health(self):
         self.healthbar.update_health()
@@ -39,9 +30,12 @@ class AllHealthBars:
 
     def set_damage(self, damage : int):
         if self.shieldbar: # and not self.shieldbar.empty()
-            self.shieldbar.set_damage(damage)
+            overdamage = self.shieldbar.set_damage(damage)
             if self.shieldbar.health.empty():
                 self.shieldbar = None
+            if overdamage:
+                print("overdamage is ", overdamage)
+                self.healthbar.set_damage(overdamage)
         else:
             self.healthbar.set_damage(damage)
 
@@ -84,6 +78,10 @@ class GrayShield(HealthBar.HealthBar):
             self.bordered_rect.width = self.rect.width + self.border * 2
         else:
             self.bordered_rect.width = 0
+
+    def set_damage(self, damage : int):
+        overdamage = self.health.set_damage(damage)
+        return overdamage
 
     def set_heal(self, heal : int):
         pass

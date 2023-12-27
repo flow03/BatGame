@@ -37,7 +37,7 @@ class Dummy(pygame.sprite.Sprite):
             self.health_bar = add.Shields.GrayShield(health_bar_rect, self.health, 1)
         elif health_type == "fancy_blue":
             health_bar = HealthBar.HealthBar(health_bar_rect, self.health, 1)
-            shield_bar = add.Shields.GrayShield(health_bar_rect, Health(5), 1)
+            shield_bar = add.Shields.GrayShield(health_bar_rect, Health(10), 1)
             self.health_bar = add.Shields.AllHealthBars(health_bar, shield_bar)
         else:
             self.health_bar = HealthBar.FancyBoundHealthBar(health_bar_rect, self.health, 1)
