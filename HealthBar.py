@@ -67,20 +67,29 @@ class HealthBar:
 
     def update_pos(self, pos):
         pos = Vector2(pos)
-        self.bordered_rect.center = pos
-        # self.bound_rect.midleft = self.bordered_rect.midleft
-
-        new_rect_pos = Vector2(self.bordered_rect.midleft)
-        new_rect_pos.x += self.border
-        self.rect.midleft = new_rect_pos
+        if self.get_pos() != pos:
+            self.bordered_rect.center = pos
+            # self.bound_rect.midleft = self.bordered_rect.midleft
+            print(self.get_pos())
+            new_rect_pos = Vector2(self.bordered_rect.midleft)
+            print(self.get_pos())
+            new_rect_pos.x += self.border
+            print(self.get_pos())
+            self.rect.midleft = Vector2(new_rect_pos)
+            print(self.get_pos())
+            print()
 
     def update_pos_left(self, pos):
         pos = Vector2(pos)
-        self.bordered_rect.midleft = pos
+        if Vector2(self.bordered_rect.midleft) != pos:
+            self.bordered_rect.midleft = pos
 
-        new_rect_pos = Vector2(self.bordered_rect.midleft)
-        new_rect_pos.x += self.border
-        self.rect.midleft = new_rect_pos
+            new_rect_pos = Vector2(self.bordered_rect.midleft)
+            new_rect_pos.x += self.border
+            self.rect.midleft = new_rect_pos
+
+    def get_pos(self):
+        return Vector2(self.rect.center)
     
     def update_health(self):
         if self.prev_health != self.health.health:

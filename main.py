@@ -75,11 +75,13 @@ player = Player(WIDTH//2, HEIGHT//2, drops) # 150, 300
 def createDummies(actors_param):
     left_dummy = Dummy(WIDTH//2 - 200, HEIGHT//2, actors_param.bullets, 3, "blue")
     right_dummy = Dummy(WIDTH//2 + 200, HEIGHT//2, actors_param.bullets, 25, "cell")
-    down_dummy = Dummy(WIDTH//2, HEIGHT//2 + 200, actors_param.bullets, 25, "gray")
+    down_dummy = Dummy(WIDTH//2, HEIGHT//2 + 200, actors_param.bullets, 50, "gray")
+    up_dummy = Dummy(WIDTH//2, HEIGHT//2 - 200, actors_param.bullets, 50, "fancy_blue")
 
     actors_param.add_actor("left_dummy", left_dummy)
     actors_param.add_actor("right_dummy", right_dummy)
     actors_param.add_actor("down_dummy", down_dummy)
+    actors_param.add_actor("up_dummy", up_dummy)
 
 # 3 variants of add
 # actors['actors'].add(dummy)
@@ -218,14 +220,9 @@ while run:
             if event.key == pygame.K_m: # unlimited
                 groups.add_actor("girl", Dance_Girl(screen, player, groups.actors, drops.foodDrops))
             if event.key == pygame.K_h:
-                groups.set_heal("left_dummy", 5)
-                groups.set_heal("right_dummy", 5)
-                groups.set_heal("down_dummy", 5)
-
+                groups.actors_heal(5)
             if event.key == pygame.K_k:
-                groups.set_damage("left_dummy", 5)
-                groups.set_damage("right_dummy", 5)
-                groups.set_damage("down_dummy", 5)
+                groups.actors_damage(5)
 
         # працює незалежно від player.gameplay
         if event.type == pygame.KEYDOWN:

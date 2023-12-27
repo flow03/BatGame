@@ -6,20 +6,47 @@ class AllHealthBars:
     def __init__(self, healthbar : HealthBar, shieldbar):
         self.healthbar = healthbar
         self.shieldbar = shieldbar
-    
-    # healthbar pos
-    def update_pos(self, pos):
-        self.healthbar.update_pos(pos)
+        self.update_pos(self.healthbar.get_pos())
 
-        shield_pos = Vector2(self.healthbar.self.bordered_rect.topleft)
-        shield_pos.y -= 10
+    # healthbar pos as parameter
+    def update_pos(self, health_pos):
+        # if self.healthbar.get_pos() != Vector2(pos):
+        self.healthbar.update_pos(health_pos)
+        
+        if self.shieldbar:
+            shield_pos = Vector2(self.healthbar.get_pos()) # not a link
+            # print(self.healthbar.get_pos())
+            shield_pos.y -= 10
+            # print(self.healthbar.get_pos())
+            # self.shieldbar.update_pos_left(shield_pos)
+            self.shieldbar.update_pos(shield_pos)
+            # print(self.healthbar.get_pos())
+            # print()
 
-        self.shieldbar.update_pos_left(shield_pos)
+        # new_pos = Vector2(self.rect.midtop)
+        # new_pos.y -= 10
+        # self.health_bar.update_pos(new_pos)
     
     def update_health(self):
         self.healthbar.update_health()
-        self.shieldbar.update_health()
-        
+        if self.shieldbar:
+            self.shieldbar.update_health()
+
+    def draw(self, screen):
+        self.healthbar.draw(screen)
+        if self.shieldbar:
+            self.shieldbar.draw(screen)
+
+    def set_damage(self, damage : int):
+        if self.shieldbar: # and not self.shieldbar.empty()
+            self.shieldbar.set_damage(damage)
+            if self.shieldbar.health.empty():
+                self.shieldbar = None
+        else:
+            self.healthbar.set_damage(damage)
+
+    def set_heal(self, heal : int):
+        self.healthbar.set_heal(heal)
 
 class BlueShield(HealthBar.CellHealthBar):
     def __init__(self, rect : pygame.Rect, health : HealthBar.Health, border = 1):

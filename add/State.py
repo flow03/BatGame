@@ -175,19 +175,12 @@ class move_away(IState):
     # Визначає напрям до найближчої межі екрану
     def get_min_direction(self):
         distances = {
-            "left"  : self.rect.centerx,                               # Відстань до лівої межі
-            "up"    : self.rect.centery,                               # Відстань до верхньої межі
-            "right" : self.screen.get_width() - self.rect.centerx,     # Відстань до правої межі
-            "down"  : self.screen.get_height() - self.rect.centery     # Відстань до нижньої межі
+            self.rect.centerx : "left",                             # Відстань до лівої межі
+            self.rect.centery : "up",                               # Відстань до верхньої межі
+            self.screen.get_width() - self.rect.centerx : "right",  # Відстань до правої межі
+            self.screen.get_height() - self.rect.centery : "down"   # Відстань до нижньої межі
         }
 
-        min_distance = min(distances.values())
-        min_direction = None
+        min_distance_key = min(distances)
 
-        for key, value in distances.items():
-            if value == min_distance:
-                min_direction = key
-                # print(f"min_direction: {min_direction}")
-                break
-        # print(min_direction)
-        return min_direction
+        return distances[min_distance_key]

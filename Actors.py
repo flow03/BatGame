@@ -141,6 +141,14 @@ class Groups:
         actor = self.get_actor(actor_key)
         if actor:
             actor.set_heal(heal)
+    
+    def actors_damage(self, damage):
+        for actor in self.actors.values():
+            actor.set_damage(damage)
+
+    def actors_heal(self, heal):
+        for actor in self.actors.values():
+            actor.set_heal(heal)
 
     def update(self):
         self.bats.update()

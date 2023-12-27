@@ -21,10 +21,13 @@ class Dummy(pygame.sprite.Sprite):
         self.healthBarCreate(health_type)
         # print("dummy ", self.health_bar.bordered_rect.width, self.health_bar.bordered_rect.height)
 
+    def update_bar_pos(self):
+        new_pos = Vector2(self.rect.midtop)
+        new_pos.y -= 10
+        self.health_bar.update_pos(new_pos)
+
     def healthBarCreate(self, health_type = None):
-        bar_pos = Vector2(self.rect.midtop)
-        bar_pos.y -= 10
-        health_bar_rect = pygame.Rect(bar_pos, (100, 6))
+        health_bar_rect = pygame.Rect((0, 0), (100, 6)) # (0, 0) position
 
         if health_type == "cell":
             self.health_bar = HealthBar.CellHealthBar(health_bar_rect, self.health, 1)
@@ -32,10 +35,14 @@ class Dummy(pygame.sprite.Sprite):
             self.health_bar = add.Shields.BlueShield(health_bar_rect, self.health, 1)
         elif health_type == "gray":
             self.health_bar = add.Shields.GrayShield(health_bar_rect, self.health, 1)
+        elif health_type == "fancy_blue":
+            health_bar = HealthBar.HealthBar(health_bar_rect, self.health, 1)
+            shield_bar = add.Shields.GrayShield(health_bar_rect, Health(5), 1)
+            self.health_bar = add.Shields.AllHealthBars(health_bar, shield_bar)
         else:
             self.health_bar = HealthBar.FancyBoundHealthBar(health_bar_rect, self.health, 1)
 
-        self.health_bar.update_pos(bar_pos)
+        self.update_bar_pos()
 
     def init(self):
         self.health_bar.init()
@@ -71,7 +78,7 @@ class Dummy(pygame.sprite.Sprite):
             self.re_delay.start()
 
     def set_heal(self, heal : int):
-        self.health_bar.set_heal(heal) # decreace to 1
+        self.health_bar.set_heal(heal)
 
     def resize_image(self, new_h):
         original_w = self.image.get_width()
