@@ -43,7 +43,7 @@ class Dance_Girl(pygame.sprite.Sprite):
         self.live = True
         self.is_moving = False
         self.state = add.State.move_to_player(self)
-        self.health.reload()
+        self.health.restore()
 
         # self.circle.init()
         # self.state.init()

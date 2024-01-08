@@ -35,7 +35,7 @@ class Health:
     def get_ratio(self):
         return self.health/self.max_health
 
-    def reload(self):
+    def restore(self):
         self.health = self.max_health
 
     def full(self):
@@ -47,7 +47,7 @@ class Health:
 class HealthBar:
     def __init__(self, rect : pygame.Rect, health : Health, border = 1, colour = "Red"):
         self.health = health # reference
-        self.rect = pygame.Rect(rect)        
+        self.rect = pygame.Rect(rect) # new object
         self.bordered_rect = pygame.Rect(self.rect.x - border, self.rect.y - border, 
             self.rect.width + border * 2, self.rect.height + border * 2)
         # self.bordered_rect = rect        
@@ -108,6 +108,9 @@ class HealthBar:
     def set_heal(self, heal: int):
         return self.health.set_heal(heal)
 
+    def restore(self):
+        self.health.restore()
+
 class FancyHealthBar(HealthBar):
     # def __init__(self, pos, width, height, border = 2):
     #     super().__init__(pos, width, height, border)
@@ -129,7 +132,7 @@ class FancyHealthBar(HealthBar):
         self.anim_speed = 3
         self.decrease = False
         self.increase = False
-        self.health.reload()
+        self.health.restore()
         # self.prev_health = self.health.health
 
     def draw(self, screen):
@@ -347,32 +350,41 @@ class EffectBar:
 
 class CellHealthBar:
     def __init__(self, rect : pygame.Rect, health : Health, border = 1, colour = "Red"):
-        self.rect = pygame.Rect(rect)
         self.health = health # reference
+        self.rect = pygame.Rect(rect) # new object
         self.border = border
         self.colour = colour
 
         self.init()
 
     def init(self):
-        self.health.reload()
+        self.health.restore()
         
         self.cell_list = self.createCellList()
         self.update_pos(self.rect.center)
-
-        self.index = len(self.cell_list) - 1
+        self.fit_rect()
 
     def createCellList(self):
         cell_list = list() # []
-        # width = round(self.rect.width/self.health.max_health)
-        width = round((self.rect.width - (self.health.max_health - 1) * self.border)/self.health.max_health)
-        # width = (self.rect.width - self.health.max_health + 1)//self.health.max_health + 1
+        # cell_width = round(self.rect.width/self.health.max_health)
+        cell_width = round((self.rect.width - (self.health.max_health - 1) * self.border)/self.health.max_health)
+        # cell_width = (self.rect.width - self.health.max_health + 1)//self.health.max_health + 1
         # print(width)
-        cell_rect = pygame.Rect((0,0), (width, self.rect.height))
+        cell_rect = pygame.Rect((0,0), (cell_width, self.rect.height))
         for i in range(self.health.max_health):
             cell_list.append(FancyHealthBar(pygame.Rect(cell_rect), Health(1), self.border, self.colour))
 
         return cell_list
+
+     # changes rect width if necessary
+    def fit_rect(self):
+        midleft = Vector2(self.cell_list[0].rect.midleft)
+        midright = Vector2(self.cell_list[-1].rect.midright)
+        cell_list_width = midright.x - midleft.x + self.border
+        if self.rect.width != cell_list_width:
+            print(f"fit_rect: {self.rect.width} != {cell_list_width}")
+            self.rect.width = cell_list_width
+            # self.update_pos(self.rect.center)
 
     def update_pos(self, pos):
         self.rect.center = pos
@@ -380,6 +392,18 @@ class CellHealthBar:
         for cell in self.cell_list:
             cell.update_pos_left(position)
             position.x += cell.rect.width + self.border
+
+        # because +self.border = +1
+        # cell_list_width = position.x - Vector2(self.rect.midleft).x
+        # midleft = Vector2(self.cell_list[0].rect.midleft)
+        # midright = Vector2(self.cell_list[-1].rect.midright)
+        # cell_list_width = midright.x - midleft.x + 1
+        # print("rect_width: ", self.rect.width)
+        # print("cells_width: ", cell_list_width)
+        # print("pos x: ", position.x)
+        # print("midrigt: ", self.cell_list[-1].rect.midright[0])
+        # print()
+
 
     def draw(self, screen):
         for cell in self.cell_list:
@@ -394,7 +418,6 @@ class CellHealthBar:
             if index < self.health.health:
                 if self.cell_list[index].health.empty():
                     self.cell_list[index].health.set_heal(1)
-                    self.index = index
             # empty cells
             else:
                 if self.cell_list[index].health.full(): # or not empty()

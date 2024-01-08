@@ -20,7 +20,7 @@ class AllHealthBars:
     
     def update_health(self):
         self.healthbar.update_health()
-        if self.shieldbar:
+        if self.shieldbar: # and not self.shieldbar.health.empty()
             self.shieldbar.update_health()
 
     def draw(self, screen):
@@ -34,13 +34,18 @@ class AllHealthBars:
             if self.shieldbar.health.empty():
                 self.shieldbar = None
             if overdamage:
-                print("overdamage is ", overdamage)
+                # print("overdamage is ", overdamage)
                 self.healthbar.set_damage(overdamage)
         else:
             self.healthbar.set_damage(damage)
 
     def set_heal(self, heal : int):
         self.healthbar.set_heal(heal)
+
+    def restore(self):
+        self.healthbar.restore()
+        if self.shieldbar:
+            self.shieldbar.restore()
 
 class BlueShield(HealthBar.CellHealthBar):
     def __init__(self, rect : pygame.Rect, health : HealthBar.Health, border = 1):
@@ -49,14 +54,10 @@ class BlueShield(HealthBar.CellHealthBar):
         # self.change_colour("Blue")
     
     def set_damage(self, damage : int):
-        self.cell_list[self.index].health.set_damage(1)
-        if self.health.set_damage(1): # bounds check
-            self.index -= 1
+        return self.health.set_damage(1)
         
     def set_heal(self, heal : int):
-        self.cell_list[self.index].health.set_heal(1)
-        if self.health.set_heal(1): # bounds check
-            self.index += 1 # warning
+        return self.health.set_heal(1)
 
     def draw(self, screen):
         for cell in self.cell_list:

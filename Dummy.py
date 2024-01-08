@@ -27,17 +27,21 @@ class Dummy(pygame.sprite.Sprite):
         self.health_bar.update_pos(new_pos)
 
     def healthBarCreate(self, health_type = None):
-        health_bar_rect = pygame.Rect((0, 0), (100, 6)) # (0, 0) position
+        health_bar_rect = pygame.Rect((0, 0), (90, 6)) # (0, 0) position
 
         if health_type == "cell":
-            self.health_bar = HealthBar.CellHealthBar(health_bar_rect, self.health, 1)
+            self.health_bar = HealthBar.CellHealthBar(health_bar_rect, self.health, 2)
         elif health_type == "blue":
             self.health_bar = add.Shields.BlueShield(health_bar_rect, self.health, 1)
         elif health_type == "gray":
             self.health_bar = add.Shields.GrayShield(health_bar_rect, self.health, 1)
+        elif health_type == "fancy_gray":
+            health_bar = HealthBar.FancyHealthBar(health_bar_rect, self.health, 1)
+            shield_bar = add.Shields.GrayShield(health_bar_rect, Health(30), 1)
+            self.health_bar = add.Shields.AllHealthBars(health_bar, shield_bar)
         elif health_type == "fancy_blue":
-            health_bar = HealthBar.HealthBar(health_bar_rect, self.health, 1)
-            shield_bar = add.Shields.GrayShield(health_bar_rect, Health(10), 1)
+            health_bar = HealthBar.FancyHealthBar(health_bar_rect, self.health, 1)
+            shield_bar = add.Shields.BlueShield(health_bar_rect, Health(5), 1)
             self.health_bar = add.Shields.AllHealthBars(health_bar, shield_bar)
         else:
             self.health_bar = HealthBar.FancyBoundHealthBar(health_bar_rect, self.health, 1)
@@ -51,7 +55,7 @@ class Dummy(pygame.sprite.Sprite):
         self.collide_bullet()
         
         if self.re_delay.end():
-            self.health.reload()
+            self.health.restore()
 
         self.health_bar.update_health()
 

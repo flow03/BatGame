@@ -73,15 +73,17 @@ groups = Actors.Groups()
 player = Player(WIDTH//2, HEIGHT//2, drops) # 150, 300
 
 def createDummies(actors_param):
-    left_dummy = Dummy(WIDTH//2 - 200, HEIGHT//2, actors_param.bullets, 3, "blue")
-    right_dummy = Dummy(WIDTH//2 + 200, HEIGHT//2, actors_param.bullets, 25, "cell")
-    down_dummy = Dummy(WIDTH//2, HEIGHT//2 + 200, actors_param.bullets, 50, "gray")
-    up_dummy = Dummy(WIDTH//2, HEIGHT//2 - 200, actors_param.bullets, 50, "fancy_blue")
+    left_dummy = Dummy(WIDTH//2 - 200, HEIGHT//2, actors_param.bullets,50, "fancy_blue")
+    right_dummy = Dummy(WIDTH//2 + 200, HEIGHT//2, actors_param.bullets, 50, "fancy_gray")
+    topleft_dummy = Dummy(WIDTH//2 - 200, HEIGHT//2 - 200, actors_param.bullets,3, "blue")
+    topright_dummy = Dummy(WIDTH//2 + 200, HEIGHT//2 - 200, actors_param.bullets, 50, "gray")
+    down_dummy = Dummy(WIDTH//2, HEIGHT//2 + 200, actors_param.bullets, 10, "cell")
 
     actors_param.add_actor("left_dummy", left_dummy)
     actors_param.add_actor("right_dummy", right_dummy)
+    actors_param.add_actor("topleft_dummy", topleft_dummy)
+    actors_param.add_actor("topright_dummy", topright_dummy)
     actors_param.add_actor("down_dummy", down_dummy)
-    actors_param.add_actor("up_dummy", up_dummy)
 
 # 3 variants of add
 # actors['actors'].add(dummy)
