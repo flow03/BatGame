@@ -23,7 +23,7 @@ class Player:
         self.health_new = HealthBar.Health(100)
         # self.max_health = 100
         # self.max_bullets_count = 32
-        health_rect = pygame.Rect((20, 15), (254, 13))
+        health_rect = pygame.Rect((20, 10), (258, 17)) # 254, 13
         # self.health_bar = FancyHealthBar(health_rect) # max_health is 100 as default
         self.health_bar = HealthBar.FancyBoundHealthBar(health_rect, self.health_new, 2)
         # print("player ", self.health_bar.bordered_rect.width, self.health_bar.bordered_rect.height)

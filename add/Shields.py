@@ -76,9 +76,9 @@ class GrayShield(HealthBar.HealthBar):
     def update_health(self):
         super().update_health()
         if not self.health.empty():
-            self.bordered_rect.width = self.rect.width + self.border * 2
+            self.rect.width = self.rect_health.width + self.border * 2
         else:
-            self.bordered_rect.width = 0
+            self.rect.width = 0
 
     def set_damage(self, damage : int):
         overdamage = self.health.set_damage(damage)

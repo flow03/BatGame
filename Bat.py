@@ -73,7 +73,7 @@ class BatSpecial(Bat):
         self.direction = Vector2()
         self.target = None
 
-        health_bar_rect = pygame.Rect(self.rect.midtop, (self.rect.width, 5))
+        health_bar_rect = pygame.Rect(self.rect.midtop, (self.rect.width, 7))
         self.health_bar = HealthBar.FancyBoundHealthBar(health_bar_rect, self.health, 1)
         self.update_bar_pos()
         # print("bat ", self.health_bar.bordered_rect.width, self.health_bar.bordered_rect.height)

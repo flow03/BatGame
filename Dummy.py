@@ -27,10 +27,10 @@ class Dummy(pygame.sprite.Sprite):
         self.health_bar.update_pos(new_pos)
 
     def healthBarCreate(self, health_type = None):
-        health_bar_rect = pygame.Rect((0, 0), (90, 6)) # (0, 0) position
+        health_bar_rect = pygame.Rect((0, 0), (100, 8)) # (0, 0) position
 
         if health_type == "cell":
-            self.health_bar = HealthBar.CellHealthBar(health_bar_rect, self.health, 2)
+            self.health_bar = HealthBar.CellHealthBar(health_bar_rect, self.health, 1)
         elif health_type == "blue":
             self.health_bar = add.Shields.BlueShield(health_bar_rect, self.health, 1)
         elif health_type == "gray":

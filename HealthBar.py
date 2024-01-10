@@ -6,7 +6,7 @@ from Effects import Effect
 
 # --- bordered rects ---
 # player  258 17
-# dummy(both)  102 8
+# dummy(all)  102 8
 # bat  66 7
 
 class Health:
@@ -47,53 +47,54 @@ class Health:
 class HealthBar:
     def __init__(self, rect : pygame.Rect, health : Health, border = 1, colour = "Red"):
         self.health = health # reference
-        self.rect = pygame.Rect(rect) # new object
-        self.bordered_rect = pygame.Rect(self.rect.x - border, self.rect.y - border, 
-            self.rect.width + border * 2, self.rect.height + border * 2)
-        # self.bordered_rect = rect        
-        # self.rect = pygame.Rect(self.bordered_rect.x + border, self.bordered_rect.y + border, 
-        #     self.bordered_rect.width - border * 2, self.bordered_rect.height - border * 2)
+        # self.rect_health = pygame.Rect(rect) # new object
+        # self.rect = pygame.Rect(self.rect_health.x - border, self.rect_health.y - border, 
+        #     self.rect_health.width + border * 2, self.rect_health.height + border * 2)
+        self.rect = pygame.Rect(rect)        
+        self.rect_health = pygame.Rect(self.rect.x + border, self.rect.y + border, 
+            self.rect.width - border * 2, self.rect.height - border * 2)
 
-        self.max_width = self.rect.width
+        self.max_width = self.rect_health.width
         self.border = border
         self.prev_health = self.health.health
         self.colour = colour
 
        
     def init(self):
-        self.rect.width = self.max_width
+        self.rect_health.width = self.max_width
 
     def draw(self, screen):
-        pygame.draw.rect(screen, self.colour, self.rect)
-        pygame.draw.rect(screen, "Black", self.bordered_rect, self.border)
+        pygame.draw.rect(screen, self.colour, self.rect_health)
+        pygame.draw.rect(screen, "Black", self.rect, self.border)
 
     def update_pos(self, pos):
         pos = Vector2(pos)
         if self.get_pos() != pos:
-            self.bordered_rect.center = pos
-            # self.bound_rect.midleft = self.bordered_rect.midleft
-            new_rect_pos = Vector2(self.bordered_rect.midleft)
+            self.rect.center = pos
+            # self.bound_rect.midleft = self.rect.midleft
+            new_rect_pos = Vector2(self.rect.midleft)
             new_rect_pos.x += self.border
-            self.rect.midleft = Vector2(new_rect_pos)
+            self.rect_health.midleft = Vector2(new_rect_pos)
 
     def update_pos_left(self, pos):
         pos = Vector2(pos)
-        # if Vector2(self.bordered_rect.midleft) != pos:
-        self.bordered_rect.midleft = pos
+        # if Vector2(self.rect.midleft) != pos:
+        self.rect.midleft = pos
 
-        new_rect_pos = Vector2(self.bordered_rect.midleft)
+        new_rect_pos = Vector2(self.rect.midleft)
         new_rect_pos.x += self.border
-        self.rect.midleft = new_rect_pos
+        self.rect_health.midleft = new_rect_pos
 
+    # center
     def get_pos(self):
-        return Vector2(self.bordered_rect.center)
+        return Vector2(self.rect.center)
     
     def update_health(self):
         if self.prev_health != self.health.health:
             self.prev_health = round(self.health.health)
             
             ratio = self.health.get_ratio()
-            self.rect.width = round(self.max_width * ratio)
+            self.rect_health.width = round(self.max_width * ratio)
 
     def set_health(self, health):
         self.health.health = health
@@ -117,15 +118,15 @@ class FancyHealthBar(HealthBar):
     def __init__(self, *params):
         super().__init__(*params)
     
-        self.yellow_rect = pygame.Rect(self.rect)
+        self.yellow_rect = pygame.Rect(self.rect_health)
         self.yellow_clock = Clock(500)  # delay before decrease
-        self.green_rect = pygame.Rect(self.rect)
+        self.green_rect = pygame.Rect(self.rect_health)
         self.green_clock = Clock(500)   # delay before increase
 
         self.init()
 
     def init(self):
-        self.rect.width = self.max_width
+        self.rect_health.width = self.max_width
         self.green_rect.width = self.max_width
         self.yellow_rect.width = self.max_width
 
@@ -142,8 +143,8 @@ class FancyHealthBar(HealthBar):
 
     # for pos methods
     def fit_to_left(self):
-        self.green_rect.midleft = self.rect.midleft
-        self.yellow_rect.midleft = self.rect.midleft
+        self.green_rect.midleft = self.rect_health.midleft
+        self.yellow_rect.midleft = self.rect_health.midleft
 
     def update_pos(self, pos):
         super().update_pos(pos)
@@ -160,7 +161,7 @@ class FancyHealthBar(HealthBar):
 
             if self.health.health < self.prev_health:
                 self.green_rect.width = round(self.max_width * ratio)
-                self.rect.width = self.green_rect.width
+                self.rect_health.width = self.green_rect.width
                 self.yellow_clock.start()
             elif self.health.health > self.prev_health:
                 self.green_rect.width = round(self.max_width * ratio)
@@ -181,7 +182,7 @@ class FancyHealthBar(HealthBar):
         if not self.yellow_clock.nextFrame and not self.decrease:
             self.yellow_rect.width = self.green_rect.width
         if not self.green_clock.nextFrame and not self.increase:
-            self.rect.width = self.green_rect.width
+            self.rect_health.width = self.green_rect.width
 
     def yellow_decrease(self):
         if self.yellow_rect.width > self.green_rect.width:
@@ -191,10 +192,10 @@ class FancyHealthBar(HealthBar):
             self.decrease = False
 
     def red_increase(self):
-        if self.rect.width < self.green_rect.width:
-            self.rect.width += self.anim_speed
+        if self.rect_health.width < self.green_rect.width:
+            self.rect_health.width += self.anim_speed
         else:
-            self.rect.width = self.green_rect.width
+            self.rect_health.width = self.green_rect.width
             self.increase = False
 
 class BoundHealthBar(HealthBar):
@@ -202,7 +203,7 @@ class BoundHealthBar(HealthBar):
         super().__init__(*params)
 
         self.bound = 1
-        self.bound_rect = pygame.Rect(self.rect)
+        self.bound_rect = pygame.Rect(self.rect_health)
         self.bound_rect.width += self.bound
 
     def draw(self, screen):
@@ -211,18 +212,18 @@ class BoundHealthBar(HealthBar):
         
     def update_health(self):
         super().update_health()
-        self.bound_rect.width = self.rect.width + self.bound
+        self.bound_rect.width = self.rect_health.width + self.bound
 
     def update_pos(self, pos):
         super().update_pos(pos)
-        self.bound_rect.midleft = self.rect.midleft
+        self.bound_rect.midleft = self.rect_health.midleft
 
 class FancyBoundHealthBar(FancyHealthBar):
     def __init__(self, *params):
         super().__init__(*params)
 
         self.bound = 1
-        self.bound_rect = pygame.Rect(self.rect)
+        self.bound_rect = pygame.Rect(self.rect_health)
         self.bound_rect.width += self.bound
 
     def draw(self, screen):
@@ -233,16 +234,16 @@ class FancyBoundHealthBar(FancyHealthBar):
             pygame.draw.rect(screen, "Black", self.bound_rect, self.bound)
         # super().draw(screen)
         
-        pygame.draw.rect(screen, self.colour, self.rect)
-        pygame.draw.rect(screen, "Black", self.bordered_rect, self.border)
+        pygame.draw.rect(screen, self.colour, self.rect_health)
+        pygame.draw.rect(screen, "Black", self.rect, self.border)
 
     def update_health(self):
         super().update_health()
-        self.bound_rect.width = self.rect.width + self.bound
+        self.bound_rect.width = self.rect_health.width + self.bound
 
     def update_pos(self, pos):
         super().update_pos(pos)
-        self.bound_rect.midleft = self.rect.midleft
+        self.bound_rect.midleft = self.rect_health.midleft
 
 
 class BulletBar:
@@ -362,14 +363,16 @@ class CellHealthBar:
         
         self.cell_list = self.createCellList()
         self.update_pos(self.rect.center)
-        self.fit_rect()
+        # self.fit_rect()
+        # print("cell constructor call") 
 
     def createCellList(self):
         cell_list = list() # []
         # cell_width = round(self.rect.width/self.health.max_health)
-        cell_width = round((self.rect.width - (self.health.max_health - 1) * self.border)/self.health.max_health)
+        cell_width = round((self.rect.width + (self.health.max_health - 1) * self.border)/self.health.max_health)
+        # cell_width = round((self.rect.width - (self.health.max_health - 1) * self.border)/self.health.max_health)
         # cell_width = (self.rect.width - self.health.max_health + 1)//self.health.max_health + 1
-        # print(width)
+        print(cell_width)
         cell_rect = pygame.Rect((0,0), (cell_width, self.rect.height))
         for i in range(self.health.max_health):
             cell_list.append(FancyHealthBar(pygame.Rect(cell_rect), Health(1), self.border, self.colour))
@@ -391,25 +394,26 @@ class CellHealthBar:
         position = Vector2(self.rect.midleft)
         for cell in self.cell_list:
             cell.update_pos_left(position)
-            position.x += cell.rect.width + self.border
+            position.x += cell.rect.width - self.border
 
         # because +self.border = +1
         # cell_list_width = position.x - Vector2(self.rect.midleft).x
-        # midleft = Vector2(self.cell_list[0].rect.midleft)
-        # midright = Vector2(self.cell_list[-1].rect.midright)
-        # cell_list_width = midright.x - midleft.x + 1
-        # print("rect_width: ", self.rect.width)
-        # print("cells_width: ", cell_list_width)
-        # print("pos x: ", position.x)
-        # print("midrigt: ", self.cell_list[-1].rect.midright[0])
-        # print()
+        midleft = Vector2(self.cell_list[0].rect.midleft)
+        midright = Vector2(self.cell_list[-1].rect.midright)
+        cell_list_width = midright.x - midleft.x
+        print("rect_width: ", self.rect.width)
+        print("cells_width: ", cell_list_width)
+        print("pos x: ", position.x)
+        print("midrigt: ", self.cell_list[-1].rect.midright[0])
+        print("rect_midrigt: ", self.rect.midright[0])
+        print()
 
 
     def draw(self, screen):
         for cell in self.cell_list:
             cell.draw(screen)
 
-        # pygame.draw.rect(screen, "Green", self.rect, 1)
+        pygame.draw.rect(screen, "Green", self.rect, 1)
 
     def update_health(self):
         for index in range(self.health.max_health):
