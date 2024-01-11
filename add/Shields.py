@@ -50,10 +50,12 @@ class AllHealthBars:
 class BlueShield(HealthBar.CellHealthBar):
     def __init__(self, rect : pygame.Rect, health : HealthBar.Health, border = 1):
         super().__init__(rect, health, border, "Blue")
-        self.visible = False
+        self.visible_empty = False
+        self.decreased_cell = None
         # self.change_colour("Blue")
     
     def set_damage(self, damage : int):
+        self.decreased_cell = self.current_cell()
         return self.health.set_damage(1)
         
     def set_heal(self, heal : int):
@@ -61,12 +63,20 @@ class BlueShield(HealthBar.CellHealthBar):
 
     def draw(self, screen):
         for cell in self.cell_list:
-            if self.visible:
+            if self.visible_empty:
                 cell.draw(screen)
             elif not cell.health.empty():
                 cell.draw(screen)
-            elif cell.decrease or cell.yellow_clock.nextFrame:
+            elif cell.is_decrease():
                 cell.draw(screen)
+
+    def update_health(self):
+        super().update_health()
+        if self.decreased_cell:
+            if not self.decreased_cell.is_decrease():
+                self.decreased_cell = None
+                if not self.visible_empty:
+                    self.fit_rect(self.cell_visible_width())
 
 class GrayShield(HealthBar.HealthBar):
     def __init__(self, rect : pygame.Rect, health : HealthBar.Health, border = 1):
