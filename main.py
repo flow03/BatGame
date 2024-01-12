@@ -56,6 +56,7 @@ pygame.display.update()
 # jump = Jump()
 
 Events = UserEvents()
+Events.start_timer()
 
 # Groups---
 # bat_list = MyGroup()
@@ -74,15 +75,15 @@ player = Player(WIDTH//2, HEIGHT//2, drops) # 150, 300
 
 def createDummies(actors_param):
     left_dummy = Dummy(WIDTH//2 - 200, HEIGHT//2, actors_param.bullets, 50, "fancy_blue")
-    # right_dummy = Dummy(WIDTH//2 + 200, HEIGHT//2, actors_param.bullets, 50, "fancy_gray")
+    right_dummy = Dummy(WIDTH//2 + 200, HEIGHT//2, actors_param.bullets, 50, "fancy_gray")
     topleft_dummy = Dummy(WIDTH//2 - 200, HEIGHT//2 - 200, actors_param.bullets,3, "blue")
-    # topright_dummy = Dummy(WIDTH//2 + 200, HEIGHT//2 - 200, actors_param.bullets, 50, "gray")
+    topright_dummy = Dummy(WIDTH//2 + 200, HEIGHT//2 - 200, actors_param.bullets, 50, "gray")
     down_dummy = Dummy(WIDTH//2, HEIGHT//2 + 200, actors_param.bullets, 10, "cell")
 
     actors_param.add_actor("left_dummy", left_dummy)
-    # actors_param.add_actor("right_dummy", right_dummy)
+    actors_param.add_actor("right_dummy", right_dummy)
     actors_param.add_actor("topleft_dummy", topleft_dummy)
-    # actors_param.add_actor("topright_dummy", topright_dummy)
+    actors_param.add_actor("topright_dummy", topright_dummy)
     actors_param.add_actor("down_dummy", down_dummy)
 
 # 3 variants of add
@@ -90,7 +91,7 @@ def createDummies(actors_param):
 # actors['actors'] = dummy
 # actors.add('actors', dummy)
 
-createDummies(groups)
+# createDummies(groups)
 
 # test_group = MyGroup()
 # print('test_group empty ', bool(test_group))
@@ -125,10 +126,10 @@ run = True
 def initialize():
     player.init()
     groups.clear()
-    createDummies(groups)
-    drops.empty()
+    drops.clear()
     # jump.is_jump = False
-    Events.stop_timer()
+    Events.start_timer()
+    # createDummies(groups) # after clear
 
 # Main loop
 while run:

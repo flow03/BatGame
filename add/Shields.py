@@ -3,7 +3,7 @@ from pygame.math import Vector2
 import HealthBar
 
 class AllHealthBars:
-    def __init__(self, healthbar : HealthBar, shieldbar):
+    def __init__(self, healthbar : HealthBar, shieldbar = None):
         self.healthbar = healthbar
         self.shieldbar = shieldbar
         # self.update_pos(self.healthbar.get_pos())
@@ -14,9 +14,7 @@ class AllHealthBars:
         self.healthbar.update_pos(health_pos)
         
         if self.shieldbar:
-            shield_pos = self.healthbar.get_pos() # not a link
-            shield_pos.y -= 10
-            self.shieldbar.update_pos(shield_pos)
+            self.shieldbar.update_rect_pos(self.healthbar.rect, 10)
     
     def update_health(self):
         self.healthbar.update_health()
@@ -78,6 +76,12 @@ class BlueShield(HealthBar.CellHealthBar):
                 if not self.visible_empty:
                     self.fit_rect(self.cell_visible_width())
 
+    def update_rect_pos(self, rect : pygame.Rect, y_shift):
+        shield_pos = Vector2(rect.center)
+        shield_pos.y -= y_shift
+
+        super().update_pos(shield_pos) # center
+
 class GrayShield(HealthBar.HealthBar):
     def __init__(self, rect : pygame.Rect, health : HealthBar.Health, border = 1):
         super().__init__(rect, health, border, "Gray")
@@ -96,3 +100,9 @@ class GrayShield(HealthBar.HealthBar):
 
     def set_heal(self, heal : int):
         pass
+
+    def update_rect_pos(self, rect : pygame.Rect, y_shift):
+        shield_pos = Vector2(rect.midleft)
+        shield_pos.y -= y_shift
+
+        super().update_pos_left(shield_pos) # left

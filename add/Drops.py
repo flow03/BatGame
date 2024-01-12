@@ -151,8 +151,13 @@ class Drops():
         start_pos = Vector2(start_pos)
         dest_pos = Vector2()
         dest_pos.x = start_pos.x
-        dest_pos.y = random.randint(start_pos.y, self.screen.get_height() - new_drop.rect.width//2)
-        
+        max_y = self.screen.get_height() - new_drop.rect.height//2
+
+        if max_y > start_pos.y:
+            dest_pos.y = random.randint(start_pos.y, max_y)
+        else:
+            dest_pos.y = start_pos.y
+
         self.fallen_drops.add(Drop(new_drop, start_pos, dest_pos))
 
         # self.fallen_count += 1
@@ -177,7 +182,7 @@ class Drops():
         new_food.check_random_coordinates(self.screen)  # collide before add
         # self.foodDrops.add(new_food)
 
-    def empty(self):
+    def clear(self):
         self.bulletDrops.empty()
         self.foodDrops.empty()
         self.fallen_drops.empty()

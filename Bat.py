@@ -4,6 +4,7 @@ from pygame.math import Vector2
 import HealthBar
 from add.Path import resource_path
 import add.Drops as Drops
+import add.Shields as Shields
 
 class Bat(pygame.sprite.Sprite):
     def __init__(self, screen, drops : Drops.Drops, player, bullets):
@@ -68,15 +69,51 @@ class BatSpecial(Bat):
         # self.food_list = food_list
         # self.speed = random.randint(1, 3)
         self.speed = 2
-        max_health = random.randint(30, 55) # bullet damage 25
-        self.health = HealthBar.Health(max_health)
+        self.createHealth()
         self.direction = Vector2()
         self.target = None
 
+    def createHealth(self):
+        max_health = random.randint(30, 55) # bullet damage 25
+        self.health = HealthBar.Health(max_health)
+
         health_bar_rect = pygame.Rect(self.rect.midtop, (self.rect.width, 7))
-        self.health_bar = HealthBar.FancyBoundHealthBar(health_bar_rect, self.health, 1)
+        health_bar_temp = HealthBar.FancyBoundHealthBar(health_bar_rect, self.health, 1)
+        self.health_bar = Shields.AllHealthBars(health_bar_temp)
+
+        self.createShield()
         self.update_bar_pos()
-        # print("bat ", self.health_bar.bordered_rect.width, self.health_bar.bordered_rect.height)
+
+    def createShield(self):
+        isShield = random.randint(0, 2)
+
+        if isShield == 1:
+            self.createBlueShield()
+        elif isShield == 2:
+            self.createGrayShield()
+
+    def createBlueShield(self): # , AllBar : Shields.AllHealthBars
+        max = 4
+        max_shield = random.randint(1, max)
+
+        if max_shield:
+            shield = HealthBar.Health(max_shield)
+            if max_shield == max:
+                shield_width = self.rect.width
+            else:
+                shield_width = self.rect.width/max * max_shield
+
+            shield_bar_rect = pygame.Rect(self.rect.midtop, (shield_width, 7))
+            shield_bar_temp = Shields.BlueShield(shield_bar_rect, shield, 1)
+            self.health_bar.shieldbar = shield_bar_temp
+
+    def createGrayShield(self):
+        max_shield = random.randint(20, 50)
+        shield = HealthBar.Health(max_shield)
+
+        shield_bar_rect = pygame.Rect(self.rect.midtop, (self.rect.width, 7))
+        shield_bar_temp = Shields.GrayShield(shield_bar_rect, shield, 1)
+        self.health_bar.shieldbar = shield_bar_temp
 
     def update(self):
         self.changeTarget() # player position as default
@@ -153,7 +190,7 @@ class BatSpecial(Bat):
         return direction
 
     def set_damage(self, damage: int):
-        self.health.set_damage(damage)
+        self.health_bar.set_damage(damage)
         if self.health.empty():
             self.player.killedBats += 1
             self.drops.createFallenDrop(self.rect.center)

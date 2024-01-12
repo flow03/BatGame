@@ -337,7 +337,7 @@ class EffectBar:
     def __init__(self, effect : Effect):
         self.effect = effect
         max_time = self.effect.duration()
-        status_bar_rect = pygame.Rect((0,0), (60, 5))   # pos (0,0)
+        status_bar_rect = pygame.Rect((0,0), (60, 7))   # pos (0,0)
         self.effect_bar = BoundHealthBar(status_bar_rect, Health(max_time), 1)
         self.effect_bar.change_colour("Yellow")
         
@@ -401,10 +401,10 @@ class CellHealthBar:
 
     # changes rect width if necessary
     def fit_rect(self, new_width):
-        print("fit_rect call")
+        # print("fit_rect call")
         center = self.rect.center
         if self.rect.width != new_width:
-            print(f"fit_rect: {self.rect.width} != {new_width}")
+            # print(f"fit_rect: {self.rect.width} != {new_width}")
             self.rect.width = new_width
             self.update_pos(center)
 
