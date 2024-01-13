@@ -8,6 +8,11 @@ class AllHealthBars:
         self.shieldbar = shieldbar
         # self.update_pos(self.healthbar.get_pos())
 
+    def init(self):
+        self.healthbar.init()
+        if self.shieldbar:
+            self.shieldbar.restore()
+
     # healthbar pos as parameter
     def update_pos(self, health_pos):
         # if self.healthbar.get_pos() != Vector2(pos):
@@ -50,8 +55,14 @@ class BlueShield(HealthBar.CellHealthBar):
         super().__init__(rect, health, border, "Blue")
         self.visible_empty = False
         self.decreased_cell = None
+        self.start_width = rect.width
+        self.align = 'center' # or 'left'
         # self.change_colour("Blue")
     
+    def restore(self):
+        self.rect.width = self.start_width
+        super().init()
+
     def set_damage(self, damage : int):
         self.decreased_cell = self.current_cell()
         return self.health.set_damage(1)
@@ -70,22 +81,31 @@ class BlueShield(HealthBar.CellHealthBar):
 
     def update_health(self):
         super().update_health()
-        if self.decreased_cell:
-            if not self.decreased_cell.is_decrease():
-                self.decreased_cell = None
-                if not self.visible_empty:
-                    self.fit_rect(self.cell_visible_width())
+        # if self.decreased_cell:
+        #     if not self.decreased_cell.is_decrease():
+        #         self.decreased_cell = None
+        #         if not self.visible_empty:
+        #             self.fit_rect(self.cell_visible_width()) # update_pos inside
 
     def update_rect_pos(self, rect : pygame.Rect, y_shift):
-        shield_pos = Vector2(rect.center)
-        shield_pos.y -= y_shift
-
-        super().update_pos(shield_pos) # center
+        print('align: ', self.align)
+        if self.align == 'center':
+            shield_pos = Vector2(rect.center)
+            shield_pos.y -= y_shift
+            super().update_pos(shield_pos)
+        elif self.align == 'left':
+            shield_pos = Vector2(rect.midleft)
+            shield_pos.y -= y_shift
+            super().update_pos_left(shield_pos)
 
 class GrayShield(HealthBar.HealthBar):
     def __init__(self, rect : pygame.Rect, health : HealthBar.Health, border = 1):
         super().__init__(rect, health, border, "Gray")
         self.start_width = rect.width
+
+    def restore(self):
+        self.rect.width = self.start_width
+        super().init()
 
     def update_health(self):
         super().update_health()

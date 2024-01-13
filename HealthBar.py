@@ -59,9 +59,9 @@ class HealthBar:
         self.prev_health = self.health.health
         self.colour = colour
 
-       
     def init(self):
         self.rect_health.width = self.max_width
+        self.health.restore()
 
     def draw(self, screen):
         pygame.draw.rect(screen, self.colour, self.rect_health)
@@ -415,17 +415,13 @@ class CellHealthBar:
             cell.update_pos_left(position)
             position.x += cell.rect.width - self.border
 
-        # midleft = Vector2(self.cell_list[0].rect.midleft)
-        # midright = Vector2(self.cell_list[-1].rect.midright)
-        # cell_list_width = midright.x - midleft.x
-        # print("rect_width: ", self.rect.width)
-        # print("cells_width: ", cell_list_width)
-        # print("pos x: ", position.x)
-        # print("midleft: ", midleft.x)
-        # print("rect_midleft: ", self.rect.midleft[0])
-        # print("midrigt: ", midright.x)
-        # print("rect_midrigt: ", self.rect.midright[0])
-        # print()
+    def update_pos_left(self, pos):
+        print('update_pos_left')
+        self.rect.midleft = pos
+        position = Vector2(self.rect.midleft)
+        for cell in self.cell_list:
+            cell.update_pos_left(position)
+            position.x += cell.rect.width - self.border
 
     def draw(self, screen):
         for cell in self.cell_list:

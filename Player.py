@@ -4,6 +4,7 @@ from add.Spritesheet import SpriteSheet
 import HealthBar
 from Bullet import Bullet
 import Effects
+import add.Shields as Shields
 
 class Player:
     def __init__(self, x, y, drops):
@@ -20,14 +21,8 @@ class Player:
         self.effects = Effects.EffectQueue_draw(self)
         self.drops = drops
 
-        self.health_new = HealthBar.Health(100)
-        # self.max_health = 100
-        # self.max_bullets_count = 32
-        health_rect = pygame.Rect((20, 10), (258, 17)) # 254, 13
-        # self.health_bar = FancyHealthBar(health_rect) # max_health is 100 as default
-        self.health_bar = HealthBar.FancyBoundHealthBar(health_rect, self.health_new, 2)
-        # print("player ", self.health_bar.bordered_rect.width, self.health_bar.bordered_rect.height)
-        self.bullet_bar = HealthBar.BulletBar((20, 32), 254, 16) # 15+13+(2*2)
+        self.createHealth()
+        
 
         self.init()
 
@@ -49,6 +44,31 @@ class Player:
 
         self.health_bar.init()
         self.bullet_bar.update(self.bullets_count)
+
+    def createHealth(self):
+        start_pos = Vector2(20, 30)
+
+        # health_bar
+        self.health = HealthBar.Health(100)
+        health_bar_rect = pygame.Rect(start_pos, (258, 17)) # 254, 13
+        health_bar_temp = HealthBar.HealthBar(health_bar_rect, self.health, 2)
+        self.health_bar = Shields.AllHealthBars(health_bar_temp)
+
+        # bullet_bar
+        start_pos.y += 17 + 5
+        self.bullet_bar = HealthBar.BulletBar(start_pos, 254, 16) # 15+13+(2*2)
+
+        # shield_bar
+        shield_height = 8
+        shield_width = health_bar_rect.width/2 # /5 * 5
+        start_pos = Vector2(health_bar_rect.topleft)
+        start_pos.x += 2
+        start_pos.y -= 5 + shield_height
+        shield = HealthBar.Health(5)
+        shield_bar_rect = pygame.Rect(start_pos, (shield_width, shield_height))
+        shield_bar_temp = Shields.BlueShield(shield_bar_rect, shield, 1)
+        shield_bar_temp.align = 'left'
+        self.health_bar.shieldbar = shield_bar_temp
 
     def add_effect(self, effect_key : str):
         self.effects.add(effect_key)
@@ -83,7 +103,7 @@ class Player:
         if self.drops.foodDrops:
             food = pygame.sprite.spritecollideany(self, self.drops.foodDrops)
             if food:
-                self.health_new.set_heal(food.heal)
+                self.health.set_heal(food.heal)
                 # self.health_bar.update_health()
                 food.kill()
 
@@ -91,7 +111,7 @@ class Player:
 
         self.effects.update()
 
-        if self.health_new.empty():
+        if self.health.empty():
             self.gameplay = False
 
         self.update_animations()
@@ -165,16 +185,15 @@ class Player:
         # print("velocity: ",self.velocity)
 
     def defence_damage(self, damage):
-        # new_damage = damage
-        if self.defence < 100:
+        if self.defence < 100: # 100 percent
             damage = (1 - self.defence/100) * damage # 0/100 = 0
+            damage = ((100 - self.defence)/100) * damage # 0/100 = 0
             # print(f"defence_damage: {damage}")
         return round(damage)
 
     def set_damage(self, damage: int):
         damage = self.defence_damage(damage)
-        self.health_new.set_damage(damage)
-            # self.gameplay = False
+        self.health_bar.set_damage(damage)
 
     def add_bullet(self, new_bullet : int):
         self.bullets_count += new_bullet

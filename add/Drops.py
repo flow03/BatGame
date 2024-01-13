@@ -1,5 +1,5 @@
 import pygame
-import random
+from random import randint, uniform
 import math
 from pygame.math import Vector2
 from add.Spritesheet import SpriteSheet
@@ -19,8 +19,8 @@ class BulletDrop(pygame.sprite.Sprite):
 
     def set_random_coordinates(self, screen, offset = 30):
         coords = Vector2()
-        coords.x = random.randint(offset, screen.get_width() - offset)
-        coords.y = random.randint(offset, screen.get_height() - offset)
+        coords.x = randint(offset, screen.get_width() - offset)
+        coords.y = randint(offset, screen.get_height() - offset)
         self.rect.center = coords
 
     def draw(self, screen):
@@ -33,14 +33,14 @@ class Food(pygame.sprite.Sprite):
         size = 30
         self.image = self.get_image(size)
         self.rect = self.image.get_rect()
-        self.heal = random.randint(10, 20)
+        self.heal = randint(10, 20)
         self.group = group
         self.group.add(self)
 
     def get_image(self, size):
         sprite_sheet = SpriteSheet('img/spritesheets/food_spritesheet_30.png')
-        col = random.randint(0, 9)
-        row = random.randint(0, 9)
+        col = randint(0, 9)
+        row = randint(0, 9)
         image = sprite_sheet.get_image(size, size, col, row)
         # new_size = 30
         # self.image = pygame.transform.scale(self.image, (new_size, new_size))
@@ -49,9 +49,9 @@ class Food(pygame.sprite.Sprite):
     def set_circle_coordinates(self, center, radius, c_offset = 0):
         center = Vector2(center)
         coords = Vector2()
-        angle = random.uniform(0, 2 * math.pi)
+        angle = uniform(0, 2 * math.pi)
         # distance = math.sqrt(random.uniform(0, 1)) * radius
-        distance = random.uniform(0, 1) * (radius - c_offset) + c_offset
+        distance = uniform(0, 1) * (radius - c_offset) + c_offset
         coords.x = center.x + distance * math.cos(angle)
         coords.y = center.y + distance * math.sin(angle)
         coords = round(coords)
@@ -63,8 +63,8 @@ class Food(pygame.sprite.Sprite):
         offset = self.rect.width
         # print("Food self.rect.width: ", self.rect.width)
         coords = Vector2()
-        coords.x = random.randint(offset, screen.get_width() - offset)
-        coords.y = random.randint(offset, screen.get_height() - offset)
+        coords.x = randint(offset, screen.get_width() - offset)
+        coords.y = randint(offset, screen.get_height() - offset)
         self.rect.center = coords
         # return (x, y)
 
@@ -140,7 +140,7 @@ class Drops():
         # self.fallen_count = 0
 
     def createFallenDrop(self, start_pos):
-        rand_drop = random.randint(0, 1)
+        rand_drop = randint(0, 1)
         new_drop = None
 
         if rand_drop:
@@ -154,7 +154,7 @@ class Drops():
         max_y = self.screen.get_height() - new_drop.rect.height//2
 
         if max_y > start_pos.y:
-            dest_pos.y = random.randint(start_pos.y, max_y)
+            dest_pos.y = randint(start_pos.y, max_y)
         else:
             dest_pos.y = start_pos.y
 
