@@ -363,19 +363,19 @@ class CellHealthBar:
         self.rect = pygame.Rect(rect) # new object
         self.border = border
         self.colour = colour
+        self.cell_list = list() # []
 
         self.init()
 
     def init(self):
         self.health.restore()
-        
-        self.cell_list = self.createCellList()
+        self.createCellList()
         self.update_pos(self.rect.center)
         self.fit_rect(self.cell_list_width())
         # print("cell constructor call") 
 
     def createCellList(self):
-        cell_list = list() # []
+        self.cell_list.clear()
         # cell_width = round(self.rect.width/self.health.max_health)
         cell_width = round((self.rect.width + (self.health.max_health - 1) * self.border)/self.health.max_health)
         # cell_width = round((self.rect.width - (self.health.max_health - 1) * self.border)/self.health.max_health)
@@ -383,9 +383,11 @@ class CellHealthBar:
         # print(cell_width)
         cell_rect = pygame.Rect((0,0), (cell_width, self.rect.height))
         for i in range(self.health.max_health):
-            cell_list.append(FancyHealthBar(pygame.Rect(cell_rect), Health(1), self.border, self.colour))
+            self.cell_list.append(FancyHealthBar(pygame.Rect(cell_rect), Health(1), self.border, self.colour))
 
-        return cell_list
+        self.update_cells_left() # builds cell order
+
+        # return cell_list
 
     def cell_list_width(self):
         midleft = Vector2(self.cell_list[0].rect.midleft)
@@ -410,14 +412,14 @@ class CellHealthBar:
 
     def update_pos(self, pos):
         self.rect.center = pos
-        position = Vector2(self.rect.midleft)
-        for cell in self.cell_list:
-            cell.update_pos_left(position)
-            position.x += cell.rect.width - self.border
+        self.update_cells_left()
 
     def update_pos_left(self, pos):
-        print('update_pos_left')
+        # print('cell update_pos_left')
         self.rect.midleft = pos
+        self.update_cells_left()
+        
+    def update_cells_left(self):
         position = Vector2(self.rect.midleft)
         for cell in self.cell_list:
             cell.update_pos_left(position)

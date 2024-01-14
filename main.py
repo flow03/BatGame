@@ -91,7 +91,7 @@ def createDummies(actors_param):
 # actors['actors'] = dummy
 # actors.add('actors', dummy)
 
-# createDummies(groups)
+createDummies(groups)
 
 # test_group = MyGroup()
 # print('test_group empty ', bool(test_group))
@@ -129,7 +129,7 @@ def initialize():
     drops.clear()
     # jump.is_jump = False
     Events.start_timer()
-    # createDummies(groups) # after clear
+    createDummies(groups) # after groups.clear
 
 # Main loop
 while run:
@@ -224,8 +224,10 @@ while run:
                 groups.add_actor("girl", Dance_Girl(screen, player, groups.actors, drops.foodDrops))
             if event.key == pygame.K_h:
                 groups.actors_heal(5)
+                player.set_heal(5)
             if event.key == pygame.K_k:
                 groups.actors_damage(5)
+                player.set_damage(5)
 
         # працює незалежно від player.gameplay
         if event.type == pygame.KEYDOWN:

@@ -105,7 +105,9 @@ class BatSpecial(Bat):
 
             shield_bar_rect = pygame.Rect(self.rect.midtop, (shield_width, 7))
             shield_bar_temp = Shields.BlueShield(shield_bar_rect, shield, 1)
+            shield_bar_temp.shifting = True
             self.health_bar.shieldbar = shield_bar_temp
+            self.health_bar.align = 'center'
 
     def createGrayShield(self):
         max_shield = random.randint(20, 50)
@@ -114,6 +116,7 @@ class BatSpecial(Bat):
         shield_bar_rect = pygame.Rect(self.rect.midtop, (self.rect.width, 7))
         shield_bar_temp = Shields.GrayShield(shield_bar_rect, shield, 1)
         self.health_bar.shieldbar = shield_bar_temp
+        self.health_bar.align = 'left'
 
     def update(self):
         self.changeTarget() # player position as default
