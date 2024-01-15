@@ -1,22 +1,22 @@
 import pygame
 import random
 from pygame.math import Vector2
-import HealthBar
+import visuals.HealthBar as HealthBar
 from add.Path import resource_path
-import add.Drops as Drops
-import add.Shields as Shields
+import Drops as Drops
+import visuals.Shields as Shields
 
 class Bat(pygame.sprite.Sprite):
-    def __init__(self, screen, drops : Drops.Drops, player, bullets):
+    def __init__(self, drops : Drops.Drops, player, bullets):
         super().__init__()
 
-        self.screen = screen
+        self.screen = pygame.display.get_surface()
         self.drops = drops
         self.player = player
         self.bullet_list = bullets
 
-        WIDTH = screen.get_width()
-        HEIGHT = screen.get_height()
+        WIDTH = self.screen.get_width()
+        HEIGHT = self.screen.get_height()
         self.image = self.load_random_frame()
 
         bat_y = random.randint(0 + self.image.get_height()//2, 
@@ -62,10 +62,10 @@ class Bat(pygame.sprite.Sprite):
         self.kill()
 
 class BatSpecial(Bat):
-    def __init__(self, screen, *args):
-        super().__init__(screen, *args)
+    def __init__(self, *args):
+        super().__init__(*args)
 
-        self.set_rand_pos(screen)
+        self.set_rand_pos(self.screen)
         # self.food_list = food_list
         # self.speed = random.randint(1, 3)
         self.speed = 2

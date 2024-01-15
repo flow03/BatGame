@@ -3,9 +3,9 @@ import pygame
 # import spritesheet
 from Player import Player
 # from add.Jump import Jump
-import add.Drops as Drops
+import Drops as Drops
 # from add.MyGroup import MyGroup
-from add.Text import Text
+from visuals.Text import Text
 from add.Path import resource_path
 from add.UserEvents import UserEvents
 from Dance_Girl import Dance_Girl
@@ -62,7 +62,7 @@ Events.start_timer()
 # bat_list = MyGroup()
 # bullets = MyGroup() #pygame.sprite.Group()
 
-drops = Drops.Drops(screen)
+drops = Drops.Drops()
 # bulletDrops = MyGroup()
 # foodDrops = MyGroup()
 # drops_list = MyGroup()
@@ -74,11 +74,11 @@ groups = Actors.Groups()
 player = Player(WIDTH//2, HEIGHT//2, drops) # 150, 300
 
 def createDummies(actors_param):
-    left_dummy = Dummy(WIDTH//2 - 200, HEIGHT//2, actors_param.bullets, 50, "fancy_blue")
-    right_dummy = Dummy(WIDTH//2 + 200, HEIGHT//2, actors_param.bullets, 50, "fancy_gray")
-    topleft_dummy = Dummy(WIDTH//2 - 200, HEIGHT//2 - 200, actors_param.bullets,3, "blue")
-    topright_dummy = Dummy(WIDTH//2 + 200, HEIGHT//2 - 200, actors_param.bullets, 50, "gray")
-    down_dummy = Dummy(WIDTH//2, HEIGHT//2 + 200, actors_param.bullets, 10, "cell")
+    left_dummy = Dummy(WIDTH//2 - 200, HEIGHT//2, actors_param.bullets,"fancy_blue", 50, 5)
+    right_dummy = Dummy(WIDTH//2 + 200, HEIGHT//2, actors_param.bullets, "fancy_gray", 50, 30)
+    topleft_dummy = Dummy(WIDTH//2 - 200, HEIGHT//2 - 200, actors_param.bullets,"blue", 3)
+    topright_dummy = Dummy(WIDTH//2 + 200, HEIGHT//2 - 200, actors_param.bullets, "gray", 50)
+    down_dummy = Dummy(WIDTH//2, HEIGHT//2 + 200, actors_param.bullets, "cell", 15)
 
     actors_param.add_actor("left_dummy", left_dummy)
     actors_param.add_actor("right_dummy", right_dummy)
@@ -119,7 +119,7 @@ def draw_objects(isBoundRects):
 # bg_sound.play()
 
 # Bool triggers
-isBoundRects = False
+displayText = False
 # gameplay = True
 run = True
 
@@ -139,28 +139,12 @@ while run:
 
     if player.gameplay:
         
-        # gameplay = False
-        
-        keys = pygame.key.get_pressed()
-        if (keys[pygame.K_a]) and player.rect.x > 0:
-            player.move('left')
-        if (keys[pygame.K_d]) and player.rect.x < (WIDTH - player.rect.width):
-            player.move('right')
-        if (keys[pygame.K_UP] or keys[pygame.K_w]) and player.rect.y > 0:
-            player.move('up')
-        if (keys[pygame.K_DOWN] or keys[pygame.K_s]) and player.rect.y < (HEIGHT - player.rect.height):
-            player.move('down')
-        
-        # Player jump
-        # if keys[pygame.K_SPACE]:
-        #     jump.jump_start(player)
-        # jump.jump_end(player)
+        player.input()
 
         update_objects()
-        draw_objects(isBoundRects)
-
+        draw_objects(displayText)
         
-        if isBoundRects:
+        if displayText:
             text.print_fps(screen, FPS)
             text.print_debug_info(screen, groups, drops, player)
             # if Girl:
@@ -191,37 +175,41 @@ while run:
             # pygame.quit()
         # if not Girl:
         if event.type == Events.BAT_TIMER:
-            groups.add_bat(Bat.Bat(screen, drops, player, groups.bullets))
+            groups.add_bat(Bat.Bat(drops, player, groups.bullets))
         if event.type == Events.BAT_SP_TIMER:
-            groups.add_bat(Bat.BatSpecial(screen, drops, player, groups.bullets))
+            groups.add_bat(Bat.BatSpecial(drops, player, groups.bullets))
         if event.type == Events.BULLET_DROP_TIMER:
             drops.create_bulletDrop()
         if event.type == Events.FOOD_DROP_TIMER:
             drops.create_foodDrop()
         if player.gameplay and event.type == pygame.MOUSEBUTTONDOWN:
             # Створення кулі з позиції гравця до позиції миші
-            player.shoot(screen, groups.bullets, pygame.mouse.get_pos())
+            player.shoot(groups.bullets, pygame.mouse.get_pos())
         if player.gameplay and event.type == pygame.KEYDOWN:
             if event.key == pygame.K_e or event.key == pygame.K_q:
                 # Створення кулі, яка летітиме у напрямку player.direction
-                player.shoot(screen, groups.bullets)
+                player.shoot(groups.bullets)
             if event.key == pygame.K_TAB:
-                if not isBoundRects:
-                    isBoundRects = True
+                if not displayText:
+                    displayText = True
                 else:
-                    isBoundRects = False
+                    displayText = False
             if event.key == pygame.K_t:
                 Events.switch()
             if event.key == pygame.K_p:
                 player.add_effect("poison")
             if event.key == pygame.K_i:
-                player.add_effect("iron")
+                player.add_effect("ironskin")
             if event.key == pygame.K_LSHIFT:
                 player.add_effect("speed")
             if event.key == pygame.K_o:
                 player.add_effect("onepunch")
+            if event.key == pygame.K_n:
+                player.add_effect("harmless")
+            if event.key == pygame.K_b:
+                player.add_effect("standing")
             if event.key == pygame.K_m: # unlimited
-                groups.add_actor("girl", Dance_Girl(screen, player, groups.actors, drops.foodDrops))
+                groups.add_actor("girl", Dance_Girl(player, groups.actors, drops.foodDrops))
             if event.key == pygame.K_h:
                 groups.actors_heal(5)
                 player.set_heal(5)

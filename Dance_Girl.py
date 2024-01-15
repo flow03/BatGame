@@ -6,11 +6,11 @@ from add.Spritesheet import SpriteSheet
 # from Clock_class import Clock
 from add.MyGroup import MyGroup
 # from Drops_class import Food
-from HealthBar import Health
+from visuals.HealthBar import Health
 import add.State
 
 class Dance_Girl(pygame.sprite.Sprite):
-    def __init__(self, screen, player, actors, food_list : MyGroup):
+    def __init__(self, player, actors, food_list : MyGroup):
         super().__init__()
         self.animations = {
             'balancing': [],
@@ -20,7 +20,7 @@ class Dance_Girl(pygame.sprite.Sprite):
             'snap': []
         }
         self.load_animations_from_sheet()
-        self.screen = screen
+        self.screen = pygame.display.get_surface()
         self.speed = 3
         self.health = Health(12)
 

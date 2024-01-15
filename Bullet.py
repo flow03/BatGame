@@ -5,7 +5,7 @@ from add.Path import resource_path
 
 # Клас, що представляє кулю
 class Bullet(pygame.sprite.Sprite):
-    def __init__(self, screen, start_pos):
+    def __init__(self, start_pos):
         super().__init__()
         img_url = resource_path('img/bullet.png')
         self.image = pygame.image.load(img_url).convert_alpha()
@@ -13,7 +13,7 @@ class Bullet(pygame.sprite.Sprite):
         self.rect = self.image.get_rect(center=start_pos)
         self.speed = 7
         self.damage = 25
-        self.screen = screen
+        self.screen = pygame.display.get_surface()
         # self.angle = 0
         # self.velocity_for_direction(direction)
 

@@ -16,11 +16,12 @@ class BulletDrop(pygame.sprite.Sprite):
         self.rect = self.image.get_rect()
         self.group = group
         self.group.add(self)
+        self.screen = pygame.display.get_surface()
 
-    def set_random_coordinates(self, screen, offset = 30):
+    def set_random_coordinates(self, offset = 30):
         coords = Vector2()
-        coords.x = randint(offset, screen.get_width() - offset)
-        coords.y = randint(offset, screen.get_height() - offset)
+        coords.x = randint(offset, self.screen.get_width() - offset)
+        coords.y = randint(offset, self.screen.get_height() - offset)
         self.rect.center = coords
 
     def draw(self, screen):
@@ -36,6 +37,7 @@ class Food(pygame.sprite.Sprite):
         self.heal = randint(10, 20)
         self.group = group
         self.group.add(self)
+        self.screen = pygame.display.get_surface()
 
     def get_image(self, size):
         sprite_sheet = SpriteSheet('img/spritesheets/food_spritesheet_30.png')
@@ -58,25 +60,25 @@ class Food(pygame.sprite.Sprite):
         # print(coords)
         self.rect.center = coords
 
-    def set_random_coordinates(self, screen):
+    def set_random_coordinates(self):
         offset = 30 # self.image.get_width()//2 + 10
         offset = self.rect.width
         # print("Food self.rect.width: ", self.rect.width)
         coords = Vector2()
-        coords.x = randint(offset, screen.get_width() - offset)
-        coords.y = randint(offset, screen.get_height() - offset)
+        coords.x = randint(offset, self.screen.get_width() - offset)
+        coords.y = randint(offset, self.screen.get_height() - offset)
         self.rect.center = coords
         # return (x, y)
 
-    def check_random_coordinates(self, screen):
+    def check_random_coordinates(self):
         # exclude self collide
         if self.group.has(self):
             self.group.remove(self) 
 
-        self.set_random_coordinates(screen)
+        self.set_random_coordinates()
         count = 0
         while pygame.sprite.spritecollideany(self, self.group):
-            self.set_random_coordinates(screen)
+            self.set_random_coordinates()
             count += 1
             if count >= 15:
                 break
@@ -131,12 +133,12 @@ class Drop(pygame.sprite.Sprite):
             self.kill()
 
 class Drops():
-    def __init__(self, screen):
+    def __init__(self):
         self.bulletDrops = MyGroup()
         self.foodDrops = MyGroup()
         self.fallen_drops = MyGroup()
 
-        self.screen = screen
+        self.screen = pygame.display.get_surface()
         # self.fallen_count = 0
 
     def createFallenDrop(self, start_pos):
@@ -174,12 +176,12 @@ class Drops():
 
     def create_bulletDrop(self):
         new_bullet_drop = BulletDrop(self.bulletDrops)
-        new_bullet_drop.set_random_coordinates(self.screen)
+        new_bullet_drop.set_random_coordinates()
         # self.bulletDrops.add(new_bullet_drop)
 
     def create_foodDrop(self):
         new_food = Food(self.foodDrops)
-        new_food.check_random_coordinates(self.screen)  # collide before add
+        new_food.check_random_coordinates()  # collide before add
         # self.foodDrops.add(new_food)
 
     def clear(self):

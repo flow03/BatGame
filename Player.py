@@ -1,10 +1,10 @@
 import pygame
 from pygame.math import Vector2
 from add.Spritesheet import SpriteSheet
-import HealthBar
+import visuals.HealthBar as HealthBar
 from Bullet import Bullet
-import Effects
-import add.Shields as Shields
+import visuals.Effects as Effects
+import visuals.Shields as Shields
 
 class Player:
     def __init__(self, x, y, drops):
@@ -39,11 +39,14 @@ class Player:
         self.gameplay = True
         self.is_moving = False
         self.onepunch = False
+        self.harmless = False
+        self.standing = False
         self.effects.clear()
 
         self.health_bar.init()
         self.bullet_bar.update(self.bullets_count)
-        self.createBlueShield(4) # def after debug
+        # self.createBlueShield(4) # def after debug
+        self.createGrayShield(50)
 
     def createHealth(self):
         start_pos = Vector2(20, 30)
@@ -61,15 +64,29 @@ class Player:
         # shield_bar
         # self.createBlueShield(10)
 
-    def createBlueShield(self, count):
+    def createBlueShield(self, shield_value):
         shield_height = 8
         shield_width = self.health_bar.healthbar.rect.width/2 # /5 * 5
         start_pos = Vector2(self.health_bar.healthbar.rect.topleft)
         # start_pos.x += 2
         start_pos.y -= 5 + shield_height
-        shield = HealthBar.Health(count)
+
+        shield = HealthBar.Health(shield_value)
         shield_bar_rect = pygame.Rect(start_pos, (shield_width, shield_height))
         shield_bar_temp = Shields.BlueShield(shield_bar_rect, shield, 1)
+        self.health_bar.shieldbar = shield_bar_temp
+        self.health_bar.align = 'left'
+
+    def createGrayShield(self, shield_value):
+        shield_height = 8
+        shield_width = self.health_bar.healthbar.rect.width
+        start_pos = Vector2(self.health_bar.healthbar.rect.topleft)
+        # start_pos.x += 2
+        start_pos.y -= 5 + shield_height
+
+        shield = HealthBar.Health(shield_value)
+        shield_bar_rect = pygame.Rect(start_pos, (shield_width, shield_height))
+        shield_bar_temp = Shields.GrayShield(shield_bar_rect, shield, 1)
         self.health_bar.shieldbar = shield_bar_temp
         self.health_bar.align = 'left'
 
@@ -148,44 +165,47 @@ class Player:
         colour_rect.set_alpha(100)
         return colour_rect
 
-    # def move(self, direction):
-    #     self.direction = direction
-    #     self.current_animation = self.direction
+    def input(self):
+        screen = pygame.display.get_surface()
+        keys = pygame.key.get_pressed()
+        if (keys[pygame.K_a]) and self.rect.x > 0:
+            self.move('left')
+        if (keys[pygame.K_d]) and self.rect.x < (screen.get_width() - self.rect.width):
+            self.move('right')
+        if (keys[pygame.K_UP] or keys[pygame.K_w]) and self.rect.y > 0:
+            self.move('up')
+        if (keys[pygame.K_DOWN] or keys[pygame.K_s]) and self.rect.y < (screen.get_height() - self.rect.height):
+            self.move('down')
 
-    #     if direction == 'down':
-    #         self.rect.centery += self.speed
-    #     elif direction == 'up':
-    #         self.rect.centery += -self.speed
-    #     elif direction == 'left':
-    #         self.rect.centerx += -self.speed
-    #     elif direction == 'right':
-    #         self.rect.centerx += self.speed
-
-    #     self.is_moving = True
+        # Player jump
+        # if keys[pygame.K_SPACE]:
+        #     jump.jump_start(player)
+        # jump.jump_end(player)
 
     def move(self, direction):
-        self.direction = direction
-        self.current_animation = self.direction
+        if not self.standing:
+            self.direction = direction
+            self.current_animation = self.direction
 
-        if direction == 'down':
-            self.velocity.y = 1
-        elif direction == 'up':
-            self.velocity.y = -1
-        elif direction == 'right':
-            self.velocity.x = 1
-        elif direction == 'left':
-            self.velocity.x = -1
+            if direction == 'down':
+                self.velocity.y = 1
+            elif direction == 'up':
+                self.velocity.y = -1
+            elif direction == 'right':
+                self.velocity.x = 1
+            elif direction == 'left':
+                self.velocity.x = -1
 
-        # normalize diagonal moving (not Null)
-        if self.velocity.x and self.velocity.y:
-            self.velocity.normalize_ip()
+            # normalize diagonal moving (not Null)
+            if self.velocity.x and self.velocity.y:
+                self.velocity.normalize_ip()
 
-        # move
-        # self.rect.center += direction_vec * self.speed
-        self.is_moving = True
+            # move
+            # self.rect.center += direction_vec * self.speed
+            self.is_moving = True
 
-        # print("direction: ", self.direction)
-        # print("velocity: ",self.velocity)
+            # print("direction: ", self.direction)
+            # print("velocity: ",self.velocity)
 
     def defence_damage(self, damage):
         if self.defence < 100: # 100 percent
@@ -210,23 +230,24 @@ class Player:
         self.bullet_bar.update(self.bullets_count)
 
     # target is direction as default
-    def shoot(self, screen, bullet_group, target = None):
-        if self.bullets_count > 0 or self.onepunch:
-            new_bullet = Bullet(screen, self.rect.center)
-            if self.onepunch:
-                new_bullet.damage = 10000
-                new_bullet.speed = 11
-                # print("onepunch bullet")
+    def shoot(self, bullet_group, target = None):
+        if not self.harmless:
+            if self.bullets_count > 0 or self.onepunch:
+                new_bullet = Bullet(self.rect.center)
+                if self.onepunch:
+                    new_bullet.damage = 10000
+                    new_bullet.speed = 11
+                    # print("onepunch bullet")
 
-            if target:
-                new_bullet.velocity_by_mouse(target)
-            else:
-                new_bullet.velocity_by_direction(self.direction)
+                if target:
+                    new_bullet.velocity_by_mouse(target)
+                else:
+                    new_bullet.velocity_by_direction(self.direction)
 
-            bullet_group.add(new_bullet)
+                bullet_group.add(new_bullet)
 
-            if not self.onepunch:
-                self.add_bullet(-1)
+                if not self.onepunch:
+                    self.add_bullet(-1)
 
             # # if type(target) == str:
             # if isinstance(target, str):

@@ -2,7 +2,7 @@ import pygame
 from pygame.math import Vector2
 from add.Clock import Clock
 from add.Path import resource_path
-from Effects import Effect
+from visuals.Effects import Effect
 
 # --- bordered rects ---
 # player  258 17
@@ -370,8 +370,8 @@ class CellHealthBar:
     def init(self):
         self.health.restore()
         self.createCellList()
-        self.update_pos(self.rect.center)
-        self.fit_rect(self.cell_list_width())
+        # self.update_pos(self.rect.center)
+        # self.fit_rect(self.cell_list_width())
         # print("cell constructor call") 
 
     def createCellList(self):

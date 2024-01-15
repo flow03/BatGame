@@ -2,7 +2,7 @@
 import math
 from pygame.math import Vector2
 from add.Clock import Clock
-from add.Drops import Food
+from Drops import Food
 # from Dance_Girl_class import Dance_Girl
 
 class Circle:

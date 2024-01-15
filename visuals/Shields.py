@@ -1,6 +1,6 @@
 import pygame
 from pygame.math import Vector2
-import HealthBar
+import visuals.HealthBar as HealthBar
 
 class AllHealthBars:
     def __init__(self, healthbar : HealthBar, shieldbar = None):

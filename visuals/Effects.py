@@ -1,6 +1,6 @@
 import pygame
 from pygame.math import Vector2
-import HealthBar
+import visuals.HealthBar as HealthBar
 from add.Clock import Clock
 
 class EffectQueue:
@@ -64,10 +64,14 @@ class EffectQueue:
             effect = PoisonEffect(self.player)
         if effect_key == "speed":
             effect = SpeedEffect(self.player)
-        if effect_key == "iron":
-            effect = IronEffect(self.player)
+        if effect_key == "ironskin":
+            effect = IronskinEffect(self.player)
         if effect_key == "onepunch":
             effect = OnepunchEffect(self.player)
+        if effect_key == "harmless":
+            effect = HarmlessEffect(self.player)
+        if effect_key == "standing":
+            effect = StandingEffect(self.player)
         return effect
 
 class EffectQueue_draw(EffectQueue):
@@ -176,7 +180,7 @@ class SpeedEffect(Effect):
     def __del__(self):
         self.player.speed = self.default_speed
 
-class IronEffect(Effect):
+class IronskinEffect(Effect):
     def __init__(self, player):
         time = 8000
         super().__init__(player, time)
@@ -204,3 +208,29 @@ class OnepunchEffect(Effect):
     
     def __del__(self):
         self.player.onepunch = False
+
+class HarmlessEffect(Effect):
+    def __init__(self, player):
+        time = 8000
+        super().__init__(player, time)
+
+        self.player.harmless = True
+
+    def increase(self):
+        self.timer.restart()
+    
+    def __del__(self):
+        self.player.harmless = False
+
+class StandingEffect(Effect):
+    def __init__(self, player):
+        time = 5000
+        super().__init__(player, time)
+
+        self.player.standing = True
+
+    def increase(self):
+        self.timer.restart()
+    
+    def __del__(self):
+        self.player.standing = False
