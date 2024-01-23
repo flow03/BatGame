@@ -45,8 +45,8 @@ class Player:
 
         self.health_bar.init()
         self.bullet_bar.update(self.bullets_count)
-        # self.createBlueShield(4) # def after debug
-        self.createGrayShield(50)
+        self.createBlueShield(4) # del after debug
+        # self.createGrayShield(50)
 
     def createHealth(self):
         start_pos = Vector2(20, 30)

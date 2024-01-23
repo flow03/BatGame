@@ -56,7 +56,8 @@ pygame.display.update()
 # jump = Jump()
 
 Events = UserEvents()
-Events.start_timer()
+Events.isEvents = False
+Events.start()
 
 # Groups---
 # bat_list = MyGroup()
@@ -91,7 +92,7 @@ def createDummies(actors_param):
 # actors['actors'] = dummy
 # actors.add('actors', dummy)
 
-createDummies(groups)
+# createDummies(groups)
 
 # test_group = MyGroup()
 # print('test_group empty ', bool(test_group))
@@ -128,8 +129,8 @@ def initialize():
     groups.clear()
     drops.clear()
     # jump.is_jump = False
-    Events.start_timer()
-    createDummies(groups) # after groups.clear
+    Events.start()
+    # createDummies(groups) # after groups.clear
 
 # Main loop
 while run:

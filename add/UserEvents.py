@@ -7,7 +7,7 @@ class UserEvents:
         self.FOOD_DROP_TIMER = pygame.USEREVENT + 3
         self.BAT_SP_TIMER = pygame.USEREVENT + 4
 
-        self.isEvents = False
+        self.isEvents = True
         # self.start_timer()
         # self.stop_timer()
 
@@ -30,3 +30,10 @@ class UserEvents:
             self.stop_timer()
         else:
             self.start_timer()
+
+    # reverse to switch
+    def start(self):
+        if self.isEvents:
+            self.start_timer()
+        else:
+            self.stop_timer()
