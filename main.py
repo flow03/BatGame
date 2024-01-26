@@ -14,6 +14,7 @@ import Bat
 from Dummy import Dummy
 import Actors
 import gc # garbage collector
+from Food import FoodCreator
 
 FPS = pygame.time.Clock()
 pygame.init()
@@ -64,9 +65,8 @@ Events.start()
 # bullets = MyGroup() #pygame.sprite.Group()
 
 drops = Drops.Drops()
-# bulletDrops = MyGroup()
-# foodDrops = MyGroup()
-# drops_list = MyGroup()
+
+food = FoodCreator()
 
 # actors = Actors.Actors_()
 groups = Actors.Groups()
@@ -94,11 +94,7 @@ def createDummies(actors_param):
 
 # createDummies(groups)
 
-# test_group = MyGroup()
-# print('test_group empty ', bool(test_group))
 
-# test_group.add(Dummy(WIDTH//2 + 200, HEIGHT//2, actors['bullets']))
-# print('test_group not empty ', bool(test_group))
 
 # Update
 def update_objects():
@@ -114,6 +110,7 @@ def draw_objects(isBoundRects):
     drops.draw(screen, colourGreen)
     groups.draw(screen, colourRed)
     player.draw(screen, colourGreen)
+    food.draw(screen)
 
 # Sound
 # bg_sound = pygame.mixer.Sound('sounds/Black Sabbath - Paranoid.mp3')
