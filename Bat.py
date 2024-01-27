@@ -216,3 +216,13 @@ class BatSpecial(Bat):
             new_y = random.choice(out_y)
 
         self.rect.center = (new_x, new_y)
+
+class BatBomb(Bat):
+    def __init__(self, *args):
+        super().__init__(*args)
+        pass
+
+class Bomb(pygame.sprite.Sprite):
+    def __init__(self):
+        pass
+        

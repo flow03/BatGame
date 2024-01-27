@@ -67,9 +67,7 @@ class Dance:
     def update(self):
         self.changeDance()
         if self.food_clock.isNextFrame():
-            new_food = Food(self.girl.food_list)
-            new_food.check_circle_coordinates(self.girl.rect.center, 70, 60)
-            # girl.food_list.add(new_food)
+            self.girl.foodCreator.createFoodCircle(self.girl.rect.center, 70, 60)
 
     def isDanceOver(self):
         return self.dance_over.end()

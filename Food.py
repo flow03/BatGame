@@ -38,7 +38,7 @@ class Food(pygame.sprite.Sprite):
         self.rect.center = coords
 
     def set_random_coordinates(self):
-        offset = 30 # self.image.get_width()//2 + 10
+        # offset = 30 # self.image.get_width()//2 + 10
         offset = self.rect.width
         # print("Food self.rect.width: ", self.rect.width)
         coords = Vector2()
@@ -87,7 +87,8 @@ class Food(pygame.sprite.Sprite):
         screen.blit(self.image, self.rect)
 
 class FoodCreator():
-    def __init__(self):
+    def __init__(self, foodGroup):
+        self.foodGroup = foodGroup
         self.images = {
             'other' : [],
             'meat' : [],
@@ -163,10 +164,18 @@ class FoodCreator():
 
     def draw(self, screen):
         # screen = pygame.display.get_surface()
-        # anim_blit_dict(screen, self.images, 20, 70)
-        self.blit_other()
+        anim_blit_dict(screen, self.images, 20, 70)
+        # self.blit_other()
 
     def createFood(self):
+        new_food = Food(self.foodGroup)
+        new_food.check_random_coordinates()
+
+    def createFoodCircle(self, *args):
+        new_food = Food(self.foodGroup)
+        new_food.check_circle_coordinates(*args)
+
+    def createFood_new(self):
         # self.createOther()
         self.createMeat()
         # self.createFish()
@@ -176,7 +185,7 @@ class FoodCreator():
 
     def createMeat(self):
         image = choice(self.images['meat'])
-        # return Meat(group, image)
+        self.foodGroup.add(Meat(self.foodGroup, image))
 
 class Meat(Food):
     def __init__(self, group, image):

@@ -14,7 +14,7 @@ import Bat
 from Dummy import Dummy
 import Actors
 import gc # garbage collector
-from Food import FoodCreator
+# from Food import FoodCreator
 
 FPS = pygame.time.Clock()
 pygame.init()
@@ -66,8 +66,6 @@ Events.start()
 
 drops = Drops.Drops()
 
-food = FoodCreator()
-
 # actors = Actors.Actors_()
 groups = Actors.Groups()
 
@@ -94,8 +92,6 @@ def createDummies(actors_param):
 
 # createDummies(groups)
 
-
-
 # Update
 def update_objects():
     # bat_list.update()
@@ -110,7 +106,6 @@ def draw_objects(isBoundRects):
     drops.draw(screen, colourGreen)
     groups.draw(screen, colourRed)
     player.draw(screen, colourGreen)
-    food.draw(screen)
 
 # Sound
 # bg_sound = pygame.mixer.Sound('sounds/Black Sabbath - Paranoid.mp3')
@@ -207,7 +202,7 @@ while run:
             if event.key == pygame.K_b:
                 player.add_effect("standing")
             if event.key == pygame.K_m: # unlimited
-                groups.add_actor("girl", Dance_Girl(player, groups.actors, drops.foodDrops))
+                groups.add_actor("girl", Dance_Girl(player, groups.actors, drops.foodCreator))
             if event.key == pygame.K_h:
                 groups.actors_heal(5)
                 player.set_heal(5)

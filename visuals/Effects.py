@@ -145,7 +145,7 @@ class PoisonEffect(Effect):
         time = 20000
         super().__init__(player, time)
 
-        self.healthBar = self.player.health_bar
+        self.healthBar = self.player.health_bar.healthbar
         self.healthBar.change_colour("forestgreen")
         self.default_damage = 2
         self.poison_damage = self.default_damage

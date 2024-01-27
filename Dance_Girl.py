@@ -4,13 +4,13 @@ import random
 from pygame.math import Vector2
 from add.Spritesheet import SpriteSheet
 # from Clock_class import Clock
-from add.MyGroup import MyGroup
-# from Drops_class import Food
+# from add.MyGroup import MyGroup
+from Food import FoodCreator
 from visuals.HealthBar import Health
 import add.State
 
 class Dance_Girl(pygame.sprite.Sprite):
-    def __init__(self, player, actors, food_list : MyGroup):
+    def __init__(self, player, actors, foodCreator : FoodCreator):
         super().__init__()
         self.animations = {
             'balancing': [],
@@ -26,7 +26,7 @@ class Dance_Girl(pygame.sprite.Sprite):
 
         self.player = player
         self.actors = actors
-        self.food_list = food_list
+        self.foodCreator = foodCreator
         
         self.init()
 

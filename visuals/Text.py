@@ -36,16 +36,18 @@ class Text:
         self.y = 75
         self.screen = screen
         # self.print('bats on screen', len(actors['bats']))
-        # self.print('food on screen', len(drops.foodDrops))
+        self.print('food on screen', len(drops.foodDrops))
+        self.print('bullets on screen', len(drops.bulletDrops))
+        self.print('loot on screen', len(drops.fallen_drops))
         # self.print('killed bats', player.killedBats)
         # self.print('bullets', player.bullets_count)
         # self.print('health', player.health_new.health)
         # self.print('speed', player.speed)
         # self.print('defence', player.defence)
-        # self.print('loot on screen', len(drops.fallen_drops))
-        self.print('bats', len(groups.bats))
-        self.print('bullets', len(groups.bullets))
-        self.print('actors', len(groups.actors))
+
+        # self.print('bats', len(groups.bats))
+        # self.print('bullets', len(groups.bullets))
+        # self.print('actors', len(groups.actors))
         if groups.actors:
             for key in list(groups.actors.keys()):
                self.print(key +' health', groups.actors[key].health.health) 

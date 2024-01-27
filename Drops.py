@@ -3,20 +3,20 @@ from random import randint
 # import math
 from pygame.math import Vector2
 # from add.Spritesheet import SpriteSheet
-from Food import Food
+from Food import Food, FoodCreator
 from add.MyGroup import MyGroup
 from add.Path import resource_path
 
 class BulletDrop(pygame.sprite.Sprite):
-    def __init__(self, group):
+    def __init__(self):
         super().__init__()
         img_url = resource_path('img/bullet.png')
         self.image = pygame.image.load(img_url).convert_alpha()
         self.image = pygame.transform.scale(self.image, (25, 9))
         self.image = pygame.transform.rotate(self.image, 90)
         self.rect = self.image.get_rect()
-        self.group = group
-        self.group.add(self)
+        # self.group = group
+        # self.group.add(self)
         self.screen = pygame.display.get_surface()
 
     def set_random_coordinates(self, offset = 30):
@@ -28,7 +28,7 @@ class BulletDrop(pygame.sprite.Sprite):
     def draw(self, screen):
         screen.blit(self.image, self.rect)
 
-class Drop(pygame.sprite.Sprite):
+class FallenDrop(pygame.sprite.Sprite):
     def __init__(self, drop_obj, start_pos, dest_pos):
         super().__init__()
         self.drop_obj = drop_obj # object reference
@@ -37,7 +37,7 @@ class Drop(pygame.sprite.Sprite):
         self.speed = 3
 
     def update(self):
-        if self.drop_obj.group.has(self.drop_obj):  # Group method
+        if self.drop_obj.groups():  # groups Sprite method
         # if self.drop_obj in self.drop_obj.group:
             direction = self.dest_pos - self.drop_obj.rect.center
 
@@ -56,6 +56,7 @@ class Drops():
         self.foodDrops = MyGroup()
         self.fallen_drops = MyGroup()
 
+        self.foodCreator = FoodCreator(self.foodDrops)
         self.screen = pygame.display.get_surface()
         # self.fallen_count = 0
 
@@ -66,7 +67,8 @@ class Drops():
         if rand_drop:
             new_drop = Food(self.foodDrops)
         else:
-            new_drop = BulletDrop(self.bulletDrops)
+            new_drop = BulletDrop()
+            self.bulletDrops.add(new_drop)
 
         start_pos = Vector2(start_pos)
         dest_pos = Vector2()
@@ -78,7 +80,7 @@ class Drops():
         else:
             dest_pos.y = start_pos.y
 
-        self.fallen_drops.add(Drop(new_drop, start_pos, dest_pos))
+        self.fallen_drops.add(FallenDrop(new_drop, start_pos, dest_pos))
 
         # self.fallen_count += 1
         # print(type(new_drop), " created ", self.fallen_count)
@@ -91,16 +93,16 @@ class Drops():
     def draw(self, screen, colour):
         self.bulletDrops.draw(screen, colour)
         self.foodDrops.draw(screen, colour)
+        # self.foodCreator.draw(screen)
 
     def create_bulletDrop(self):
-        new_bullet_drop = BulletDrop(self.bulletDrops)
+        new_bullet_drop = BulletDrop()
+        self.bulletDrops.add(new_bullet_drop)
         new_bullet_drop.set_random_coordinates()
         # self.bulletDrops.add(new_bullet_drop)
 
     def create_foodDrop(self):
-        new_food = Food(self.foodDrops)
-        new_food.check_random_coordinates()  # collide before add
-        # self.foodDrops.add(new_food)
+        self.foodCreator.createFood()
 
     def clear(self):
         self.bulletDrops.empty()
