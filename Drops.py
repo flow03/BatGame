@@ -1,11 +1,142 @@
 import pygame
-from random import randint
-# import math
+from random import randint, uniform
+import math
 from pygame.math import Vector2
 # from add.Spritesheet import SpriteSheet
 from Food import Food, FoodCreator
 from add.MyGroup import MyGroup
 from add.Path import resource_path
+
+class Drops():
+    def __init__(self):
+        self.bulletDrops = MyGroup()
+        self.foodDrops = MyGroup()
+        self.fallen_drops = MyGroup()
+
+        self.foodCreator = FoodCreator(self.foodDrops)
+        self.screen = pygame.display.get_surface()
+        # self.fallen_count = 0
+
+    def createFallenDrop(self, start_pos):
+        rand_drop = randint(0, 1)
+        new_drop = None
+
+        if rand_drop:
+            new_drop = Food()
+            self.foodDrops.add(new_drop)
+        else:
+            new_drop = BulletDrop()
+            self.bulletDrops.add(new_drop)
+
+        start_pos = Vector2(start_pos)
+        dest_pos = Vector2()
+        dest_pos.x = start_pos.x
+        max_y = self.screen.get_height() - new_drop.rect.height//2
+
+        if max_y > start_pos.y:
+            dest_pos.y = randint(start_pos.y, max_y)
+        else:
+            dest_pos.y = start_pos.y
+
+        self.fallen_drops.add(FallenDrop(new_drop, start_pos, dest_pos))
+
+        # self.fallen_count += 1
+        # print(type(new_drop), " created ", self.fallen_count)
+
+    def update(self):
+        if self.fallen_drops:
+            for drop in self.fallen_drops:
+                drop.update()
+
+    def draw(self, screen, colour):
+        self.bulletDrops.draw(screen, colour)
+        self.foodDrops.draw(screen, colour)
+        # self.foodCreator.draw(screen)
+
+    def create_bulletDrop(self):
+        new_bullet = BulletDrop()
+        self.bulletDrops.add(new_bullet)
+        self.check_and_set_random_coords(new_bullet, self.bulletDrops)
+        # self.set_random_coords(new_bullet)
+
+    def create_foodDrop(self):
+        new_food = self.foodCreator.createFood()
+        self.foodDrops.add(new_food)
+        self.check_and_set_random_coords(new_food, self.foodDrops)
+        # self.set_random_coords(new_food)
+
+    def create_foodCircle(self, center, radius, prev_coords):
+        new_food = self.foodCreator.createFood()
+        self.foodDrops.add(new_food)
+        # self.check_and_set_circle_coords(new_food, self.foodDrops, center, radius)
+        return self.set_circle_coords(new_food, center, radius, prev_coords)
+
+    def clear(self):
+        self.bulletDrops.empty()
+        self.foodDrops.empty()
+        self.fallen_drops.empty()
+
+    def set_random_coords(self, obj):
+        # offset = obj.rect.width
+        coords = Vector2()
+        coords.x = randint(obj.rect.width, self.screen.get_width() - obj.rect.width)
+        coords.y = randint(obj.rect.height, self.screen.get_height() - obj.rect.height)
+        obj.rect.center = coords
+    
+    def set_circle_coords(self, obj, center, radius, prev_coords):
+        center = Vector2(center)
+        coords = Vector2()
+
+        # angle = uniform(0, 2 * math.pi)
+        # Обчислення кута між попередніми координатами та новими
+        angle = math.atan2(prev_coords.y - center.y, prev_coords.x - center.x)
+
+        # Зміщення кута на rect.width
+        angle += obj.rect.width / radius
+
+        coords.x = center.x + radius * math.cos(angle)
+        coords.y = center.y + radius * math.sin(angle)
+        coords = round(coords)
+        obj.rect.center = coords
+
+        return coords
+
+    def check_and_set_random_coords(self, obj, group : MyGroup):
+        # exclude self collide
+        if group.has(obj):
+            group.remove(obj) 
+
+        self.set_random_coords(obj)
+        count = 0
+        while pygame.sprite.spritecollideany(obj, group):
+            self.set_random_coords(obj)
+            count += 1
+            if count >= 15:
+                break
+        
+        group.add(obj)
+
+        # if count:
+        #     print(f"collisions: {count}")
+
+    def check_and_set_circle_coords(self, obj, group, center, radius):
+        # exclude self collide
+        if group.has(obj):
+            group.remove(obj) 
+
+        self.set_circle_coords(obj, center, radius)
+        count = 0
+        while pygame.sprite.spritecollideany(obj, group):
+            self.set_circle_coords(obj, center, radius)
+            count += 1
+            if count >= 20:
+                break
+
+        group.add(obj)
+
+        if count:
+            print(f"Food circle collisions: {count}")
+
 
 class BulletDrop(pygame.sprite.Sprite):
     def __init__(self):
@@ -49,62 +180,3 @@ class FallenDrop(pygame.sprite.Sprite):
                 self.drop_obj.rect.center += direction * self.speed
         else:
             self.kill()
-
-class Drops():
-    def __init__(self):
-        self.bulletDrops = MyGroup()
-        self.foodDrops = MyGroup()
-        self.fallen_drops = MyGroup()
-
-        self.foodCreator = FoodCreator(self.foodDrops)
-        self.screen = pygame.display.get_surface()
-        # self.fallen_count = 0
-
-    def createFallenDrop(self, start_pos):
-        rand_drop = randint(0, 1)
-        new_drop = None
-
-        if rand_drop:
-            new_drop = Food(self.foodDrops)
-        else:
-            new_drop = BulletDrop()
-            self.bulletDrops.add(new_drop)
-
-        start_pos = Vector2(start_pos)
-        dest_pos = Vector2()
-        dest_pos.x = start_pos.x
-        max_y = self.screen.get_height() - new_drop.rect.height//2
-
-        if max_y > start_pos.y:
-            dest_pos.y = randint(start_pos.y, max_y)
-        else:
-            dest_pos.y = start_pos.y
-
-        self.fallen_drops.add(FallenDrop(new_drop, start_pos, dest_pos))
-
-        # self.fallen_count += 1
-        # print(type(new_drop), " created ", self.fallen_count)
-
-    def update(self):
-        if self.fallen_drops:
-            for drop in self.fallen_drops:
-                drop.update()
-
-    def draw(self, screen, colour):
-        self.bulletDrops.draw(screen, colour)
-        self.foodDrops.draw(screen, colour)
-        # self.foodCreator.draw(screen)
-
-    def create_bulletDrop(self):
-        new_bullet_drop = BulletDrop()
-        self.bulletDrops.add(new_bullet_drop)
-        new_bullet_drop.set_random_coordinates()
-        # self.bulletDrops.add(new_bullet_drop)
-
-    def create_foodDrop(self):
-        self.foodCreator.createFood()
-
-    def clear(self):
-        self.bulletDrops.empty()
-        self.foodDrops.empty()
-        self.fallen_drops.empty()

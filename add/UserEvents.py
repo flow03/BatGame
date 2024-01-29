@@ -12,10 +12,10 @@ class UserEvents:
         # self.stop_timer()
 
     def start_timer(self):
-        pygame.time.set_timer(self.BAT_TIMER, 4000)
-        pygame.time.set_timer(self.BULLET_DROP_TIMER, 4000)
-        pygame.time.set_timer(self.FOOD_DROP_TIMER, 5000)
-        pygame.time.set_timer(self.BAT_SP_TIMER, 5000)
+        # pygame.time.set_timer(self.BAT_TIMER, 4000)
+        pygame.time.set_timer(self.BULLET_DROP_TIMER, 2000)
+        pygame.time.set_timer(self.FOOD_DROP_TIMER, 2500)
+        # pygame.time.set_timer(self.BAT_SP_TIMER, 5000)
         self.isEvents = True
 
     def stop_timer(self):

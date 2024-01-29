@@ -57,7 +57,7 @@ pygame.display.update()
 # jump = Jump()
 
 Events = UserEvents()
-Events.isEvents = False
+# Events.isEvents = False
 Events.start()
 
 # Groups---
@@ -202,7 +202,7 @@ while run:
             if event.key == pygame.K_b:
                 player.add_effect("standing")
             if event.key == pygame.K_m: # unlimited
-                groups.add_actor("girl", Dance_Girl(player, groups.actors, drops.foodCreator))
+                groups.add_actor("girl", Dance_Girl(player, groups.actors, drops))
             if event.key == pygame.K_h:
                 groups.actors_heal(5)
                 player.set_heal(5)

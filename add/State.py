@@ -48,7 +48,10 @@ class Dance:
         self.d_clock = Clock(2200) # dance clock
         self.food_clock = Clock(500)
         self.dance_over = Clock(2200 * 4) # one time tick
-
+        self.radius = 70
+        self.prev_coords = Vector2(self.girl.rect.center)
+        self.prev_coords.y -= self.radius
+        self.created_food = 0
         self.init()
 
     def init(self):
@@ -67,7 +70,9 @@ class Dance:
     def update(self):
         self.changeDance()
         if self.food_clock.isNextFrame():
-            self.girl.foodCreator.createFoodCircle(self.girl.rect.center, 70, 60)
+            if self.created_food < 15:
+                self.prev_coords = self.girl.drops.create_foodCircle(self.girl.rect.center, self.radius, self.prev_coords)
+                self.created_food += 1
 
     def isDanceOver(self):
         return self.dance_over.end()
