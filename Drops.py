@@ -65,11 +65,11 @@ class Drops():
         self.check_and_set_random_coords(new_food, self.foodDrops)
         # self.set_random_coords(new_food)
 
-    def create_foodCircle(self, center, radius, prev_coords):
+    # creates food with specified coordinates
+    def create_foodCoords(self, coords : Vector2):
         new_food = self.foodCreator.createFood()
         self.foodDrops.add(new_food)
-        # self.check_and_set_circle_coords(new_food, self.foodDrops, center, radius)
-        return self.set_circle_coords(new_food, center, radius, prev_coords)
+        new_food.rect.center = coords
 
     def clear(self):
         self.bulletDrops.empty()
@@ -82,24 +82,6 @@ class Drops():
         coords.x = randint(obj.rect.width, self.screen.get_width() - obj.rect.width)
         coords.y = randint(obj.rect.height, self.screen.get_height() - obj.rect.height)
         obj.rect.center = coords
-    
-    def set_circle_coords(self, obj, center, radius, prev_coords):
-        center = Vector2(center)
-        coords = Vector2()
-
-        # angle = uniform(0, 2 * math.pi)
-        # Обчислення кута між попередніми координатами та новими
-        angle = math.atan2(prev_coords.y - center.y, prev_coords.x - center.x)
-
-        # Зміщення кута на rect.width
-        angle += obj.rect.width / radius
-
-        coords.x = center.x + radius * math.cos(angle)
-        coords.y = center.y + radius * math.sin(angle)
-        coords = round(coords)
-        obj.rect.center = coords
-
-        return coords
 
     def check_and_set_random_coords(self, obj, group : MyGroup):
         # exclude self collide

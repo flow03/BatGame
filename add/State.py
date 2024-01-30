@@ -2,7 +2,7 @@
 import math
 from pygame.math import Vector2
 from add.Clock import Clock
-from Drops import Food
+# from Drops import Food
 # from Dance_Girl_class import Dance_Girl
 
 class Circle:
@@ -41,24 +41,55 @@ class Circle:
         elif self.laps_completed >= 4:
             self.is_circle = False
 
+class FoodCircle:
+    def __init__(self, drops, center):
+        self.food_clock = Clock(500)
+        self.food_clock.start()
+        self.drops = drops
+        self.center = center
+        self.radius = 70
+        self.food_coords = Vector2(self.center)
+        self.food_coords.y -= self.radius
+        self.created_food = 0
+
+    def spawnFood(self):
+        if self.food_clock.isNextFrame():
+            if self.created_food < 15:
+                self.drops.create_foodCoords(self.food_coords)
+                self.food_coords = self.get_circle_coords()
+                self.created_food += 1
+
+    def get_circle_coords(self):
+        center = Vector2(self.center)
+        coords = Vector2()
+        rect_width = 30
+
+        # angle = uniform(0, 2 * math.pi)
+        # Обчислення кута між попередніми координатами та новими
+        angle = math.atan2(self.food_coords.y - center.y, self.food_coords.x - center.x)
+
+        # Зміщення кута на rect.width
+        angle += rect_width / self.radius
+
+        coords.x = center.x + self.radius * math.cos(angle)
+        coords.y = center.y + self.radius * math.sin(angle)
+        coords = round(coords)
+
+        return coords
+
 class Dance:
     def __init__(self, girl):
         self.girl = girl
         self.danceList = ['hips','slide','snap']
         self.d_clock = Clock(2200) # dance clock
-        self.food_clock = Clock(500)
         self.dance_over = Clock(2200 * 4) # one time tick
-        self.radius = 70
-        self.prev_coords = Vector2(self.girl.rect.center)
-        self.prev_coords.y -= self.radius
-        self.created_food = 0
+        self.foodCircle = FoodCircle(self.girl.drops, self.girl.rect.center)
         self.init()
 
     def init(self):
         self.currentDance = 0
         self.dance_over.start()
         self.d_clock.start()
-        self.food_clock.start()
 
     def changeDance(self):
         if self.d_clock.isNextFrame():
@@ -69,14 +100,10 @@ class Dance:
 
     def update(self):
         self.changeDance()
-        if self.food_clock.isNextFrame():
-            if self.created_food < 15:
-                self.prev_coords = self.girl.drops.create_foodCircle(self.girl.rect.center, self.radius, self.prev_coords)
-                self.created_food += 1
+        self.foodCircle.spawnFood()
 
     def isDanceOver(self):
         return self.dance_over.end()
-
 
 class IState:
     def __init__(self, npc): # npc : Dance_Girl
@@ -118,7 +145,7 @@ class move_to_player(IState):
 
             return self
         else:
-            return move_around_player(self.npc)
+            return danceState(self.npc)
 
 class move_around_player(IState):
     def __init__(self, npc):
