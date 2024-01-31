@@ -2,6 +2,7 @@ import pygame
 import random
 from pygame.math import Vector2
 import visuals.HealthBar as HealthBar
+import visuals.Effects as Effects
 from add.Path import resource_path
 import Drops as Drops
 import visuals.Shields as Shields
@@ -25,6 +26,8 @@ class Bat(pygame.sprite.Sprite):
 
         self.speed = random.randint(2, 4)
         self.damage = random.randint(15, 30)
+
+        self.effects = Effects.EffectQueue_draw(self)
   
     def load_random_frame(self):
         i = random.randint(0, 17) # max bat index
@@ -41,8 +44,12 @@ class Bat(pygame.sprite.Sprite):
         if self.rect.right < 0:
             self.kill()
 
+        self.effects.update()
+
     def draw(self, screen):
         screen.blit(self.image, self.rect)
+        if self.effects:
+            self.effects.draw(screen) 
 
     def collide(self):
         # Перевірка колізій з гравцем
@@ -60,6 +67,9 @@ class Bat(pygame.sprite.Sprite):
         self.player.killedBats += 1
         self.drops.createFallenDrop(self.rect.center)
         self.kill()
+
+    def add_effect(self, effect_key : str):
+        self.effects.add(effect_key)
 
 class BatSpecial(Bat):
     def __init__(self, *args):
@@ -130,6 +140,8 @@ class BatSpecial(Bat):
         if self.health.empty():
             self.kill()
 
+        self.effects.update()
+
     def nearest_food(self):
         nearest_d = None # distance
         nearest_pos = Vector2()
@@ -168,13 +180,14 @@ class BatSpecial(Bat):
         if not self.health.full() and self.drops.foodDrops and not self.health.empty():
             food = pygame.sprite.spritecollideany(self, self.drops.foodDrops)
             if food:
-                self.health.set_heal(food.heal)
+                # self.health.set_heal(food.heal)
+                food.do(self)
                 # self.health_bar.update_health()
                 self.target = Vector2(self.player.rect.center)
                 food.kill()
 
     def draw(self, screen):
-        screen.blit(self.image, self.rect)
+        super().draw(screen)
         self.health_bar.draw(screen)
 
     def update_bar_pos(self):
@@ -198,6 +211,9 @@ class BatSpecial(Bat):
             self.player.killedBats += 1
             self.drops.createFallenDrop(self.rect.center)
             self.kill()
+
+    def set_heal(self, heal: int):
+        self.health_bar.set_heal(heal)
     
     # def set_heal(self, heal: int):
     #     self.health += int(heal)

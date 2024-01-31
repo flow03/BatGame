@@ -13,7 +13,7 @@ class Drops():
         self.foodDrops = MyGroup()
         self.fallen_drops = MyGroup()
 
-        self.foodCreator = FoodCreator(self.foodDrops)
+        self.foodCreator = FoodCreator()
         self.screen = pygame.display.get_surface()
         # self.fallen_count = 0
 
@@ -22,7 +22,7 @@ class Drops():
         new_drop = None
 
         if rand_drop:
-            new_drop = Food()
+            new_drop = self.foodCreator.createFood()
             self.foodDrops.add(new_drop)
         else:
             new_drop = BulletDrop()
@@ -60,7 +60,7 @@ class Drops():
         # self.set_random_coords(new_bullet)
 
     def create_foodDrop(self):
-        new_food = self.foodCreator.createFood()
+        new_food = self.foodCreator.createFood_new()
         self.foodDrops.add(new_food)
         self.check_and_set_random_coords(new_food, self.foodDrops)
         # self.set_random_coords(new_food)

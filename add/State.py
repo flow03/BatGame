@@ -46,7 +46,7 @@ class FoodCircle:
         self.food_clock = Clock(500)
         self.food_clock.start()
         self.drops = drops
-        self.center = center
+        self.center = Vector2(center)
         self.radius = 70
         self.food_coords = Vector2(self.center)
         self.food_coords.y -= self.radius

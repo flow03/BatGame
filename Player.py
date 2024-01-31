@@ -45,7 +45,7 @@ class Player:
 
         self.health_bar.init()
         self.bullet_bar.update(self.bullets_count)
-        self.createBlueShield(4) # del after debug
+        # self.createBlueShield(4) # del after debug
         # self.createGrayShield(50)
 
     def createHealth(self):
@@ -123,7 +123,8 @@ class Player:
         if self.drops.foodDrops:
             food = pygame.sprite.spritecollideany(self, self.drops.foodDrops)
             if food:
-                self.health_bar.set_heal(food.heal)
+                # self.health_bar.set_heal(food.heal)
+                food.do(self)
                 # self.health_bar.update_health()
                 food.kill()
 
