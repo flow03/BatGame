@@ -1,7 +1,7 @@
 import pygame
 from random import randint, choice
 import math
-from pygame.math import Vector2
+# from pygame.math import Vector2
 from add.Spritesheet import SpriteSheet, anim_blit, anim_blit_dict
             
 class Food(pygame.sprite.Sprite):
@@ -118,46 +118,44 @@ class FoodCreator():
         # self.foodGroup.add(new_food)
         
     def createFood_new(self):
-        rand_drop = randint(0, 1)
+        key = choice(list(self.images.keys()))    # rand key
+        image = choice(self.images[key])          # rand image
         new_drop = None
-        # self.createOther()
-        # self.createMeat()
-        if rand_drop:
-            new_drop = self.createFish()
-        # self.createCrab()
+
+        if key == 'fish':
+            new_drop = Fish(image)
+        elif key == 'mushroom':
+            new_drop = Mushroom(image)
+        elif key == 'meat':
+            new_drop = Meat(image)
+        elif key == 'flour':
+            new_drop = Flour(image)
+        elif key == 'crab':
+            new_drop = Crab(image)
+        elif key == 'egg':
+            new_drop = Egg(image)
         else:
-            new_drop = self.createMushroom()
-        # self.createCake()
+            new_drop = Food(image)
+
+        # print(new_drop)
         return new_drop
 
-    def createMeat(self):
-        image = choice(self.images['meat'])
-        return Meat(image)
-
-    def createFish(self):
-        image = choice(self.images['fish'])
-        return Fish(image)
-
-    def createMushroom(self):
-        image = choice(self.images['mushroom'])
-        return Mushroom(image)
-
 class Meat(Food):
+    def __init__(self, image):
+        super().__init__(image)
+        self.heal = 40
+
+    def do(self, actor):
+        super().do(actor)
+
+class Fish(Food):
     def __init__(self, image):
         super().__init__(image)
         self.heal = self.min_heal
 
     def do(self, actor):
-        # meat stuff
-        pass
-
-class Fish(Food):
-    def __init__(self, image):
-        super().__init__(image)
-        # self.heal = self.min_heal
-
-    def do(self, actor):
-        actor.set_heal(self.min_heal)
+        # actor.set_heal(self.min_heal)
+        super().do(actor)
         actor.add_effect('speed')
 
 class Mushroom(Food):
@@ -167,3 +165,36 @@ class Mushroom(Food):
 
     def do(self, actor):
         actor.add_effect('poison')
+
+class Flour(Food):
+    def __init__(self, image):
+        super().__init__(image)
+        self.stand = randint(0, 1)
+
+    def do(self, actor):
+        super().do(actor)
+        if self.stand:
+            actor.add_effect('stand')
+
+class Crab(Food):
+    def __init__(self, image):
+        super().__init__(image)
+        self.heal = self.min_heal
+        self.shield = randint(20, 50)
+
+    def do(self, actor):
+        super().do(actor)
+        actor.createGrayShield(self.shield)
+
+class Egg(Food):
+    def __init__(self, image):
+        super().__init__(image)
+        self.heal = self.min_heal
+        self.bullets_bonus = randint(0, 2)
+
+    def do(self, actor):
+        super().do(actor)
+        actor.add_effect("bullets")
+        if self.bullets_bonus == 2:
+            actor.bullets_count += 32
+            

@@ -12,7 +12,7 @@ from Dance_Girl import Dance_Girl
 import Bat
 # from Bullet_class import Bullet
 from Dummy import Dummy
-import Actors
+import add.Actors as Actors
 import gc # garbage collector
 # from Food import FoodCreator
 
@@ -189,26 +189,30 @@ while run:
                     displayText = False
             if event.key == pygame.K_t:
                 Events.switch()
-            if event.key == pygame.K_p:
+            if event.key == pygame.K_1:
                 player.add_effect("poison")
-            if event.key == pygame.K_i:
-                player.add_effect("ironskin")
-            if event.key == pygame.K_LSHIFT:
+            if event.key == pygame.K_LSHIFT or event.key == pygame.K_2:
                 player.add_effect("speed")
-            if event.key == pygame.K_o:
+            if event.key == pygame.K_3:
                 player.add_effect("onepunch")
-            if event.key == pygame.K_n:
+            if event.key == pygame.K_4:
+                player.add_effect("ironskin")
+            if event.key == pygame.K_5:
                 player.add_effect("harmless")
-            if event.key == pygame.K_b:
-                player.add_effect("standing")
-            if event.key == pygame.K_m: # unlimited
+            if event.key == pygame.K_6:
+                player.add_effect("stand")
+            if event.key == pygame.K_x:
+                player.add_effect("bullets")
+            if event.key == pygame.K_m: # unlimited recreates
                 groups.add_actor("girl", Dance_Girl(player, groups.actors, drops))
-            if event.key == pygame.K_h:
-                groups.actors_heal(5)
-                player.set_heal(5)
-            if event.key == pygame.K_k:
-                groups.actors_damage(5)
-                player.set_damage(5)
+            if event.key == pygame.K_c:
+                pygame.event.post(pygame.event.Event(Events.BAT_SP_TIMER))
+            # if event.key == pygame.K_h:
+            #     groups.actors_heal(5)
+            #     player.set_heal(5)
+            # if event.key == pygame.K_k:
+            #     groups.actors_damage(5)
+            #     player.set_damage(5)
 
         # працює незалежно від player.gameplay
         if event.type == pygame.KEYDOWN:

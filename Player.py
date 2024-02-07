@@ -18,6 +18,7 @@ class Player:
         self.start_pos = Vector2(x, y)
         self.speed = 4
         self.defence = 0
+        # self.bullet_speed_bonus = 0
         self.effects = Effects.EffectQueue_draw(self)
         self.drops = drops
 
@@ -38,9 +39,11 @@ class Player:
         self.killedBats = 0
         self.gameplay = True
         self.is_moving = False
-        self.onepunch = False
-        self.harmless = False
-        self.standing = False
+        # self.onepunch = False
+        self.add_damage = 0
+        self.add_b_speed = 0
+        # self.harmless = False
+        # self.standing = False
         self.effects.clear()
 
         self.health_bar.init()
@@ -184,7 +187,7 @@ class Player:
         # jump.jump_end(player)
 
     def move(self, direction):
-        if not self.standing:
+        if not self.effects.get('stand'):
             self.direction = direction
             self.current_animation = self.direction
 
@@ -232,12 +235,20 @@ class Player:
 
     # target is direction as default
     def shoot(self, bullet_group, target = None):
-        if not self.harmless:
-            if self.bullets_count > 0 or self.onepunch:
+        if not self.effects.get('harmless'):
+            if self.bullets_count > 0 or self.effects.get('onepunch'):
                 new_bullet = Bullet(self.rect.center)
-                if self.onepunch:
-                    new_bullet.damage = 10000
-                    new_bullet.speed = 11
+                new_bullet.damage += self.add_damage
+                new_bullet.speed += self.add_b_speed
+                # print('add_b_speed: ', self.add_b_speed)
+
+                # bullet_effect = self.effects.get('bullets')
+                # if bullet_effect:
+                #     new_bullet.speed += bullet_effect.bullet_speed_bonus
+
+                # if self.onepunch:
+                #     new_bullet.damage = 10000
+                #     new_bullet.speed = 12
                     # print("onepunch bullet")
 
                 if target:
@@ -247,7 +258,7 @@ class Player:
 
                 bullet_group.add(new_bullet)
 
-                if not self.onepunch:
+                if not self.effects.get('onepunch'):
                     self.add_bullet(-1)
 
             # # if type(target) == str:

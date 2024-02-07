@@ -26,15 +26,8 @@ class EffectQueue:
         self.queue.pop(key)
         # print(key, "removed")
 
-    # def check_old(self):
-    #     del_keys = []
-    #     for key in self.queue.keys():
-    #         if self.queue[key].off():
-    #             del_keys.append(key)
-
-    #     if del_keys:
-    #         for key in del_keys:
-    #             self.remove(key)
+    def get(self, key):
+        return self.queue.get(key, None)
 
     def check(self):
         for key in list(self.queue.keys()):
@@ -70,8 +63,10 @@ class EffectQueue:
             effect = OnepunchEffect(self.player)
         if effect_key == "harmless":
             effect = HarmlessEffect(self.player)
-        if effect_key == "standing":
+        if effect_key == "stand":
             effect = StandingEffect(self.player)
+        if effect_key == "bullets":
+            effect = BulletsEffect(self.player)
         return effect
 
 class EffectQueue_draw(EffectQueue):
@@ -169,13 +164,17 @@ class SpeedEffect(Effect):
         time = 6000
         super().__init__(player, time)
 
-        self.speed_bonus = 2
+        # self.speed_bonus = 1
         self.default_speed = self.player.speed
-        self.player.speed += self.speed_bonus
+        self.add_speed(2)
 
     def increase(self):
-        self.player.speed += self.speed_bonus - 1
+        self.add_speed(1)
         self.timer.restart()
+
+    def add_speed(self, speed):  
+        if self.player.speed < 10:
+            self.player.speed += speed 
     
     def __del__(self):
         self.player.speed = self.default_speed
@@ -200,37 +199,60 @@ class OnepunchEffect(Effect):
     def __init__(self, player):
         time = 8000
         super().__init__(player, time)
-
-        self.player.onepunch = True
+        self.player.add_b_speed = 10
+        self.player.add_damage = 10000
 
     def increase(self):
         self.timer.restart()
     
     def __del__(self):
-        self.player.onepunch = False
+        self.player.add_b_speed = 0
+        self.player.add_damage = 0
+        pass
 
 class HarmlessEffect(Effect):
     def __init__(self, player):
         time = 8000
         super().__init__(player, time)
 
-        self.player.harmless = True
+        # self.player.harmless = True
 
     def increase(self):
         self.timer.restart()
     
     def __del__(self):
-        self.player.harmless = False
+        # self.player.harmless = False
+        pass
 
 class StandingEffect(Effect):
     def __init__(self, player):
         time = 5000
         super().__init__(player, time)
 
-        self.player.standing = True
+        # self.player.standing = True
 
     def increase(self):
         self.timer.restart()
     
     def __del__(self):
-        self.player.standing = False
+        # self.player.standing = False
+        pass
+
+class BulletsEffect(Effect):
+    def __init__(self, player):
+        time = 5000
+        super().__init__(player, time)
+
+        self.b_speed_bonus = 3
+        self.add_b_speed()
+
+    def increase(self):
+        self.timer.restart()
+        self.add_b_speed()
+
+    def add_b_speed(self):
+        if self.player.add_b_speed < self.b_speed_bonus * 3:
+            self.player.add_b_speed += self.b_speed_bonus
+    
+    def __del__(self):
+        self.player.add_b_speed = 0
