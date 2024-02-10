@@ -71,6 +71,9 @@ class Bat(pygame.sprite.Sprite):
     def add_effect(self, effect_key : str):
         self.effects.add(effect_key)
 
+    def remove_effect(self, effect_key : str):
+        self.effects.remove(effect_key)
+
 class BatSpecial(Bat):
     def __init__(self, *args):
         super().__init__(*args)

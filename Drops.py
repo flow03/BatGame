@@ -60,7 +60,7 @@ class Drops():
         # self.set_random_coords(new_bullet)
 
     def create_foodDrop(self):
-        new_food = self.foodCreator.createFood_new()
+        new_food = self.foodCreator.createFood_test()
         self.foodDrops.add(new_food)
         self.check_and_set_random_coords(new_food, self.foodDrops)
         # self.set_random_coords(new_food)

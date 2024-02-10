@@ -10,9 +10,9 @@ class EffectQueue:
         # self.isDraw = False
 
     def add(self, effect_key):
-        if not self.queue.get(effect_key):
+        if not self.get(effect_key):
             effect = self.createEffect(effect_key)
-            if effect:
+            if effect: # not None
                 self.queue[effect_key] = effect
                 # print(effect_key, "added to queue")
             # else:
@@ -22,9 +22,10 @@ class EffectQueue:
             # print(effect_key, "increased")
 
     def remove(self, key):
-        self.queue[key].__del__()
-        self.queue.pop(key)
-        # print(key, "removed")
+        if self.get(key):
+            self.queue[key].__del__()
+            self.queue.pop(key)
+            # print(key, "removed")
 
     def get(self, key):
         return self.queue.get(key, None)
@@ -142,19 +143,26 @@ class PoisonEffect(Effect):
 
         self.healthBar = self.player.health_bar.healthbar
         self.healthBar.change_colour("forestgreen")
-        self.default_damage = 2
-        self.poison_damage = self.default_damage
+        self.default_damage = 5 # percent
+        self.poison_damage = self.get_damage(self.default_damage)
 
-        self.tick_timer = Clock(900)
+        self.tick_timer = Clock(1200)
         self.tick_timer.start()
+        self.healthBar.health.set_damage(self.poison_damage) # first tick
+
+    def get_damage(self, percent):
+        damage = round(self.healthBar.health.max_health * (percent / 100))
+        # print('poison damage: ', damage)
+        return damage
 
     def update(self):
         if self.tick_timer.isNextFrame():
             self.healthBar.health.set_damage(self.poison_damage) # directly, without defence        
  
     def increase(self):
-        self.poison_damage += self.default_damage
-        # self.timer.restart()
+        if self.default_damage < 15:
+            self.default_damage += 5
+        self.poison_damage = self.get_damage(self.default_damage)
 
     def __del__(self):
         self.healthBar.change_colour("red")

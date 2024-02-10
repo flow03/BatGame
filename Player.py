@@ -96,8 +96,8 @@ class Player:
     def add_effect(self, effect_key : str):
         self.effects.add(effect_key)
 
-    # def speed_up(self):
-    #     self.effects.add("speed")
+    def remove_effect(self, effect_key : str):
+        self.effects.remove(effect_key)
 
     def load_animation_frames(self):
         # Завантаження всіх кадрів анімацій для кожного напрямку руху

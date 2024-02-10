@@ -198,12 +198,14 @@ while run:
                 player.add_effect("harmless")
             if event.key == pygame.K_6:
                 player.add_effect("stand")
-            if event.key == pygame.K_x:
+            if event.key == pygame.K_7 or event.key == pygame.K_x:
                 player.add_effect("bullets")
             if event.key == pygame.K_m: # unlimited recreates
                 groups.add_actor("girl", Dance_Girl(player, groups.actors, drops))
             if event.key == pygame.K_c:
                 pygame.event.post(pygame.event.Event(Events.BAT_SP_TIMER))
+            if event.key == pygame.K_z:
+                drops.create_foodDrop()
             # if event.key == pygame.K_h:
             #     groups.actors_heal(5)
             #     player.set_heal(5)

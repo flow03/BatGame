@@ -142,13 +142,35 @@ class FoodCreator():
         # print(new_drop)
         return new_drop
 
+    def createFood_test(self):
+        # mushroom = randint(0, 1)
+        # if mushroom:
+        #     image = choice(self.images['mushroom']) 
+        #     return self.createMushroom(image)
+        # else:
+        #     image = choice(self.images['other']) 
+        #     return Food(image)
+
+        image = choice(self.images['mushroom']) 
+        return self.createMushroom(image)
+        
+    def createMushroom(self, image):
+        index = self.images['mushroom'].index(image)
+        if index == 3 or index == 7:
+            return RedMushroom(image)
+        elif index == 2 or index == 4 or index == 8:
+            return BlueMushroom(image)
+        else:
+            return Mushroom(image)
+
+
 class Meat(Food):
     def __init__(self, image):
         super().__init__(image)
         self.heal = 40
 
-    def do(self, actor):
-        super().do(actor)
+    # def do(self, actor):
+    #     super().do(actor)
 
 class Fish(Food):
     def __init__(self, image):
@@ -160,13 +182,32 @@ class Fish(Food):
         super().do(actor)
         actor.add_effect('speed')
 
+# 3, 7 - poison
+# 2, 8 - non poison
 class Mushroom(Food):
+    def __init__(self, image):
+        super().__init__(image)
+        self.heal = self.min_heal
+
+    # def do(self, actor):
+    #     super().do(actor)
+
+class RedMushroom(Food):
     def __init__(self, image):
         super().__init__(image)
         # self.heal = self.min_heal
 
     def do(self, actor):
         actor.add_effect('poison')
+
+class BlueMushroom(Food):
+    def __init__(self, image):
+        super().__init__(image)
+        self.heal = self.min_heal
+
+    def do(self, actor):
+        super().do(actor)
+        actor.remove_effect('poison')
 
 class Flour(Food):
     def __init__(self, image):
