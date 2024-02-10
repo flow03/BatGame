@@ -240,7 +240,7 @@ class StandingEffect(Effect):
 
 class BulletsEffect(Effect):
     def __init__(self, player):
-        time = 5000
+        time = 10000
         super().__init__(player, time)
 
         self.b_speed_bonus = 3

@@ -1,7 +1,7 @@
-from pygame import draw
-from add.MyGroup import MyGroup
-import Bat
-import Bullet
+import pygame
+# from pygame import draw
+# from Bat import Bat
+# from Bullet import Bullet
 
 class Actors:
     def __init__(self):
@@ -23,7 +23,7 @@ class Actors:
                 if actor:
                     actor.draw(screen)  # requre draw method
                     if colour:
-                        draw.rect(screen, colour, actor.rect, 2)
+                        pygame.draw.rect(screen, colour, actor.rect, 2)
 
     def init(self):
         if self.actors:
@@ -109,6 +109,36 @@ class Actors_:
     def __setitem__(self, index, value):
         self.add(index, value)
 
+class MyGroup(pygame.sprite.Group):
+    def __init__(self, *sprites):
+        super().__init__(*sprites)
+        
+        # self.alpha_rect = pygame.Surface((100, 100)) #self.get_size()
+        # print(self.alpha_rect.get_width(), " ", self.alpha_rect.get_height())
+        # self.alpha_rect.set_alpha(100)
+
+    def draw(self, screen, colour = None, alpha = False):
+        sprites = self.sprites()
+        # print(len(sprites))
+        if sprites:
+            for sprite in sprites:
+                if colour and alpha:
+                    alpha_rect = self.create_alpha(colour, sprite.rect.size)
+                    screen.blit(alpha_rect, sprite.rect)
+                    
+                # screen.blit(sprite.image, sprite.rect)
+                sprite.draw(screen)
+
+                if colour and not alpha:
+                    pygame.draw.rect(screen, colour, sprite.rect, 2)
+
+    def create_alpha(self, colour, size):
+        alpha_rect = pygame.Surface(size)
+        alpha_rect.fill(colour)
+        alpha_rect.set_alpha(100)
+        return alpha_rect
+
+
 class Groups:
     def __init__(self):
         self.bats = MyGroup()
@@ -116,10 +146,10 @@ class Groups:
         self.actors = {} # dict
 
     # add bat to a group
-    def add_bat(self, object : Bat.Bat):
+    def add_bat(self, object):
         self.bats.add(object)
 
-    def add_bullet(self, object : Bullet.Bullet):
+    def add_bullet(self, object):
         self.bullets.add(object)
 
     def add_actor(self, key, value):

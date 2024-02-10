@@ -4,11 +4,11 @@ from pygame.math import Vector2
 import visuals.HealthBar as HealthBar
 import visuals.Effects as Effects
 from add.Path import resource_path
-import Drops as Drops
+from Drops import Drops
 import visuals.Shields as Shields
 
 class Bat(pygame.sprite.Sprite):
-    def __init__(self, drops : Drops.Drops, player, bullets):
+    def __init__(self, drops : Drops, player, bullets):
         super().__init__()
 
         self.screen = pygame.display.get_surface()

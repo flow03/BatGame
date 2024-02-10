@@ -134,6 +134,8 @@ class FoodCreator():
             new_drop = Crab(image)
         elif key == 'egg':
             new_drop = Egg(image)
+        elif key == 'cake':
+            new_drop = Cake(image)
         else:
             new_drop = Food(image)
 
@@ -190,11 +192,17 @@ class Egg(Food):
     def __init__(self, image):
         super().__init__(image)
         self.heal = self.min_heal
-        self.bullets_bonus = randint(0, 2)
 
     def do(self, actor):
         super().do(actor)
         actor.add_effect("bullets")
-        if self.bullets_bonus == 2:
-            actor.bullets_count += 32
-            
+
+class Cake(Food):
+    def __init__(self, image):
+        super().__init__(image)
+        self.heal = self.min_heal
+
+    def do(self, actor):
+        super().do(actor)
+        actor.add_bullet(32)
+         

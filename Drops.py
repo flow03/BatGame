@@ -3,8 +3,8 @@ from random import randint, uniform
 import math
 from pygame.math import Vector2
 # from add.Spritesheet import SpriteSheet
-from Food import Food, FoodCreator
-from add.MyGroup import MyGroup
+from Food import FoodCreator
+from add.Groups import MyGroup
 from add.Path import resource_path
 
 class Drops():

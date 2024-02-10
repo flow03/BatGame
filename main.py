@@ -3,7 +3,7 @@ import pygame
 # import spritesheet
 from Player import Player
 # from add.Jump import Jump
-import Drops as Drops
+from Drops import Drops
 # from add.MyGroup import MyGroup
 from visuals.Text import Text
 from add.Path import resource_path
@@ -12,7 +12,7 @@ from Dance_Girl import Dance_Girl
 import Bat
 # from Bullet_class import Bullet
 from Dummy import Dummy
-import add.Actors as Actors
+import add.Groups as Groups
 import gc # garbage collector
 # from Food import FoodCreator
 
@@ -60,14 +60,11 @@ Events = UserEvents()
 # Events.isEvents = False
 Events.start()
 
-# Groups---
-# bat_list = MyGroup()
-# bullets = MyGroup() #pygame.sprite.Group()
-
-drops = Drops.Drops()
+# Groups
+drops = Drops()
 
 # actors = Actors.Actors_()
-groups = Actors.Groups()
+groups = Groups.Groups()
 
 # Player
 player = Player(WIDTH//2, HEIGHT//2, drops) # 150, 300
@@ -102,7 +99,7 @@ def update_objects():
 
 # Draw
 def draw_objects(isBoundRects):
-    colourGreen, colourRed = Actors.get_colour(isBoundRects)
+    colourGreen, colourRed = Groups.get_colour(isBoundRects)
     drops.draw(screen, colourGreen)
     groups.draw(screen, colourRed)
     player.draw(screen, colourGreen)
