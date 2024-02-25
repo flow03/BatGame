@@ -118,12 +118,13 @@ class Effect:
 
         self.timer = Clock(time)
         self.timer.start()
+        self.boost = 1
 
     def update(self):
-        ...
+        pass
 
     def increase(self):
-        ...
+        self.timer.restart()
 
     def off(self):
         if self.timer.end():
@@ -136,6 +137,10 @@ class Effect:
     def duration(self):
         return self.timer.delay
 
+    def __del__(self):
+        pass
+
+# ignores defence
 class PoisonEffect(Effect):
     def __init__(self, player):
         time = 20000
@@ -158,10 +163,12 @@ class PoisonEffect(Effect):
     def update(self):
         if self.tick_timer.isNextFrame():
             self.healthBar.health.set_damage(self.poison_damage) # directly, without defence        
- 
+
     def increase(self):
+        # no restart
         if self.default_damage < 15:
             self.default_damage += 5
+            self.boost += 1
         self.poison_damage = self.get_damage(self.default_damage)
 
     def __del__(self):
@@ -174,15 +181,17 @@ class SpeedEffect(Effect):
 
         # self.speed_bonus = 1
         self.default_speed = self.player.speed
-        self.add_speed(2)
+        self.add_speed(2) # boost = 2
+        self.boost = 1
 
     def increase(self):
+        super().increase() # restart
         self.add_speed(1)
-        self.timer.restart()
 
     def add_speed(self, speed):  
         if self.player.speed < 10:
-            self.player.speed += speed 
+            self.player.speed += speed
+            self.boost += 1
     
     def __del__(self):
         self.player.speed = self.default_speed
@@ -196,9 +205,10 @@ class IronskinEffect(Effect):
         self.player.defence += 60
 
     def increase(self):
+        super().increase()
         if self.player.defence < 90:
             self.player.defence += 10
-        self.timer.restart()
+            self.boost += 1
     
     def __del__(self):
         self.player.defence = self.default_defence
@@ -209,9 +219,6 @@ class OnepunchEffect(Effect):
         super().__init__(player, time)
         self.player.add_b_speed = 10
         self.player.add_damage = 10000
-
-    def increase(self):
-        self.timer.restart()
     
     def __del__(self):
         self.player.add_b_speed = 0
@@ -223,28 +230,10 @@ class HarmlessEffect(Effect):
         time = 8000
         super().__init__(player, time)
 
-        # self.player.harmless = True
-
-    def increase(self):
-        self.timer.restart()
-    
-    def __del__(self):
-        # self.player.harmless = False
-        pass
-
 class StandingEffect(Effect):
     def __init__(self, player):
         time = 5000
         super().__init__(player, time)
-
-        # self.player.standing = True
-
-    def increase(self):
-        self.timer.restart()
-    
-    def __del__(self):
-        # self.player.standing = False
-        pass
 
 class BulletsEffect(Effect):
     def __init__(self, player):
@@ -252,15 +241,17 @@ class BulletsEffect(Effect):
         super().__init__(player, time)
 
         self.b_speed_bonus = 3
-        self.add_b_speed()
+        self.add_bullet_speed()
+        self.boost = 1
 
     def increase(self):
-        self.timer.restart()
-        self.add_b_speed()
+        super().increase()
+        self.add_bullet_speed()
 
-    def add_b_speed(self):
+    def add_bullet_speed(self):
         if self.player.add_b_speed < self.b_speed_bonus * 3:
             self.player.add_b_speed += self.b_speed_bonus
+            self.boost += 1
     
     def __del__(self):
         self.player.add_b_speed = 0

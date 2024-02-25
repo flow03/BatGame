@@ -94,10 +94,10 @@ class BatSpecial(Bat):
         health_bar_temp = HealthBar.FancyBoundHealthBar(health_bar_rect, self.health, 1)
         self.health_bar = Shields.AllHealthBars(health_bar_temp)
 
-        self.createShield()
+        self.createRandomShield()
         self.update_bar_pos()
 
-    def createShield(self):
+    def createRandomShield(self):
         isShield = random.randint(0, 2)
 
         if isShield == 1:

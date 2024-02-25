@@ -53,7 +53,10 @@ class Text:
 
         if player.effects.queue:
             for key in player.effects.queue.keys():
-                self.print(key + ' effect', player.effects.queue[key].time())
+                if player.effects.queue[key].boost <= 1:
+                    self.print(key + ' effect', player.effects.queue[key].time())
+                else:
+                    self.print(str(player.effects.queue[key].boost) + 'x ' + key + ' effect', player.effects.queue[key].time())
 
         # self.print('r_rect_width', player.health_bar.rect.width)
         # self.print('g_rect_width', player.health_bar.green_rect.width)
