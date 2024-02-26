@@ -69,18 +69,31 @@ groups = Groups.Groups()
 # Player
 player = Player(WIDTH//2, HEIGHT//2, drops) # 150, 300
 
-def createDummies(actors_param):
-    left_dummy = Dummy(WIDTH//2 - 200, HEIGHT//2, actors_param.bullets,"fancy_blue", 50, 5)
-    right_dummy = Dummy(WIDTH//2 + 200, HEIGHT//2, actors_param.bullets, "fancy_gray", 50, 30)
-    topleft_dummy = Dummy(WIDTH//2 - 200, HEIGHT//2 - 200, actors_param.bullets,"blue", 3)
-    topright_dummy = Dummy(WIDTH//2 + 200, HEIGHT//2 - 200, actors_param.bullets, "gray", 50)
-    down_dummy = Dummy(WIDTH//2, HEIGHT//2 + 200, actors_param.bullets, "cell", 15)
+def createDummies(groups):
+    left_dummy = Dummy(WIDTH//2 - 200, HEIGHT//2, groups.bullets,"fancy_blue", 50, 5)
+    right_dummy = Dummy(WIDTH//2 + 200, HEIGHT//2, groups.bullets, "fancy_gray", 50, 30)
+    topleft_dummy = Dummy(WIDTH//2 - 200, HEIGHT//2 - 200, groups.bullets,"blue", 3)
+    topright_dummy = Dummy(WIDTH//2 + 200, HEIGHT//2 - 200, groups.bullets, "gray", 50)
+    down_dummy = Dummy(WIDTH//2, HEIGHT//2 + 200, groups.bullets, "cell", 15)
 
-    actors_param.add_actor("left_dummy", left_dummy)
-    actors_param.add_actor("right_dummy", right_dummy)
-    actors_param.add_actor("topleft_dummy", topleft_dummy)
-    actors_param.add_actor("topright_dummy", topright_dummy)
-    actors_param.add_actor("down_dummy", down_dummy)
+    groups.add_actor("left_dummy", left_dummy)
+    groups.add_actor("right_dummy", right_dummy)
+    groups.add_actor("topleft_dummy", topleft_dummy)
+    groups.add_actor("topright_dummy", topright_dummy)
+    groups.add_actor("down_dummy", down_dummy)
+
+def deleteActors(groups : Groups.Groups):
+    groups.actors.clear()
+
+def switchDummies(switcher):
+    if switcher:
+        deleteActors(groups)
+        switcher = False
+    else:
+        createDummies(groups)
+        switcher = True
+    
+    return switcher
 
 # 3 variants of add
 # actors['actors'].add(dummy)
@@ -101,7 +114,7 @@ def update_objects():
 def draw_objects(isBoundRects):
     colourGreen, colourRed = Groups.get_colour(isBoundRects)
     drops.draw(screen, colourGreen)
-    groups.draw(screen, colourRed)
+    groups.draw(colourRed)
     player.draw(screen, colourGreen)
 
 # Sound
@@ -110,6 +123,8 @@ def draw_objects(isBoundRects):
 
 # Bool triggers
 displayText = False
+dummieSwitcher = False
+
 # gameplay = True
 run = True
 
@@ -139,7 +154,7 @@ while run:
             text.print_debug_info(screen, groups, drops, player)
             # if Girl:
             #     text.print_girl_info(screen, Girl.sprites()[-1]) # the last one
-            girl = groups.get_actor("girl")
+            girl = groups.actors.get("girl")
             if girl:
                 text.print_girl_info(screen, girl)
 
@@ -186,6 +201,8 @@ while run:
                     displayText = False
             if event.key == pygame.K_t:
                 Events.switch()
+            if event.key == pygame.K_p:
+                dummieSwitcher = switchDummies(dummieSwitcher)
             if event.key == pygame.K_1:
                 player.add_effect("poison")
             if event.key == pygame.K_LSHIFT or event.key == pygame.K_2:

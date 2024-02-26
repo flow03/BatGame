@@ -16,7 +16,7 @@ class Actor(pygame.sprite.Sprite):
         self.defence = 0
 
         self.health = HealthBar.Health(100)
-        self.health_bar = self.createHealthBar() # self.health needed
+        self.health_bar = self.createHealthBar() # self.health and self.rect needed
 
     def createHealthBar(self):
         health_bar_rect = pygame.Rect(self.rect.midtop, (self.rect.width, 7))

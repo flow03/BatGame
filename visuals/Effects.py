@@ -30,13 +30,13 @@ class EffectQueue:
     def get(self, key):
         return self.queue.get(key, None)
 
-    def check(self):
+    def remove_off(self):
         for key in list(self.queue.keys()):
             if self.queue[key].off():
                 self.remove(key)
 
     def update(self):
-        self.check() # +cycle
+        self.remove_off() # +cycle
 
         # for key in self.queue.keys():
         #     self.queue[key].update()
@@ -218,7 +218,7 @@ class OnepunchEffect(Effect):
         time = 8000
         super().__init__(player, time)
         self.player.add_b_speed = 10
-        self.player.add_damage = 10000
+        self.player.add_damage = 1000000
     
     def __del__(self):
         self.player.add_b_speed = 0

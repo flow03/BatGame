@@ -34,7 +34,10 @@ class AllHealthBars:
     def update_health(self):
         self.healthbar.update_health()
         if self.shieldbar: # and not self.shieldbar.health.empty()
-            self.shieldbar.update_health()
+            if self.shieldbar.health.empty():
+                self.shieldbar = None
+            else:
+                self.shieldbar.update_health()
 
     def draw(self, screen):
         self.healthbar.draw(screen)
@@ -44,8 +47,8 @@ class AllHealthBars:
     def set_damage(self, damage : int):
         if self.shieldbar: # and not self.shieldbar.empty()
             overdamage = self.shieldbar.set_damage(damage)
-            if self.shieldbar.health.empty():
-                self.shieldbar = None
+            # if self.shieldbar.health.empty():
+            #     self.shieldbar = None
             if overdamage:
                 # print("overdamage is ", overdamage)
                 self.healthbar.set_damage(overdamage)

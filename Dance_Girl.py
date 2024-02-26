@@ -118,7 +118,7 @@ class Dance_Girl(pygame.sprite.Sprite):
 
         if not self.live:
             # for gc
-            self.actors.pop("girl")
+            self.actors.remove("girl")
             # del self.actors["girl"]
             # self.__del__()
     

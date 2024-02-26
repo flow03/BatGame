@@ -7,38 +7,72 @@ class Actors:
     def __init__(self):
         self.actors = {}   # dict, not list
 
-    def add(self, name, object):
-        if not self.actors.get(name):
-            self.actors[name] = object
+    # def add(self, name, object):
+    #     if not self.actors.get(name):
+    #         self.actors[name] = object
+
+    def add_actor(self, key, actor):
+        self.actors[key] = actor
 
     def update(self):
         if self.actors:
-            for actor in self.actors.values():
-                if actor:   # not None
-                    actor.update()  # requre update method
+            for actor in list(self.actors.values()):
+                actor.update()
 
     def draw(self, screen, colour = None):
         if self.actors:
             for actor in self.actors.values():
-                if actor:
-                    actor.draw(screen)  # requre draw method
-                    if colour:
-                        pygame.draw.rect(screen, colour, actor.rect, 2)
+                actor.draw(screen)  # requre draw method
+                if colour:
+                    pygame.draw.rect(screen, colour, actor.rect, 2)
 
     def init(self):
         if self.actors:
             for actor in self.actors.values():
                 actor.init()  # requre init method
 
-    def get(self, name):
-        return self.actors.get(name)
+    def get(self, key):
+        return self.actors.get(key, None)
 
-    def remove(self, name):
-        if self.actors.get(name):
-            return self.actors.pop(name)
+    def remove(self, key):
+        return self.actors.pop(key, None)
 
     def clear(self):
         self.actors.clear()
+    
+    def keys(self):
+        return self.actors.keys()
+    
+    def get_health(self, key):
+        actor = self.get(key)
+        if actor:
+            return actor.health.health
+        else:
+            return None
+    
+    def set_damage(self, key, damage):
+        actor = self.get_actor(key)
+        if actor:
+            actor.set_damage(damage)
+
+    def set_heal(self, key, heal):
+        actor = self.get_actor(key)
+        if actor:
+            actor.set_heal(heal)
+
+    def damage_all(self, damage):
+        for actor in self.actors.values():
+            actor.set_damage(damage)
+
+    def heal_all(self, heal):
+        for actor in self.actors.values():
+            actor.set_heal(heal)
+
+    def __getitem__(self, key):
+        return self.get(key)
+
+    def __setitem__(self, key, actor):
+        self.add(key, actor)
 
 def get_colour(isBoundRects):
     colourGreen = None
@@ -143,64 +177,29 @@ class Groups:
     def __init__(self):
         self.bats = MyGroup()
         self.bullets = MyGroup()
-        self.actors = {} # dict
+        self.actors = Actors()
+
+        self.screen = pygame.display.get_surface()
 
     # add bat to a group
-    def add_bat(self, object):
-        self.bats.add(object)
+    def add_bat(self, bat):
+        self.bats.add(bat)
 
-    def add_bullet(self, object):
-        self.bullets.add(object)
+    def add_bullet(self, bullet):
+        self.bullets.add(bullet)
 
-    def add_actor(self, key, value):
-        self.actors[key] = value
-
-    def get_actor(self, key):
-        return self.actors.get(key, None)
-
-    def init_actors(self):
-        for actor in self.actors.values():
-            actor.init()
-
-    def set_damage(self, actor_key, damage):
-        actor = self.get_actor(actor_key)
-        if actor:
-            actor.set_damage(damage)
-
-    def set_heal(self, actor_key, heal):
-        actor = self.get_actor(actor_key)
-        if actor:
-            actor.set_heal(heal)
-    
-    def actors_damage(self, damage):
-        for actor in self.actors.values():
-            actor.set_damage(damage)
-
-    def actors_heal(self, heal):
-        for actor in self.actors.values():
-            actor.set_heal(heal)
+    def add_actor(self, key, actor):
+        self.actors.add_actor(key, actor)
 
     def update(self):
         self.bats.update()
         self.bullets.update()
-        # for actor in self.actors.values():
-        #     actor.update()
-        for actor in list(self.actors.values()):
-            actor.update()
+        self.actors.update()
 
-    def draw(self, screen, colour = None):
-        self.bats.draw(screen, colour)
-        self.bullets.draw(screen, colour)
-
-        for actor in self.actors.values():
-            actor.draw(screen)
-
-    # def remove(self, name):
-    #     ...
-
-    # def empty(self, name):
-    #     if self.actors.get(name):
-    #         self.actors[name].empty()
+    def draw(self, colour = None):
+        self.bats.draw(self.screen, colour)
+        self.bullets.draw(self.screen, colour)
+        self.actors.draw(self.screen, colour)
 
     def clear(self):
         self.bats.empty()

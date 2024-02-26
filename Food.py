@@ -111,7 +111,7 @@ class FoodCreator():
         anim_blit_dict(screen, self.images, 20, 70)
         # self.blit_other()
 
-    def createFood(self):
+    def createFood_common(self):
         image = self.get_rand_image(30)
         return Food(image)
         # new_food.check_random_coordinates()
@@ -142,15 +142,7 @@ class FoodCreator():
         # print(new_drop)
         return new_drop
 
-    def createFood_test(self):
-        # mushroom = randint(0, 1)
-        # if mushroom:
-        #     image = choice(self.images['mushroom']) 
-        #     return self.createMushroom(image)
-        # else:
-        #     image = choice(self.images['other']) 
-        #     return Food(image)
-
+    def createFood(self): # test
         image = choice(self.images['mushroom']) 
         return self.createMushroom(image)
         
@@ -162,6 +154,9 @@ class FoodCreator():
             return BlueMushroom(image)
         else:
             return Mushroom(image)
+        # else:
+        #     image = choice(self.images['other']) 
+        #     return Food(image)
 
 
 class Meat(Food):

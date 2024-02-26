@@ -49,7 +49,7 @@ class Text:
         # self.print('actors', len(groups.actors))
         if groups.actors:
             for key in list(groups.actors.keys()):
-               self.print(key + ' health', groups.actors[key].health.health) 
+               self.print(key + ' health', groups.actors.get_health(key)) 
 
         if player.effects.queue:
             for key in player.effects.queue.keys():
