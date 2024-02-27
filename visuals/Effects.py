@@ -36,12 +36,11 @@ class EffectQueue:
                 self.remove(key)
 
     def update(self):
-        self.remove_off() # +cycle
+        if self.queue:
+            self.remove_off() # +cycle
 
-        # for key in self.queue.keys():
-        #     self.queue[key].update()
-        for effect in self.queue.values():
-            effect.update()
+            for effect in self.queue.values():
+                effect.update()
 
     def draw(self, screen):
         ...
@@ -50,6 +49,9 @@ class EffectQueue:
         for effect in self.queue.values():
             effect.__del__()
         self.queue.clear() # does not call effect destructors of effects
+
+    # def empty(self):
+    #     return not bool(self.queue)
 
     # factory method
     def createEffect(self, effect_key):

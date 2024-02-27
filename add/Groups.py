@@ -1,5 +1,4 @@
 import pygame
-# from pygame import draw
 # from Bat import Bat
 # from Bullet import Bullet
 
@@ -178,6 +177,7 @@ class Groups:
         self.bats = MyGroup()
         self.bullets = MyGroup()
         self.actors = Actors()
+        self.dummies = Actors()
 
         self.screen = pygame.display.get_surface()
 
@@ -192,16 +192,19 @@ class Groups:
         self.actors.add_actor(key, actor)
 
     def update(self):
+        self.dummies.update()
         self.bats.update()
         self.bullets.update()
         self.actors.update()
 
     def draw(self, colour = None):
+        self.dummies.draw(self.screen, colour)
         self.bats.draw(self.screen, colour)
         self.bullets.draw(self.screen, colour)
         self.actors.draw(self.screen, colour)
 
     def clear(self):
+        self.dummies.clear()
         self.bats.empty()
         self.bullets.empty()
         self.actors.clear() # dictionary

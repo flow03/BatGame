@@ -59,14 +59,20 @@ class Drops():
         self.check_and_set_random_coords(new_bullet, self.bulletDrops)
         # self.set_random_coords(new_bullet)
 
+    def add_food(self, food):
+        self.foodDrops.add(food)
+        self.check_and_set_random_coords(food, self.foodDrops)
+
     def create_foodDrop(self):
         new_food = self.foodCreator.createFood()
-        self.foodDrops.add(new_food)
-        self.check_and_set_random_coords(new_food, self.foodDrops)
-        # self.set_random_coords(new_food)
+        self.add_food(new_food)
+
+    def create_RedMushroom(self):
+        new_food = self.foodCreator.createFood()
+        self.add_food(new_food)
 
     # creates food with specified coordinates
-    def create_foodCoords(self, coords : Vector2):
+    def create_foodDrop_coords(self, coords : Vector2):
         new_food = self.foodCreator.createFood()
         self.foodDrops.add(new_food)
         new_food.rect.center = coords

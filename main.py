@@ -76,18 +76,18 @@ def createDummies(groups):
     topright_dummy = Dummy(WIDTH//2 + 200, HEIGHT//2 - 200, groups.bullets, "gray", 50)
     down_dummy = Dummy(WIDTH//2, HEIGHT//2 + 200, groups.bullets, "cell", 15)
 
-    groups.add_actor("left_dummy", left_dummy)
-    groups.add_actor("right_dummy", right_dummy)
-    groups.add_actor("topleft_dummy", topleft_dummy)
-    groups.add_actor("topright_dummy", topright_dummy)
-    groups.add_actor("down_dummy", down_dummy)
+    groups.dummies.add_actor("left_dummy", left_dummy)
+    groups.dummies.add_actor("right_dummy", right_dummy)
+    groups.dummies.add_actor("topleft_dummy", topleft_dummy)
+    groups.dummies.add_actor("topright_dummy", topright_dummy)
+    groups.dummies.add_actor("down_dummy", down_dummy)
 
-def deleteActors(groups : Groups.Groups):
-    groups.actors.clear()
+def deleteDummies(groups : Groups.Groups):
+    groups.dummies.clear()
 
 def switchDummies(switcher):
     if switcher:
-        deleteActors(groups)
+        deleteDummies(groups)
         switcher = False
     else:
         createDummies(groups)

@@ -55,7 +55,7 @@ class FoodCircle:
     def spawnFood(self):
         if self.food_clock.isNextFrame():
             if self.created_food < 15:
-                self.drops.create_foodCoords(self.food_coords)
+                self.drops.create_foodDrop_coords(self.food_coords)
                 self.food_coords = self.get_circle_coords()
                 self.created_food += 1
 

@@ -8,22 +8,24 @@ class Actor(pygame.sprite.Sprite):
     def __init__(self):
         super().__init__()
 
-        self.image = pygame.Surface()
-        self.rect = self.image.get_rect()
+        self.screen = pygame.display.get_surface()
+        self.image = None # pygame.Surface()
+        self.rect = None #self.image.get_rect()
 
         self.speed = 0
         self.damage = 0
         self.defence = 0
 
-        self.health = HealthBar.Health(100)
-        self.health_bar = self.createHealthBar() # self.health and self.rect needed
+        self.health = None # HealthBar.Health(100)
+        self.health_bar = None # self.createHealthBar() # self.health and self.rect needed
+        # self.update_bar_pos()
 
     def createHealthBar(self):
-        health_bar_rect = pygame.Rect(self.rect.midtop, (self.rect.width, 7))
+        position = Vector2(self.rect.midtop)
+        position.y -= 10
+        health_bar_rect = pygame.Rect(position, (self.rect.width, 7))
         health_bar_temp = HealthBar.FancyBoundHealthBar(health_bar_rect, self.health, 1)
         health_bar = Shields.AllHealthBars(health_bar_temp)
-
-        self.update_bar_pos()
 
         return health_bar
 
@@ -46,12 +48,14 @@ class Actor(pygame.sprite.Sprite):
     def set_heal(self, heal: int):
         self.health_bar.set_heal(heal)
 
+    def draw(self, screen):
+        screen.blit(self.image, self.rect)
 
 class ActorEffects(Actor):
     def __init__(self):
         super().__init__()
         
-        self.effects = Effects.EffectQueue(self)
+        self.effects = Effects.EffectQueue_draw(self)
 
         self.add_damage = 0
         self.add_b_speed = 0
@@ -61,3 +65,11 @@ class ActorEffects(Actor):
 
     def remove_effect(self, effect_key : str):
         self.effects.remove(effect_key)
+
+    def update(self):
+        self.effects.update()
+
+    def draw(self, screen):
+        super().draw(screen)
+        if self.effects:
+            self.effects.draw(self.screen)

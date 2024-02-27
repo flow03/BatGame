@@ -2,32 +2,28 @@ import pygame
 import random
 from pygame.math import Vector2
 import visuals.HealthBar as HealthBar
-import visuals.Effects as Effects
+# import visuals.Effects as Effects
 from add.Path import resource_path
+from add.Actor import ActorEffects
 from Drops import Drops
 import visuals.Shields as Shields
 
-class Bat(pygame.sprite.Sprite):
+class Bat(ActorEffects):
     def __init__(self, drops : Drops, player, bullets):
-        super().__init__()
+        super().__init__() # self.screen
 
-        self.screen = pygame.display.get_surface()
+        # self.screen = pygame.display.get_surface()
         self.drops = drops
         self.player = player
         self.bullet_list = bullets
 
-        WIDTH = self.screen.get_width()
-        HEIGHT = self.screen.get_height()
         self.image = self.load_random_frame()
-
-        bat_y = random.randint(0 + self.image.get_height()//2, 
-        HEIGHT - self.image.get_height()//2)
-        self.rect = self.image.get_rect(midleft=(WIDTH, bat_y))
+        self.rect = self.image.get_rect(center=self.get_right_position())
 
         self.speed = random.randint(2, 4)
         self.damage = random.randint(15, 30)
 
-        self.effects = Effects.EffectQueue_draw(self)
+        # self.effects = Effects.EffectQueue_draw(self)
   
     def load_random_frame(self):
         i = random.randint(0, 17) # max bat index
@@ -36,7 +32,18 @@ class Bat(pygame.sprite.Sprite):
         
         return frame
 
+    def get_right_position(self):
+        WIDTH = self.screen.get_width()
+        HEIGHT = self.screen.get_height()
+        half_image = self.image.get_height()//2
+        max_heigth = HEIGHT - half_image
+
+        bat_y = random.randint(0 + half_image, max_heigth)
+
+        return Vector2(WIDTH + half_image, bat_y)
+
     def update(self):
+        super().update() # effects update
         self.rect = self.rect.move(-self.speed, 0)
 
         self.collide()
@@ -44,12 +51,11 @@ class Bat(pygame.sprite.Sprite):
         if self.rect.right < 0:
             self.kill()
 
-        self.effects.update()
+        # self.effects.update()
 
-    def draw(self, screen):
-        screen.blit(self.image, self.rect)
-        if self.effects:
-            self.effects.draw(screen) 
+    # def draw(self, screen):
+    #     super().draw()
+    #     screen.blit(self.image, self.rect)
 
     def collide(self):
         # Перевірка колізій з гравцем
@@ -68,11 +74,11 @@ class Bat(pygame.sprite.Sprite):
         self.drops.createFallenDrop(self.rect.center)
         self.kill()
 
-    def add_effect(self, effect_key : str):
-        self.effects.add(effect_key)
+    # def add_effect(self, effect_key : str):
+    #     self.effects.add(effect_key)
 
-    def remove_effect(self, effect_key : str):
-        self.effects.remove(effect_key)
+    # def remove_effect(self, effect_key : str):
+    #     self.effects.remove(effect_key)
 
 class BatSpecial(Bat):
     def __init__(self, *args):
@@ -85,6 +91,8 @@ class BatSpecial(Bat):
         self.createHealth()
         self.direction = Vector2()
         self.target = None
+
+        self.health.set_damage(10) # test
 
     def createHealth(self):
         max_health = random.randint(30, 55) # bullet damage 25
@@ -99,7 +107,7 @@ class BatSpecial(Bat):
 
     def createRandomShield(self):
         isShield = random.randint(0, 2)
-
+        # 0 = no shield
         if isShield == 1:
             self.createBlueShield()
         elif isShield == 2:

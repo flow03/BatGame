@@ -3,23 +3,6 @@ from random import randint, choice
 import math
 # from pygame.math import Vector2
 from add.Spritesheet import SpriteSheet, anim_blit, anim_blit_dict
-            
-class Food(pygame.sprite.Sprite):
-    def __init__(self, image : pygame.Surface):
-        super().__init__()
-        self.image = image
-        # size = 30
-        # self.image = self.get_rand_image(size)
-        self.rect = self.image.get_rect()
-        self.min_heal = 5
-        self.heal = randint(10, 25)
-        self.screen = pygame.display.get_surface()
-
-    def do(self, sprite : pygame.sprite.Sprite):
-        sprite.set_heal(self.heal)
-    
-    def draw(self, screen): # MyGroup required screen param
-        screen.blit(self.image, self.rect)
 
 class FoodCreator():
     def __init__(self):
@@ -30,8 +13,8 @@ class FoodCreator():
             'fish' : [],
             'crab' : [],
             'mushroom' : [],
-            # 'mushroom_red' : [],
-            # 'mushroom_blue' : [],
+            'mushroom_red' : [],
+            'mushroom_blue' : [],
             'flour' : [],
             'cake' : [],
             'egg' : []
@@ -144,9 +127,10 @@ class FoodCreator():
 
     def createFood(self): # test
         image = choice(self.images['mushroom']) 
-        return self.createMushroom(image)
+        return self.createMushrooms(image)
         
-    def createMushroom(self, image):
+
+    def createMushrooms(self, image):
         index = self.images['mushroom'].index(image)
         if index == 3 or index == 7:
             return RedMushroom(image)
@@ -158,14 +142,36 @@ class FoodCreator():
         #     image = choice(self.images['other']) 
         #     return Food(image)
 
+    def createMushroom_new(self):
+        return Mushroom(self.images['mushroom'])
+
+    def createRedMushroom(self):
+        return RedMushroom(self.images['mushroom_red'])
+
+    def createBlueMushroom(self):    
+        return BlueMushroom(self.images['mushroom_blue'])
+
+class Food(pygame.sprite.Sprite):
+    def __init__(self, image : pygame.Surface):
+        super().__init__()
+        self.image = image
+        # size = 30
+        # self.image = self.get_rand_image(size)
+        self.rect = self.image.get_rect()
+        self.min_heal = 5
+        self.heal = randint(10, 25)
+        self.screen = pygame.display.get_surface()
+
+    def do(self, sprite : pygame.sprite.Sprite):
+        sprite.set_heal(self.heal)
+    
+    def draw(self, screen): # MyGroup required screen param
+        screen.blit(self.image, self.rect)
 
 class Meat(Food):
     def __init__(self, image):
         super().__init__(image)
         self.heal = 40
-
-    # def do(self, actor):
-    #     super().do(actor)
 
 class Fish(Food):
     def __init__(self, image):
@@ -180,28 +186,26 @@ class Fish(Food):
 # 3, 7 - poison
 # 2, 8 - non poison
 class Mushroom(Food):
-    def __init__(self, image):
+    def __init__(self, images):
+        image = choice(images) 
         super().__init__(image)
         self.heal = self.min_heal
 
-    # def do(self, actor):
-    #     super().do(actor)
-
-class RedMushroom(Food):
-    def __init__(self, image):
-        super().__init__(image)
+class RedMushroom(Mushroom):
+    def __init__(self, images):
+        super().__init__(images)
         # self.heal = self.min_heal
 
     def do(self, actor):
         actor.add_effect('poison')
 
-class BlueMushroom(Food):
-    def __init__(self, image):
-        super().__init__(image)
-        self.heal = self.min_heal
+class BlueMushroom(Mushroom):
+    def __init__(self, images):
+        super().__init__(images)
+        # self.heal = self.min_heal
 
     def do(self, actor):
-        super().do(actor)
+        super().do(actor) # heal
         actor.remove_effect('poison')
 
 class Flour(Food):
