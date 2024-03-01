@@ -33,7 +33,7 @@ class Text:
         screen.blit(self.myfont.render('FPS: ' + str(int(FPS.get_fps())), True, "Black"), (self.WIDTH - 85, 15))
 
     def print_debug_info(self, screen, groups, drops, player):
-        self.y = 75
+        self.y = 85
         self.screen = screen
         # self.print('food on screen', len(drops.foodDrops))
         # self.print('bullets on screen', len(drops.bulletDrops))

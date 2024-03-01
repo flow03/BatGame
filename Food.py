@@ -27,7 +27,11 @@ class FoodCreator():
         for row in range(10):
             for col in range(10):
                 image = sprite_sheet.get_image(size, size, col, row)
-                if row == 4:
+                if row == 4 and (col == 2 or col == 4 or col == 8):
+                    self.images['mushroom_blue'].append(image)
+                elif row == 4 and (col == 3 or col == 7):
+                    self.images['mushroom_red'].append(image)
+                elif row == 4:
                     self.images['mushroom'].append(image)
                 elif row == 5 and (col == 1 or col == 2 or col == 4 or col == 6 or col == 9):
                     self.images['meat'].append(image)
@@ -64,7 +68,7 @@ class FoodCreator():
                 else:
                     self.images['other'].append(image)
 
-    def get_rand_image(self, size):
+    def get_rand_image(self, size = 30):
         sprite_sheet = SpriteSheet('img/spritesheets/food_spritesheet_30.png')
         col = randint(0, 9)
         row = randint(0, 9)
@@ -95,54 +99,53 @@ class FoodCreator():
         # self.blit_other()
 
     def createFood_common(self):
-        image = self.get_rand_image(30)
+        image = choice(self.images['other'])
         return Food(image)
         # new_food.check_random_coordinates()
         # self.foodGroup.add(new_food)
         
-    def createFood_new(self):
+    def createFood(self):
         key = choice(list(self.images.keys()))    # rand key
         image = choice(self.images[key])          # rand image
-        new_drop = None
+        # new_drop = None
 
         if key == 'fish':
-            new_drop = Fish(image)
-        elif key == 'mushroom':
-            new_drop = Mushroom(image)
+            return Fish(image)
+        elif key.startswith('mushroom'): # str method
+            return self.createMushrooms()
         elif key == 'meat':
-            new_drop = Meat(image)
+            return Meat(image)
         elif key == 'flour':
-            new_drop = Flour(image)
+            return Flour(image)
         elif key == 'crab':
-            new_drop = Crab(image)
+            return Crab(image)
         elif key == 'egg':
-            new_drop = Egg(image)
+            return Egg(image)
         elif key == 'cake':
-            new_drop = Cake(image)
+            return Cake(image)
         else:
-            new_drop = Food(image)
+            return Food(image)
 
         # print(new_drop)
-        return new_drop
+        # return new_drop
 
-    def createFood(self): # test
-        image = choice(self.images['mushroom']) 
-        return self.createMushrooms(image)
+    def createFood_test(self): # test
+        # image = choice(self.images['mushroom']) 
+        return self.createMushrooms()
         
-
-    def createMushrooms(self, image):
-        index = self.images['mushroom'].index(image)
-        if index == 3 or index == 7:
-            return RedMushroom(image)
-        elif index == 2 or index == 4 or index == 8:
-            return BlueMushroom(image)
+    def createMushrooms(self):
+        kind = randint(0, 2)
+        if kind == 1:
+            return self.createRedMushroom()
+        elif kind == 2:
+            return self.createBlueMushroom()
         else:
-            return Mushroom(image)
+            return self.createMushroom()
         # else:
         #     image = choice(self.images['other']) 
         #     return Food(image)
 
-    def createMushroom_new(self):
+    def createMushroom(self):
         return Mushroom(self.images['mushroom'])
 
     def createRedMushroom(self):
@@ -186,8 +189,8 @@ class Fish(Food):
 # 3, 7 - poison
 # 2, 8 - non poison
 class Mushroom(Food):
-    def __init__(self, images):
-        image = choice(images) 
+    def __init__(self, images : list):
+        image = choice(images)
         super().__init__(image)
         self.heal = self.min_heal
 

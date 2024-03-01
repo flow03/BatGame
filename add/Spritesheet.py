@@ -35,4 +35,5 @@ def anim_blit(surf: pygame.Surface, animation: list, x, y):
 def anim_blit_dict(surf: pygame.Surface, dictionary: dict, x, y):
     for anim_list in dictionary.values():
         anim_blit(surf, anim_list, x, y)
-        y += anim_list[0].get_height()
+        if anim_list:
+            y += anim_list[0].get_height()

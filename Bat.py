@@ -111,7 +111,8 @@ class BatSpecial(Bat):
         if isShield == 1:
             self.createBlueShield()
         elif isShield == 2:
-            self.createGrayShield()
+            max_shield = random.randint(20, 50)
+            self.createGrayShield(max_shield)
 
     def createBlueShield(self): # , AllBar : Shields.AllHealthBars
         maximum = 4
@@ -130,8 +131,8 @@ class BatSpecial(Bat):
             self.health_bar.shieldbar = shield_bar_temp
             self.health_bar.align = 'center'
 
-    def createGrayShield(self):
-        max_shield = random.randint(20, 50)
+    def createGrayShield(self, max_shield):
+        # max_shield = random.randint(20, 50)
         shield = HealthBar.Health(max_shield)
 
         shield_bar_rect = pygame.Rect(self.rect.midtop, (self.rect.width, 7))

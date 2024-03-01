@@ -223,6 +223,10 @@ while run:
                 pygame.event.post(pygame.event.Event(Events.BAT_SP_TIMER))
             if event.key == pygame.K_z:
                 drops.create_foodDrop()
+            if event.key == pygame.K_LEFTBRACKET or event.key == pygame.K_BACKQUOTE: # tilda
+                drops.create_RedMushroom()
+            if event.key == pygame.K_RIGHTBRACKET:
+                drops.create_BlueMushroom()
             # if event.key == pygame.K_h:
             #     groups.actors_heal(5)
             #     player.set_heal(5)

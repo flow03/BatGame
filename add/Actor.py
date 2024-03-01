@@ -15,6 +15,7 @@ class Actor(pygame.sprite.Sprite):
         self.speed = 0
         self.damage = 0
         self.defence = 0
+        self.bullets = 0
 
         self.health = None # HealthBar.Health(100)
         self.health_bar = None # self.createHealthBar() # self.health and self.rect needed
@@ -50,6 +51,11 @@ class Actor(pygame.sprite.Sprite):
 
     def draw(self, screen):
         screen.blit(self.image, self.rect)
+
+    def add_bullet(self, new_bullet : int):
+        self.bullets += new_bullet
+        if self.bullets < 0:
+            self.bullets = 0
 
 class ActorEffects(Actor):
     def __init__(self):
