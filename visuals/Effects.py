@@ -148,6 +148,7 @@ class PoisonEffect(Effect):
         time = 20000
         super().__init__(player, time)
 
+        self.player.add_speed -= 1
         self.healthBar = self.player.health_bar.healthbar
         self.healthBar.change_colour("forestgreen")
         self.default_damage = 5 # percent
@@ -155,7 +156,7 @@ class PoisonEffect(Effect):
 
         self.tick_timer = Clock(1200)
         self.tick_timer.start()
-        self.healthBar.health.set_damage(self.poison_damage) # first tick
+        # self.healthBar.health.set_damage(self.poison_damage) # first tick
 
     def get_damage(self, percent):
         damage = round(self.healthBar.health.max_health * (percent / 100))
@@ -175,6 +176,7 @@ class PoisonEffect(Effect):
 
     def __del__(self):
         self.healthBar.change_colour("red")
+        self.player.add_speed -= 1
 
 class SpeedEffect(Effect):
     def __init__(self, player):
@@ -182,21 +184,21 @@ class SpeedEffect(Effect):
         super().__init__(player, time)
 
         # self.speed_bonus = 1
-        self.default_speed = self.player.speed
-        self.add_speed(2) # boost = 2
+        # self.default_speed = self.player.speed
+        self.increase_speed(2) # boost = 2
         self.boost = 1
 
     def increase(self):
         super().increase() # restart
-        self.add_speed(1)
+        self.increase_speed(1)
 
-    def add_speed(self, speed):  
-        if self.player.speed < 10:
-            self.player.speed += speed
+    def increase_speed(self, speed):  
+        if (self.player.speed + self.player.add_speed) < 10:
+            self.player.add_speed += speed
             self.boost += 1
     
     def __del__(self):
-        self.player.speed = self.default_speed
+        self.player.add_speed = 0
 
 class IronskinEffect(Effect):
     def __init__(self, player):

@@ -68,11 +68,11 @@ class Drops():
         self.add_food(new_food)
 
     def create_RedMushroom(self):
-        new_food = self.foodCreator.createRedMushroom()
+        new_food = self.foodCreator.createSomeFood('mushroom_red')
         self.add_food(new_food)
     
     def create_BlueMushroom(self):
-        new_food = self.foodCreator.createBlueMushroom()
+        new_food = self.foodCreator.createSomeFood('mushroom_blue')
         self.add_food(new_food)
 
     # creates food with specified coordinates

@@ -33,7 +33,7 @@ class Player:
         self.animation_speed = 0.2  # Швидкість анімації (кількість фреймів за один update)
         self.image = self.animation_frames[self.current_animation][int(self.frame_index)]
         self.rect = self.image.get_rect(center=self.start_pos)
-        self.velocity = Vector2(0,0)
+        self.velocity = Vector2(0)
 
         self.bullets_count = 32 # self.max_bullets_count
         self.killedBats = 0
@@ -42,6 +42,7 @@ class Player:
         # self.onepunch = False
         self.add_damage = 0
         self.add_b_speed = 0
+        self.add_speed = 0
         # self.harmless = False
         # self.standing = False
         self.effects.clear()
@@ -112,7 +113,7 @@ class Player:
     def update(self):
         # moving
         if self.is_moving and self.velocity:
-            self.rect.center += self.velocity * self.speed
+            self.rect.center += round(self.velocity * (self.speed + self.add_speed))
             self.velocity = Vector2(0,0)
             # print()
 

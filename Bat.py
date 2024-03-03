@@ -4,7 +4,7 @@ from pygame.math import Vector2
 import visuals.HealthBar as HealthBar
 # import visuals.Effects as Effects
 from add.Path import resource_path
-from add.Actor import ActorEffects
+from add.Actor import Actor, ActorEffects
 from Drops import Drops
 import visuals.Shields as Shields
 
@@ -145,14 +145,15 @@ class BatSpecial(Bat):
         self.direction = self.direction_by_point(self.target)
         self.rect.center += round(self.direction * self.speed)
         
-        self.update_bar_pos()
-        self.health_bar.update_health()
+        # self.update_bar_pos()
+        # self.health_bar.update_health()
         self.collide()
         self.collide_food()
         if self.health.empty():
             self.kill()
 
-        self.effects.update()
+        # self.effects.update()
+        BatSpecial().update()
 
     def nearest_food(self):
         nearest_d = None # distance
@@ -207,15 +208,15 @@ class BatSpecial(Bat):
         new_pos.y -= 10
         self.health_bar.update_pos(new_pos)
 
-    def direction_by_point(self, target_pos):
-        target_pos = Vector2(target_pos)
-        character_pos = Vector2(self.rect.center)
+    # def direction_by_point(self, target_pos):
+    #     target_pos = Vector2(target_pos)
+    #     character_pos = Vector2(self.rect.center)
 
-        direction = target_pos - character_pos
-        if direction:   # not Zero
-            direction = direction.normalize()
+    #     direction = target_pos - character_pos
+    #     if direction:   # not Zero
+    #         direction = direction.normalize()
 
-        return direction
+    #     return direction
 
     def set_damage(self, damage: int):
         self.health_bar.set_damage(damage)

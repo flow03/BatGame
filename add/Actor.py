@@ -11,7 +11,9 @@ class Actor(pygame.sprite.Sprite):
         self.screen = pygame.display.get_surface()
         self.image = None # pygame.Surface()
         self.rect = None #self.image.get_rect()
+        self.direction = Vector2(0)
 
+        # self.default_speed = 0
         self.speed = 0
         self.damage = 0
         self.defence = 0
@@ -20,6 +22,11 @@ class Actor(pygame.sprite.Sprite):
         self.health = None # HealthBar.Health(100)
         self.health_bar = None # self.createHealthBar() # self.health and self.rect needed
         # self.update_bar_pos()
+
+    def update(self):
+        # self.rect.center += round(self.direction * self.speed)
+        self.update_bar_pos()
+        self.health_bar.update_health()
 
     def createHealthBar(self):
         position = Vector2(self.rect.midtop)
@@ -57,6 +64,16 @@ class Actor(pygame.sprite.Sprite):
         if self.bullets < 0:
             self.bullets = 0
 
+    def direction_by_point(self, target_pos):
+        target_pos = Vector2(target_pos)
+        character_pos = Vector2(self.rect.center)
+
+        direction = target_pos - character_pos
+        if direction:   # not Zero
+            direction = direction.normalize()
+
+        return direction
+
 class ActorEffects(Actor):
     def __init__(self):
         super().__init__()
@@ -65,6 +82,7 @@ class ActorEffects(Actor):
 
         self.add_damage = 0
         self.add_b_speed = 0
+        self.add_speed = 0
 
     def add_effect(self, effect_key : str):
         self.effects.add(effect_key)
@@ -73,6 +91,7 @@ class ActorEffects(Actor):
         self.effects.remove(effect_key)
 
     def update(self):
+        super().update()
         self.effects.update()
 
     def draw(self, screen):

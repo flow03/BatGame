@@ -103,56 +103,49 @@ class FoodCreator():
         return Food(image)
         # new_food.check_random_coordinates()
         # self.foodGroup.add(new_food)
-        
-    def createFood(self):
-        key = choice(list(self.images.keys()))    # rand key
-        image = choice(self.images[key])          # rand image
-        # new_drop = None
-
-        if key == 'fish':
-            return Fish(image)
-        elif key.startswith('mushroom'): # str method
-            return self.createMushrooms()
-        elif key == 'meat':
-            return Meat(image)
-        elif key == 'flour':
-            return Flour(image)
-        elif key == 'crab':
-            return Crab(image)
-        elif key == 'egg':
-            return Egg(image)
-        elif key == 'cake':
-            return Cake(image)
-        else:
-            return Food(image)
-
-        # print(new_drop)
-        # return new_drop
 
     def createFood_test(self): # test
         # image = choice(self.images['mushroom']) 
         return self.createMushrooms()
         
+    def createFood(self):
+        key = choice(list(self.images.keys()))    # rand key
+        return self.createSomeFood(key)
+
+    def createSomeFood(self, key):
+        if self.images.get(key, None) and self.images[key]: # not empty
+            image = choice(self.images[key])
+            if key == 'fish':
+                return Fish(image)
+            elif key == 'mushroom': # key.startswith('mushroom'): # str method
+                return Mushroom(image)
+            elif key == 'mushroom_red':
+                return RedMushroom(image)
+            elif key == 'mushroom_blue':
+                return BlueMushroom(image)
+            elif key == 'meat':
+                return Meat(image)
+            elif key == 'flour':
+                return Flour(image)
+            elif key == 'crab':
+                return Crab(image)
+            elif key == 'egg':
+                return Egg(image)
+            elif key == 'cake':
+                return Cake(image)
+            else:
+                return Food(image)
+        else:
+            return None
+        
     def createMushrooms(self):
         kind = randint(0, 2)
         if kind == 1:
-            return self.createRedMushroom()
+            return self.createSomeFood('mushroom_red')
         elif kind == 2:
-            return self.createBlueMushroom()
+            return self.createSomeFood('mushroom_blue')
         else:
-            return self.createMushroom()
-        # else:
-        #     image = choice(self.images['other']) 
-        #     return Food(image)
-
-    def createMushroom(self):
-        return Mushroom(self.images['mushroom'])
-
-    def createRedMushroom(self):
-        return RedMushroom(self.images['mushroom_red'])
-
-    def createBlueMushroom(self):    
-        return BlueMushroom(self.images['mushroom_blue'])
+            return self.createSomeFood('mushroom')
 
 class Food(pygame.sprite.Sprite):
     def __init__(self, image : pygame.Surface):
@@ -189,23 +182,20 @@ class Fish(Food):
 # 3, 7 - poison
 # 2, 8 - non poison
 class Mushroom(Food):
-    def __init__(self, images : list):
-        image = choice(images)
+    def __init__(self, image):
         super().__init__(image)
         self.heal = self.min_heal
 
 class RedMushroom(Mushroom):
-    def __init__(self, images):
-        super().__init__(images)
-        # self.heal = self.min_heal
+    def __init__(self, image):
+        super().__init__(image)
 
     def do(self, actor):
         actor.add_effect('poison')
 
 class BlueMushroom(Mushroom):
-    def __init__(self, images):
-        super().__init__(images)
-        # self.heal = self.min_heal
+    def __init__(self, image):
+        super().__init__(image)
 
     def do(self, actor):
         super().do(actor) # heal
