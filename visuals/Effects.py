@@ -169,6 +169,8 @@ class PoisonEffect(Effect):
 
     def increase(self):
         # no restart
+        if self.player.add_speed > -2:
+            self.player.add_speed -= 1
         if self.default_damage < 15:
             self.default_damage += 5
             self.boost += 1
@@ -176,7 +178,7 @@ class PoisonEffect(Effect):
 
     def __del__(self):
         self.healthBar.change_colour("red")
-        self.player.add_speed -= 1
+        self.player.add_speed = 0
 
 class SpeedEffect(Effect):
     def __init__(self, player):

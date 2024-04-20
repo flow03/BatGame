@@ -18,7 +18,7 @@ class Bat(ActorEffects):
         self.bullet_list = bullets
 
         self.image = self.load_random_frame()
-        self.rect = self.image.get_rect(center=self.get_right_position())
+        self.rect = self.image.get_rect()
 
         self.speed = random.randint(2, 4)
         self.damage = random.randint(15, 30)
@@ -31,6 +31,34 @@ class Bat(ActorEffects):
         frame = pygame.image.load(img_url)
         
         return frame
+
+    def update(self):
+        super().update() # effects update
+
+    def collide(self):
+        # Перевірка колізій з гравцем
+        if self.rect.colliderect(self.player.rect):
+            self.player.set_damage(self.damage)
+            self.kill()
+        # Перевірка колізій з кулями
+        if self.bullet_list:
+            bullet = pygame.sprite.spritecollideany(self, self.bullet_list)
+            if bullet:
+                self.set_damage(bullet.damage)
+                bullet.kill()
+
+    def set_damage(self, damage: int):
+        self.dead()
+
+    def dead(self):
+        self.player.killedBats += 1
+        self.drops.createFallenDrop(self.rect.center)
+        self.kill()
+
+class BatMoving(Bat):
+    def __init__(self, *args):
+        super().__init__(*args)
+        self.rect.center = self.get_right_position()
 
     def get_right_position(self):
         WIDTH = self.screen.get_width()
@@ -51,35 +79,6 @@ class Bat(ActorEffects):
         if self.rect.right < 0:
             self.kill()
 
-        # self.effects.update()
-
-    # def draw(self, screen):
-    #     super().draw()
-    #     screen.blit(self.image, self.rect)
-
-    def collide(self):
-        # Перевірка колізій з гравцем
-        if self.rect.colliderect(self.player.rect):
-            self.player.set_damage(self.damage)
-            self.kill()
-        # Перевірка колізій з кулями
-        if self.bullet_list:
-            bullet = pygame.sprite.spritecollideany(self, self.bullet_list)
-            if bullet:
-                self.set_damage(bullet.damage)
-                bullet.kill()
-
-    def set_damage(self, damage: int):
-        self.player.killedBats += 1
-        self.drops.createFallenDrop(self.rect.center)
-        self.kill()
-
-    # def add_effect(self, effect_key : str):
-    #     self.effects.add(effect_key)
-
-    # def remove_effect(self, effect_key : str):
-    #     self.effects.remove(effect_key)
-
 class BatSpecial(Bat):
     def __init__(self, *args):
         super().__init__(*args)
@@ -89,7 +88,7 @@ class BatSpecial(Bat):
         # self.speed = random.randint(1, 3)
         self.speed = 2
         self.createHealth()
-        self.direction = Vector2()
+        # self.direction = Vector2()
         self.target = None
 
         self.health.set_damage(10) # test
@@ -152,8 +151,7 @@ class BatSpecial(Bat):
         if self.health.empty():
             self.kill()
 
-        # self.effects.update()
-        BatSpecial().update()
+        super().update() # effects
 
     def nearest_food(self):
         nearest_d = None # distance
@@ -199,9 +197,9 @@ class BatSpecial(Bat):
                 self.target = Vector2(self.player.rect.center)
                 food.kill()
 
-    def draw(self, screen):
-        super().draw(screen)
-        self.health_bar.draw(screen)
+    # def draw(self, screen):
+    #     super().draw(screen)
+    #     self.health_bar.draw(screen)
 
     def update_bar_pos(self):
         new_pos = Vector2(self.rect.midtop)
@@ -221,9 +219,7 @@ class BatSpecial(Bat):
     def set_damage(self, damage: int):
         self.health_bar.set_damage(damage)
         if self.health.empty():
-            self.player.killedBats += 1
-            self.drops.createFallenDrop(self.rect.center)
-            self.kill()
+            super().dead()
 
     def set_heal(self, heal: int):
         self.health_bar.set_heal(heal)

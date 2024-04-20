@@ -180,7 +180,7 @@ while run:
             # pygame.quit()
         # if not Girl:
         if event.type == Events.BAT_TIMER:
-            groups.add_bat(Bat.Bat(drops, player, groups.bullets))
+            groups.add_bat(Bat.BatMoving(drops, player, groups.bullets))
         if event.type == Events.BAT_SP_TIMER:
             groups.add_bat(Bat.BatSpecial(drops, player, groups.bullets))
         if event.type == Events.BULLET_DROP_TIMER:
@@ -205,10 +205,10 @@ while run:
                 dummieSwitcher = switchDummies(dummieSwitcher)
             if event.key == pygame.K_1:
                 player.add_effect("poison")
-            if event.key == pygame.K_LSHIFT or event.key == pygame.K_2:
-                player.add_effect("speed")
-            if event.key == pygame.K_3:
+            if event.key == pygame.K_2:
                 player.add_effect("onepunch")
+            if event.key == pygame.K_3 or event.key == pygame.K_LSHIFT:
+                player.add_effect("speed")
             if event.key == pygame.K_4:
                 player.add_effect("ironskin")
             if event.key == pygame.K_5:

@@ -42,6 +42,7 @@ class Text:
         # self.print('bullets', player.bullets_count)
         # self.print('health', player.health_new.health)
         self.print('speed', player.speed)
+        self.print('add_speed', player.add_speed)
         self.print('defence', player.defence)
 
         # self.print('bats', len(groups.bats))
