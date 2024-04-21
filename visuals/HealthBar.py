@@ -282,14 +282,14 @@ class BulletBar:
             #     break
         self.image_list.append(image)
 
-    def update_variant_first(self, bullets_count):
-        self.image_list.clear()
-        while bullets_count > self.capacity:
-            self.create_image(bullets_count)
-            bullets_count -= self.capacity
+    # def update_variant_first(self, bullets_count):
+    #     self.image_list.clear()
+    #     while bullets_count > self.capacity:
+    #         self.create_image(bullets_count)
+    #         bullets_count -= self.capacity
 
-        if bullets_count:
-            self.create_image(bullets_count)
+    #     if bullets_count:
+    #         self.create_image(bullets_count)
 
     def update_variant_second(self, bullets_count):
         full_images = bullets_count // self.capacity

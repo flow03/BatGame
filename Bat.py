@@ -17,6 +17,7 @@ class Bat(ActorEffects):
         self.player = player
         self.bullet_list = bullets
 
+        self.dir_image = None
         self.image = self.load_random_frame()
         self.rect = self.image.get_rect()
 
@@ -30,7 +31,14 @@ class Bat(ActorEffects):
         img_url = resource_path(f'img/bat/bat{i}.png')
         frame = pygame.image.load(img_url)
         
+        self.createDirection(i, frame)
+
         return frame
+
+    def createDirection(self, number, image):
+        left_list = [0, 1, 3, 5, 9, 10, 11, 14, 15]
+        if number in left_list:
+            self.dir_image = DirectionImage(image)
 
     def update(self):
         super().update() # effects update
@@ -143,7 +151,10 @@ class BatSpecial(Bat):
         self.changeTarget() # player position as default
         self.direction = self.direction_by_point(self.target)
         self.rect.center += round(self.direction * self.speed)
-        
+
+        if self.dir_image and self.dir_image.is_changed(self.direction):
+            self.image = self.dir_image.update_image(self.direction)
+
         # self.update_bar_pos()
         # self.health_bar.update_health()
         self.collide()
@@ -250,4 +261,39 @@ class BatBomb(Bat):
 class Bomb(pygame.sprite.Sprite):
     def __init__(self):
         pass
-        
+
+class DirectionImage():
+    # Takes left image as an argument
+    def __init__(self, image):
+        self.direct = Vector2()
+        self.left = image
+        self.right = self.flip(image)
+
+    def flip(self, image : pygame.Surface) -> pygame.Surface:
+        return pygame.transform.flip(image, True, False)
+
+    def is_changed(self, direction : Vector2):
+        if direction.x < 0 and self.direct.x < 0:
+            return False
+        elif direction.x > 0 and self.direct.x > 0:
+            return False
+        else:
+            return True
+
+    def update_image(self, direction : Vector2):
+        self.direct = direction
+        # move left
+        if direction.x < 0:
+            return self.left
+        # move right
+        elif direction.x > 0:
+            return self.right
+        else:
+            return self.left
+        # elif direction.x == 0:
+        #     # move up
+        #     if direction.y < 0:
+        #         return self.left
+        #     # move down
+        #     elif direction.y > 0:
+        #         return self.right

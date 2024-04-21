@@ -104,9 +104,9 @@ class FoodCreator():
         # new_food.check_random_coordinates()
         # self.foodGroup.add(new_food)
 
-    def createFood_test(self): # test
-        # image = choice(self.images['mushroom']) 
-        return self.createMushrooms()
+    # def createFood_test(self): # test
+    #     # image = choice(self.images['mushroom']) 
+    #     return self.createMushrooms()
         
     def createFood(self):
         key = choice(list(self.images.keys()))    # rand key
@@ -192,6 +192,7 @@ class RedMushroom(Mushroom):
 
     def do(self, actor):
         actor.add_effect('poison')
+        # pass
 
 class BlueMushroom(Mushroom):
     def __init__(self, image):

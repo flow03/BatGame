@@ -11,7 +11,7 @@ class Bullet(pygame.sprite.Sprite):
         self.image = pygame.image.load(img_url).convert_alpha()
         self.image = pygame.transform.scale(self.image, (25, 9))
         self.rect = self.image.get_rect(center=start_pos)
-        self.speed = 7
+        self.speed = 8
         self.damage = 25
         self.screen = pygame.display.get_surface()
         # self.angle = 0

@@ -187,13 +187,15 @@ while run:
             drops.create_bulletDrop()
         if event.type == Events.FOOD_DROP_TIMER:
             drops.create_foodDrop()
+        if event.type == Events.MUSHROOMS:
+            drops.create_Mushrooms()
+        # Створення кулі з позиції гравця до позиції миші
         if player.gameplay and event.type == pygame.MOUSEBUTTONDOWN:
-            # Створення кулі з позиції гравця до позиції миші
             player.shoot(groups.bullets, pygame.mouse.get_pos())
         if player.gameplay and event.type == pygame.KEYDOWN:
-            if event.key == pygame.K_e or event.key == pygame.K_q:
-                # Створення кулі, яка летітиме у напрямку player.direction
-                player.shoot(groups.bullets)
+            # Створення кулі, яка летітиме у напрямку player.direction
+            # if event.key == pygame.K_e or event.key == pygame.K_q:
+            #     player.shoot(groups.bullets)
             if event.key == pygame.K_TAB:
                 if not displayText:
                     displayText = True
