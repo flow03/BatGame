@@ -10,6 +10,7 @@ class Dummy(pygame.sprite.Sprite):
     def __init__(self, x, y, bullet_list, health_type = None, health = 100, shield = 0):
         super().__init__()
         
+        self.health_type = health_type
         img_url = resource_path('img/training_dummy.png')
         self.image = pygame.image.load(img_url).convert_alpha()
         # self.resize_image(80)
@@ -18,10 +19,11 @@ class Dummy(pygame.sprite.Sprite):
         self.re_delay = Clock(1000)
 
         self.health = Health(health)
+        self.shield = None
         if shield:
             self.shield = Health(shield)
 
-        self.healthBarCreate(health_type)
+        self.healthBarCreate(self.health_type)
         # print("dummy ", self.health_bar.bordered_rect.width, self.health_bar.bordered_rect.height)
 
     def update_bar_pos(self):
@@ -53,13 +55,17 @@ class Dummy(pygame.sprite.Sprite):
         self.update_bar_pos()
 
     def init(self):
-        self.health_bar.init()
+        # self.health_bar.init()
+        self.healthBarCreate(self.health_type)
 
     def update(self):
         self.collide_bullet()
         
         if self.re_delay.end():
             self.health.restore()
+            if self.shield:
+                self.shield.restore()
+            self.healthBarCreate(self.health_type)
 
         self.health_bar.update_health()
 

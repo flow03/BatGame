@@ -134,7 +134,8 @@ def initialize():
     drops.clear()
     # jump.is_jump = False
     Events.start()
-    # createDummies(groups) # after groups.clear
+    if dummieSwitcher:
+        createDummies(groups) # after groups.clear
 
 # Main loop
 while run:

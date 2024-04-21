@@ -1,5 +1,6 @@
 import pygame
 import random
+import os
 from pygame.math import Vector2
 import visuals.HealthBar as HealthBar
 # import visuals.Effects as Effects
@@ -18,7 +19,7 @@ class Bat(ActorEffects):
         self.bullet_list = bullets
 
         self.dir_image = None
-        self.image = self.load_random_frame()
+        self.image = self.load_random_frame_new()
         self.rect = self.image.get_rect()
 
         self.speed = random.randint(2, 4)
@@ -34,6 +35,38 @@ class Bat(ActorEffects):
         self.createDirection(i, frame)
 
         return frame
+
+    def load_random_frame_new(self):
+        img_list = []
+        path = resource_path(f'img/bat')
+        for img in os.listdir(path):
+            if img.endswith(".png"):
+                img_path = os.path.join(path, img)
+                if os.path.isfile(img_path):
+                    img_list.append(img_path)
+
+        rand_img = random.choice(img_list)
+        frame = pygame.image.load(rand_img)
+
+        index = self.get_num(os.path.basename(rand_img))
+        # print("index: ", index)
+        self.createDirection(index, frame)
+
+        return frame
+
+    def get_num(self, string):
+        num = str()
+        for ch in string:
+            if ch.isdigit():
+                num += ch
+            elif num:
+                break
+
+        if num.isdigit():
+            num = int(num)
+            return num
+        else:
+            return None
 
     def createDirection(self, number, image):
         left_list = [0, 1, 3, 5, 9, 10, 11, 14, 15]
