@@ -1,10 +1,10 @@
 import pygame
 from pygame.math import Vector2
 from add.Spritesheet import SpriteSheet
-import visuals.HealthBar as HealthBar
-from Bullet import Bullet
-import visuals.Effects as Effects
-import visuals.Shields as Shields
+from actors.Bullet import Bullet
+import interface.HealthBar as HealthBar
+import interface.Effects as Effects
+import interface.Shields as Shields
 
 class Player:
     def __init__(self, x, y, drops):

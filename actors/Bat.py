@@ -2,12 +2,12 @@ import pygame
 import random
 import os
 from pygame.math import Vector2
-import visuals.HealthBar as HealthBar
-# import visuals.Effects as Effects
+import interface.HealthBar as HealthBar
+# import interface.Effects as Effects
 from add.Path import resource_path
-from add.Actor import Actor, ActorEffects
-from Drops import Drops
-import visuals.Shields as Shields
+from actors.Actor import Actor, ActorEffects
+from loot.Drops import Drops
+import interface.Shields as Shields
 
 class Bat(ActorEffects):
     def __init__(self, drops : Drops, player, bullets):

@@ -5,9 +5,9 @@ from pygame.math import Vector2
 from add.Spritesheet import SpriteSheet
 # from Clock_class import Clock
 # from add.MyGroup import MyGroup
-from Drops import Drops
-from visuals.HealthBar import Health
-import add.State
+from loot.Drops import Drops
+from interface.HealthBar import Health
+import actors.State
 
 class Dance_Girl(pygame.sprite.Sprite):
     def __init__(self, player, actors, drops : Drops):
@@ -42,7 +42,7 @@ class Dance_Girl(pygame.sprite.Sprite):
         
         self.live = True
         self.is_moving = False
-        self.state = add.State.move_to_player(self)
+        self.state = actors.State.move_to_player(self)
         self.health.restore()
 
         # self.circle.init()

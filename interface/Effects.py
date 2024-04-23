@@ -1,6 +1,6 @@
 import pygame
 from pygame.math import Vector2
-import visuals.HealthBar as HealthBar
+import interface.HealthBar as HealthBar
 from add.Clock import Clock
 
 class EffectQueue:

@@ -2,7 +2,7 @@ import pygame
 from pygame.math import Vector2
 from add.Clock import Clock
 from add.Path import resource_path
-from visuals.Effects import Effect
+from interface.Effects import Effect
 
 # --- bordered rects ---
 # player  258 17

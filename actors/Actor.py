@@ -1,8 +1,8 @@
 import pygame
 from pygame.math import Vector2
-import visuals.HealthBar as HealthBar
-import visuals.Shields as Shields
-import visuals.Effects as Effects
+import interface.HealthBar as HealthBar
+import interface.Shields as Shields
+import interface.Effects as Effects
 
 class Actor(pygame.sprite.Sprite):
     def __init__(self):

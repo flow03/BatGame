@@ -1,8 +1,8 @@
 import pygame
 from pygame.math import Vector2
-from visuals.HealthBar import Health
-import visuals.HealthBar as HealthBar
-import visuals.Shields as Shields
+from interface.HealthBar import Health
+import interface.HealthBar as HealthBar
+import interface.Shields as Shields
 from add.Path import resource_path
 from add.Clock import Clock
 

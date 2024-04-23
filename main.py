@@ -1,18 +1,18 @@
 import pygame
 # import random
 # import spritesheet
-from Player import Player
+from actors.Player import Player
 # from add.Jump import Jump
-from Drops import Drops
+from loot.Drops import Drops
 # from add.MyGroup import MyGroup
-from visuals.Text import Text
+from interface.Text import Text
 from add.Path import resource_path
 from add.UserEvents import UserEvents
-from Dance_Girl import Dance_Girl
-import Bat
+from actors.Dance_Girl import Dance_Girl
+import actors.Bat as Bat
 # from Bullet_class import Bullet
-from Dummy import Dummy
-import add.Groups as Groups
+from actors.Dummy import Dummy
+import actors.Groups as Groups
 import gc # garbage collector
 # from Food import FoodCreator
 
