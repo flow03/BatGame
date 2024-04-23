@@ -124,6 +124,7 @@ def draw_objects(isBoundRects):
 # Bool triggers
 displayText = False
 dummieSwitcher = False
+isTenBats = False
 
 # gameplay = True
 run = True
@@ -137,6 +138,7 @@ def initialize():
     if dummieSwitcher:
         createDummies(groups) # after groups.clear
     text.change_BigerFont()
+    # killedBats = 0
 
 # Main loop
 while run:
@@ -160,6 +162,9 @@ while run:
             if girl:
                 text.print_girl_info(screen, girl)
 
+        if not isTenBats and player.killedBats >= 10:
+            pygame.event.post(pygame.event.Event(Events.TEN_BATS))
+            isTenBats = True
         # COLLISIONS
         # All in classes
 
@@ -191,6 +196,11 @@ while run:
             drops.create_foodDrop()
         if event.type == Events.MUSHROOMS:
             drops.create_Mushrooms()
+        if event.type == Events.TEN_BATS:
+            for i in range(10):
+                groups.add_bat(Bat.BatSpecial(drops, player, groups.bullets))
+        # if event.type == Events.BAT_KILLED:
+        #     killedBats += 1
         # Створення кулі з позиції гравця до позиції миші
         if player.gameplay and event.type == pygame.MOUSEBUTTONDOWN:
             player.shoot(groups.bullets, pygame.mouse.get_pos())
@@ -242,9 +252,10 @@ while run:
         if event.type == pygame.KEYDOWN:
             if event.key == pygame.K_r:
                 initialize()
-            if event.key == pygame.K_g:
-                gc.collect()
-                print(gc.get_stats())
+                # killedBats = 0
+            # if event.key == pygame.K_g:
+            #     gc.collect()
+            #     print(gc.get_stats())
 
 pygame.quit()
 

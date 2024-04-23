@@ -7,6 +7,8 @@ class UserEvents:
         self.FOOD_DROP_TIMER = pygame.USEREVENT + 3
         self.BAT_SP_TIMER = pygame.USEREVENT + 4
         self.MUSHROOMS = pygame.USEREVENT + 5
+        self.TEN_BATS = pygame.USEREVENT + 6
+        # self.BAT_KILLED = pygame.USEREVENT + 7
 
         self.isEvents = True
         # self.start_timer()

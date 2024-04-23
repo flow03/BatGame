@@ -89,9 +89,10 @@ class Bat(ActorEffects):
                 bullet.kill()
 
     def set_damage(self, damage: int):
-        self.dead()
+        self.killed()
 
-    def dead(self):
+    def killed(self):
+        # pygame.event.post(pygame.event.Event(Events.BAT_KILLED))
         self.player.killedBats += 1
         self.drops.createFallenDrop(self.rect.center)
         self.kill()
@@ -155,7 +156,7 @@ class BatSpecial(Bat):
             self.createGrayShield(max_shield)
 
     def createBlueShield(self): # , AllBar : Shields.AllHealthBars
-        maximum = 4
+        maximum = 3
         max_shield = random.randint(1, maximum)
 
         if max_shield:
@@ -263,7 +264,7 @@ class BatSpecial(Bat):
     def set_damage(self, damage: int):
         self.health_bar.set_damage(damage)
         if self.health.empty():
-            super().dead()
+            super().killed()
 
     def set_heal(self, heal: int):
         self.health_bar.set_heal(heal)
