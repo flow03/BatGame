@@ -136,6 +136,7 @@ def initialize():
     Events.start()
     if dummieSwitcher:
         createDummies(groups) # after groups.clear
+    text.change_BigerFont()
 
 # Main loop
 while run:

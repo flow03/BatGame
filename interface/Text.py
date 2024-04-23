@@ -1,14 +1,21 @@
 import pygame
+from pygame.math import Vector2
 from add.Path import resource_path
+from random import randint, choice
 
 # Text
 class Text:
     def __init__(self, screen):
-        self.myfont = pygame.font.SysFont("Montserrat", 30)
-        # myfont = pygame.font.Font('fonts/Thor.otf', 30)
-        f_url = resource_path('fonts/MunchkinCyr.ttf')
-        self.myBigerFont = pygame.font.Font(f_url, 60)
-        # screen = screen
+        self.myfont = pygame.font.SysFont("Montserrat", 30) # Arial Narrow, Montserrat
+
+        # f_url = resource_path('fonts/graf.ttf')
+        # f_url = resource_path('fonts/MunchkinCyr.ttf')
+        # f_url = resource_path('fonts/moonlight.ttf')
+        # f_url = resource_path('fonts/Romashulka.ttf')
+
+        self.myBigerFont = self.get_BigerFont()
+        self.screen = pygame.display.get_surface()
+        self.center = Vector2(self.screen.get_rect().center)
         self.WIDTH = screen.get_width()
         self.HEIGHT = screen.get_height()
         self.createExitRects()
@@ -16,16 +23,43 @@ class Text:
         self.y_offset = 25
         self.x_offset = 15
 
+    def get_BigerFont(self):
+        fonts = ["Romashulka.ttf", "moonlight.ttf", "graf.ttf" ]
+        font_name = choice(fonts)
+        font_url = resource_path("fonts\\" + font_name)
+
+        return pygame.font.Font(font_url, 60)
+
+    def change_BigerFont(self):
+        self.myBigerFont = self.get_BigerFont()
+        self.createExitRects()
+
     def createExitRects(self):
+        # print("createExitRects call")
+        self.myBigerFont = self.get_BigerFont()
         self.game_over = self.myBigerFont.render('GAME OVER', False, 'Black')
-        self.game_over_rect = self.game_over.get_rect(center=(self.WIDTH/2, self.HEIGHT/2))
-        self.restart_text = self.myfont.render('Restart', False, 'Black')
-        self.restart_text_rect = self.restart_text.get_rect(center=(self.WIDTH/2, self.game_over_rect.y + 100))
-        self.exit_text = self.myfont.render('Exit', False, 'Black')
-        self.exit_text_rect = self.exit_text.get_rect(center=(self.WIDTH/2, self.restart_text_rect.y + 60))
+        self.game_over_rect = self.game_over.get_rect()
+        self.game_over_2 = self.myBigerFont.render('RESTART?', False, 'Black')
+        self.game_over_rect_2 = self.game_over_2.get_rect()
+        
+        pos_y = self.center.y - (self.game_over_rect.height + self.game_over_rect_2.height)/2
+        position = Vector2(self.center.x, pos_y)
+        self.game_over_rect.center = position
+
+        position.y = self.game_over_rect.bottom + 30
+        self.game_over_rect_2.center = position
+
+        position.y = self.game_over_rect_2.bottom + 50
+        self.restart_text = self.myfont.render('Again', False, 'Black')
+        self.restart_text_rect = self.restart_text.get_rect(center=position)
+
+        position.y = self.restart_text_rect.bottom + 30
+        self.exit_text = self.myfont.render('Another time', False, 'Black')
+        self.exit_text_rect = self.exit_text.get_rect(center=position)
 
     def blitExitRects(self, screen):
-        screen.blit(self.game_over, (self.WIDTH/2-self.game_over.get_width()/2, self.HEIGHT/2-self.game_over.get_height()/2))
+        screen.blit(self.game_over, self.game_over_rect)
+        screen.blit(self.game_over_2, self.game_over_rect_2)
         screen.blit(self.restart_text, self.restart_text_rect)
         screen.blit(self.exit_text, self.exit_text_rect)
 

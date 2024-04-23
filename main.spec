@@ -1,6 +1,8 @@
 # -*- mode: python ; coding: utf-8 -*-
 # from PyInstaller.utils.hooks import collect_data_files
 
+# pyinstaller main.spec
+
 datas_list = []
 # datas += collect_data_files('img/*.png')
 # datas += collect_data_files('img/bat/*.png')
