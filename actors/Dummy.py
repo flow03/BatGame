@@ -101,3 +101,43 @@ class Dummy(pygame.sprite.Sprite):
         # print(f"new_h: {new_h}, new_w: {new_w}")
 
         self.image = pygame.transform.scale(self.image, (new_w, new_h))
+
+class DummyCreator():
+    def __init__(self, groups):
+        self.groups = groups
+        self.is_dummies = False
+        screen = pygame.display.get_surface()
+        self.center = Vector2(screen.get_size()//2)
+
+    def create(self):
+        if self.is_dummies:
+            self.createDummies()
+
+    def createDummies(self):
+        pos = Vector2(self.center.x - 200, self.center.y)
+        left_dummy = Dummy(pos, self.groups.bullets,"fancy_blue", 50, 5)
+        pos = Vector2(self.center.x + 200, self.center.y)
+        right_dummy = Dummy(pos, self.groups.bullets, "fancy_gray", 50, 30)
+        pos = Vector2(self.center.x - 200, self.center.y - 200)
+        topleft_dummy = Dummy(pos, self.groups.bullets,"blue", 3)
+        pos = Vector2(self.center.x + 200, self.center.y - 200)
+        topright_dummy = Dummy(pos, self.groups.bullets, "gray", 50)
+        pos = Vector2(self.center.x, self.center.y + 200)
+        down_dummy = Dummy(pos, self.groups.bullets, "cell", 15)
+
+        self.groups.dummies.add_actor("left_dummy", left_dummy)
+        self.groups.dummies.add_actor("right_dummy", right_dummy)
+        self.groups.dummies.add_actor("topleft_dummy", topleft_dummy)
+        self.groups.dummies.add_actor("topright_dummy", topright_dummy)
+        self.groups.dummies.add_actor("down_dummy", down_dummy)
+
+    def deleteDummies(self):
+        self.groups.dummies.clear()
+
+    def switchDummies(self):
+        if self.is_dummies:
+            self.deleteDummies()
+            self.is_dummies = False
+        else:
+            self.createDummies()
+            self.is_dummies = True

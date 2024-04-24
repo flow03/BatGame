@@ -13,7 +13,7 @@ class Text:
         # f_url = resource_path('fonts/moonlight.ttf')
         # f_url = resource_path('fonts/Romashulka.ttf')
 
-        self.myBigerFont = self.get_BigerFont()
+        self.myBiggerFont = self.get_BiggerFont()
         self.screen = pygame.display.get_surface()
         self.center = Vector2(self.screen.get_rect().center)
         self.WIDTH = screen.get_width()
@@ -23,25 +23,25 @@ class Text:
         self.y_offset = 25
         self.x_offset = 15
 
-    def get_BigerFont(self):
+    def get_BiggerFont(self):
         fonts = ["Romashulka.ttf", "moonlight.ttf", "graf.ttf" ]
         font_name = choice(fonts)
         font_url = resource_path("fonts\\" + font_name)
 
         return pygame.font.Font(font_url, 60)
 
-    def change_BigerFont(self):
-        self.myBigerFont = self.get_BigerFont()
+    def change_BiggerFont(self):
+        self.myBiggerFont = self.get_BiggerFont()
         self.createExitRects()
 
     def createExitRects(self):
         # print("createExitRects call")
-        self.myBigerFont = self.get_BigerFont()
-        self.game_over = self.myBigerFont.render('GAME OVER', False, 'Black')
+        self.myBiggerFont = self.get_BiggerFont()
+        self.game_over = self.myBiggerFont.render('GAME OVER', False, 'Black')
         self.game_over_rect = self.game_over.get_rect()
-        self.game_over_2 = self.myBigerFont.render('RESTART?', False, 'Black')
+        self.game_over_2 = self.myBiggerFont.render('RESTART?', False, 'Black')
         self.game_over_rect_2 = self.game_over_2.get_rect()
-        
+        # self.game_over.
         pos_y = self.center.y - (self.game_over_rect.height + self.game_over_rect_2.height)/2
         position = Vector2(self.center.x, pos_y)
         self.game_over_rect.center = position
@@ -129,7 +129,7 @@ class Text:
         self.y += self.y_offset
 
     def blit_loading_text(self, screen):
-        loading_text = self.myBigerFont.render('LOADING...', False, 'Black')
+        loading_text = self.myBiggerFont.render('LOADING...', False, 'Black')
         loading_text_rect = loading_text.get_rect(center=(self.WIDTH/2, self.HEIGHT/2)) # bottomright
 
         screen.blit(loading_text, loading_text_rect)

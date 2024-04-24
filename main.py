@@ -1,104 +1,23 @@
 import pygame
 # import random
 # import spritesheet
-from actors.Player import Player
+# from actors.Player import Player
 # from add.Jump import Jump
-from loot.Drops import Drops
+# from loot.Drops import Drops
 # from add.MyGroup import MyGroup
-from interface.Text import Text
-from add.Path import resource_path
-from add.UserEvents import UserEvents
+# from interface.Text import Text
+# from add.Path import resource_path
+# from add.UserEvents import UserEvents
 from actors.Dance_Girl import Dance_Girl
 import actors.Bat as Bat
 # from Bullet_class import Bullet
-from actors.Dummy import Dummy
+# from actors.Dummy import Dummy
 import actors.Groups as Groups
-import gc # garbage collector
+# import gc # garbage collector
 # from Food import FoodCreator
+from Game import Game
 
-FPS = pygame.time.Clock()
-pygame.init()
-
-WIDTH = 1200
-HEIGHT = 600
-
-# screen = pygame.display.set_mode((600, 300), flags=pygame.NOFRAME)
-screen = pygame.display.set_mode((WIDTH, HEIGHT))
-pygame.display.set_caption("Bat Game")
-icon = pygame.image.load(resource_path('img/fangs.ico')).convert_alpha()
-pygame.display.set_icon(icon)
-
-# Text
-text = Text(screen)
-
-# bg = pygame.image.load('img/bg/bg_PS7HtBx.jpg')
-bg = pygame.image.load(resource_path('img/bg/Work-2.jpg')).convert()
-# bg = pygame.transform.scale(bg, (WIDTH, HEIGHT))
-# screen.blit(bg, (0, 0))
-
-bg_width, bg_height = bg.get_size()
-scale_factor = max(WIDTH / bg_width, HEIGHT / bg_height)
-scaled_bg_width = int(bg_width * scale_factor)
-scaled_bg_height = int(bg_height * scale_factor)
-bg = pygame.transform.scale(bg, (scaled_bg_width, scaled_bg_height))
-bg_x = (WIDTH - scaled_bg_width) // 2
-bg_y = (HEIGHT - scaled_bg_height) // 2
-screen.blit(bg, (bg_x, bg_y))
-
-# print(f"original: {bg_width, bg_height}")
-# print(f"scale_factor: {scale_factor}")
-# print(f"scaled: {scaled_bg_width, scaled_bg_height}")
-# print(f"position: {bg_x, bg_y}")
-
-text.blit_loading_text(screen)
-pygame.display.update()
-
-# Jump
-# jump = Jump()
-
-Events = UserEvents()
-# Events.isEvents = False
-Events.start()
-
-# Groups
-drops = Drops()
-
-# actors = Actors.Actors_()
-groups = Groups.Groups()
-
-# Player
-player = Player(WIDTH//2, HEIGHT//2, drops) # 150, 300
-
-def createDummies(groups):
-    left_dummy = Dummy(WIDTH//2 - 200, HEIGHT//2, groups.bullets,"fancy_blue", 50, 5)
-    right_dummy = Dummy(WIDTH//2 + 200, HEIGHT//2, groups.bullets, "fancy_gray", 50, 30)
-    topleft_dummy = Dummy(WIDTH//2 - 200, HEIGHT//2 - 200, groups.bullets,"blue", 3)
-    topright_dummy = Dummy(WIDTH//2 + 200, HEIGHT//2 - 200, groups.bullets, "gray", 50)
-    down_dummy = Dummy(WIDTH//2, HEIGHT//2 + 200, groups.bullets, "cell", 15)
-
-    groups.dummies.add_actor("left_dummy", left_dummy)
-    groups.dummies.add_actor("right_dummy", right_dummy)
-    groups.dummies.add_actor("topleft_dummy", topleft_dummy)
-    groups.dummies.add_actor("topright_dummy", topright_dummy)
-    groups.dummies.add_actor("down_dummy", down_dummy)
-
-def deleteDummies(groups : Groups.Groups):
-    groups.dummies.clear()
-
-def switchDummies(switcher):
-    if switcher:
-        deleteDummies(groups)
-        switcher = False
-    else:
-        createDummies(groups)
-        switcher = True
-    
-    return switcher
-
-# 3 variants of add
-# actors['actors'].add(dummy)
-# actors['actors'] = dummy
-# actors.add('actors', dummy)
+game = Game()
 
 # createDummies(groups)
 
@@ -109,6 +28,7 @@ def update_objects():
     # bullets.update()
     drops.update()
     groups.update()
+    # Events.update()
 
 # Draw
 def draw_objects(isBoundRects):
@@ -123,8 +43,8 @@ def draw_objects(isBoundRects):
 
 # Bool triggers
 displayText = False
-dummieSwitcher = False
-isTenBats = False
+
+# isTenBats = False
 
 # gameplay = True
 run = True
@@ -135,10 +55,10 @@ def initialize():
     drops.clear()
     # jump.is_jump = False
     Events.start()
-    if dummieSwitcher:
-        createDummies(groups) # after groups.clear
-    text.change_BigerFont()
-    # killedBats = 0
+    dummies.create() # after groups.clear
+    text.change_BiggerFont()
+    # isTenBats = False
+
 
 # Main loop
 while run:
@@ -162,9 +82,9 @@ while run:
             if girl:
                 text.print_girl_info(screen, girl)
 
-        if not isTenBats and player.killedBats >= 10:
-            pygame.event.post(pygame.event.Event(Events.TEN_BATS))
-            isTenBats = True
+        # if not isTenBats and player.killedBats >= 10:
+        #     pygame.event.post(pygame.event.Event(Events.TEN_BATS))
+        #     isTenBats = True
         # COLLISIONS
         # All in classes
 
@@ -252,7 +172,6 @@ while run:
         if event.type == pygame.KEYDOWN:
             if event.key == pygame.K_r:
                 initialize()
-                # killedBats = 0
             # if event.key == pygame.K_g:
             #     gc.collect()
             #     print(gc.get_stats())

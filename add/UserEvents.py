@@ -11,8 +11,15 @@ class UserEvents:
         # self.BAT_KILLED = pygame.USEREVENT + 7
 
         self.isEvents = True
-        # self.start_timer()
-        # self.stop_timer()
+        self.start()
+        
+        self.isTenBats = False
+
+    def update(self):
+        # if not self.isTenBats and player.killedBats >= 10:
+        #     pygame.event.post(pygame.event.Event(self.TEN_BATS))
+        #     self.isTenBats = True
+        pass
 
     def start_timer(self):
         pygame.time.set_timer(self.BAT_TIMER, 3500)
@@ -40,5 +47,3 @@ class UserEvents:
     def start(self):
         if self.isEvents:
             self.start_timer()
-        else:
-            self.stop_timer()
