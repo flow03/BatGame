@@ -115,9 +115,8 @@ class IState:
         # self.dance = Dance()
         # self.dance = None
     
-    # def init(self):
+    # def print(self):
     #     pass
-        # self.circle.init()
 
     def doState(self):
         return self

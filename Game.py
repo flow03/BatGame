@@ -13,15 +13,17 @@ class Game():
         self.FPS = pygame.time.Clock()
         self.screen_init()
 
-        self.text = Text(self.screen)
+        self.text = Text(self)
         self.blit_loading()
 
         self.drops = Drops()
         self.groups = Groups()
-        self.Events = UserEvents()
+        self.Events = UserEvents(self)
 
         self.player = Player(self.screen.get_size()//2, self.drops)
         self.dummies = DummyCreator(self.groups)
+
+        self.displayText = False
 
     def screen_init(self):
         WIDTH = 1200
@@ -57,7 +59,6 @@ class Game():
         # Events.update()
 
     def draw_objects(self):
-        # colourGreen, colourRed = Groups.get_colour(isBoundRects)
         self.drops.draw()
         self.groups.draw()
         self.player.draw(self.screen) 
@@ -71,4 +72,38 @@ class Game():
         self.dummies.create() # after groups.clear
         self.text.change_BiggerFont()
         # isTenBats = False
+
+    # Main loop    
+    def run(self):
+        run = True
+        while run:
+            self.FPS.tick(60)
+
+            self.screen.blit(self.background, self.bg_pos)
+
+            if self.player.gameplay:
+                
+                self.player.input()
+
+                self.update_objects()
+                self.draw_objects()
+                
+                self.text.display()
+            else:
+                # screen.fill("Black")
+                self.text.blitExitRects(self.screen)
+
+                mouse = pygame.mouse.get_pos()
+                if self.text.collide_restart(mouse):
+                    self.restart()
+                elif self.text.collide_exit(mouse):
+                    run = False
+            
+            pygame.display.update()
+
+            self.Events.update()
+
+
+        pygame.quit()
+
 

@@ -92,12 +92,27 @@ class FoodCreator():
             start_index = end_index
             end_index += max_count
             y += 30 #frame_height
+
+        y += 30
+        return y
+
+    def blit_other_new(self):
+        screen = pygame.display.get_surface()
+        other = self.images['other']
+        max_count = (screen.get_width() - 20) // 30
+        y = 70
+        for i in range(len(other)):
+            anim_blit(screen, other[i], 20, y)
+            if i == max_count - 1:
+                y += 30
+                max_count *= 2
+        y += 30
         return y
 
     def blit_dict(self):
         screen = pygame.display.get_surface()
         # anim_blit_dict(screen, self.images, 20, 70)
-        y = self.blit_other()
+        y = self.blit_other_new()
         for key, images in self.images.items():
             if images and key != "other":
                 anim_blit(screen, images, 20, y)

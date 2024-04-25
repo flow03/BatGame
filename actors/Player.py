@@ -155,6 +155,7 @@ class Player:
 
     def draw(self, screen):
         screen.blit(self.image, self.rect)
+        # self.drawer.draw(self)
         # if colour:
         #     pygame.draw.rect(screen, colour, self.rect, 2)
 

@@ -5,23 +5,34 @@ from random import randint, choice
 
 # Text
 class Text:
-    def __init__(self, screen):
+    def __init__(self, game):
+        self.game = game
         self.myfont = pygame.font.SysFont("Montserrat", 30) # Arial Narrow, Montserrat
-
-        # f_url = resource_path('fonts/graf.ttf')
-        # f_url = resource_path('fonts/MunchkinCyr.ttf')
-        # f_url = resource_path('fonts/moonlight.ttf')
-        # f_url = resource_path('fonts/Romashulka.ttf')
-
         self.myBiggerFont = self.get_BiggerFont()
         self.screen = pygame.display.get_surface()
         self.center = Vector2(self.screen.get_rect().center)
-        self.WIDTH = screen.get_width()
-        self.HEIGHT = screen.get_height()
+        self.WIDTH = self.screen.get_width()
+        self.HEIGHT = self.screen.get_height()
         self.createExitRects()
         self.y = 15
         self.y_offset = 25
         self.x_offset = 15
+
+    def display(self):
+        if self.game.displayText:
+            self.print_fps(self.game.FPS)
+            self.print_debug_info()
+            # if Girl:
+            #     text.print_girl_info(screen, Girl.sprites()[-1]) # the last one
+            girl = self.game.groups.actors.get("girl")
+            if girl:
+                self.print_girl_info(girl)
+
+    def collide_restart(self, mouse):
+        return self.restart_text_rect.collidepoint(mouse) and pygame.mouse.get_pressed()[0]
+
+    def collide_exit(self, mouse):
+        return self.exit_text_rect.collidepoint(mouse) and pygame.mouse.get_pressed()[0]
 
     def get_BiggerFont(self):
         fonts = ["Romashulka.ttf", "moonlight.ttf", "graf.ttf" ]
@@ -63,12 +74,14 @@ class Text:
         screen.blit(self.restart_text, self.restart_text_rect)
         screen.blit(self.exit_text, self.exit_text_rect)
 
-    def print_fps(self, screen, FPS):
-        screen.blit(self.myfont.render('FPS: ' + str(int(FPS.get_fps())), True, "Black"), (self.WIDTH - 85, 15))
+    def print_fps(self, FPS):
+        self.screen.blit(self.myfont.render('FPS: ' + str(int(FPS.get_fps())), True, "Black"), (self.WIDTH - 85, 15))
 
-    def print_debug_info(self, screen, groups, drops, player):
+    def print_debug_info(self):
         self.y = 85
-        self.screen = screen
+        groups = self.game.groups
+        # drops = self.game.drops
+        player = self.game.player
         # self.print('food on screen', len(drops.foodDrops))
         # self.print('bullets on screen', len(drops.bulletDrops))
         # self.print('loot on screen', len(drops.fallen_drops))
@@ -98,10 +111,9 @@ class Text:
         # self.print('y_rect_width', player.health_bar.yellow_rect.width)
 
 
-    def print_girl_info(self, screen, girl):
+    def print_girl_info(self, girl):
         # self.y = 85 + self.y_offset * 2 # 135
         self.y += self.y_offset
-        self.screen = screen    # for print method
 
         self.screen.blit(self.myfont.render("Girl", True, "Black"), (self.x_offset, self.y))
         self.y += self.y_offset
@@ -122,7 +134,7 @@ class Text:
 
             # self.print('food_clock', girl.dance.food_clock.clock())
             # self.print('nextFood', girl.dance.food_clock.nextFrame)
-            
+        ...    
 
     def print(self, string : str, variable):
         self.screen.blit(self.myfont.render(string + ": " + str(variable), True, "Black"), (self.x_offset, self.y))
