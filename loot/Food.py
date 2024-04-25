@@ -92,11 +92,15 @@ class FoodCreator():
             start_index = end_index
             end_index += max_count
             y += 30 #frame_height
+        return y
 
-    def draw(self, screen):
-        # screen = pygame.display.get_surface()
-        anim_blit_dict(screen, self.images, 20, 70)
-        # self.blit_other()
+    def blit_dict(self):
+        screen = pygame.display.get_surface()
+        # anim_blit_dict(screen, self.images, 20, 70)
+        y = self.blit_other()
+        for key, images in self.images.items():
+            if images and key != "other":
+                anim_blit(screen, images, 20, y)
 
     def createFood_common(self):
         image = choice(self.images['other'])

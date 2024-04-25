@@ -1,5 +1,5 @@
 import pygame
-# from Bat import Bat
+from interface.Drawer import Drawer
 # from Bullet import Bullet
 
 class Actors:
@@ -9,6 +9,9 @@ class Actors:
     # def add(self, name, object):
     #     if not self.actors.get(name):
     #         self.actors[name] = object
+    def sprites(self):
+        # return list(self.actors)
+        return self.actors # dict
 
     def add_actor(self, key, actor):
         self.actors[key] = actor
@@ -73,103 +76,99 @@ class Actors:
     def __setitem__(self, key, actor):
         self.add(key, actor)
 
-def get_colour(isBoundRects):
-    colourGreen = None
-    colourRed = None
+# def get_colour(isBoundRects):
+#     colourGreen = None
+#     colourRed = None
 
-    if isBoundRects:
-        colourGreen = "Green"
-        colourRed = "Red"
+#     if isBoundRects:
+#         colourGreen = "Green"
+#         colourRed = "Red"
 
-    return colourGreen, colourRed
+#     return colourGreen, colourRed
 
-class Actors_:
-    def __init__(self):
-        # dict of MyGroups
-        self.actors = {
-            'bats': MyGroup(),
-            'bullets': MyGroup(),
-            'actors': MyGroup()
-        }
+# class Actors_:
+#     def __init__(self):
+#         # dict of MyGroups
+#         self.actors = {
+#             'bats': MyGroup(),
+#             'bullets': MyGroup(),
+#             'actors': MyGroup()
+#         }
 
-    # add item to a group
-    def add(self, name, object):
-        self.actors[name].add(object)
+#     # add item to a group
+#     def add(self, name, object):
+#         self.actors[name].add(object)
 
-    def update(self):
-        for group in self.actors.values():
-            if group:   # not empty
-                group.update()
+#     def update(self):
+#         for group in self.actors.values():
+#             if group:   # not empty
+#                 group.update()
 
-    def draw(self, screen, colour = None):
-        # colourGreen, colourRed = get_colour(isBoundRects)
-        # self.actors['bats'].draw(screen, colourRed)
-        # self.actors['bullets'].draw(screen, colourGreen)
-        # self.actors['actors'].draw(screen, colourRed)
+#     def draw(self, screen, colour = None):
+#         # colourGreen, colourRed = get_colour(isBoundRects)
+#         # self.actors['bats'].draw(screen, colourRed)
+#         # self.actors['bullets'].draw(screen, colourGreen)
+#         # self.actors['actors'].draw(screen, colourRed)
 
-        for group in self.actors.values():
-            if group:   # not empty
-                if colour and group == self.actors['bullets']:
-                    self.actors['bullets'].draw(screen, 'Green')
-                else:
-                    group.draw(screen, colour)
+#         for group in self.actors.values():
+#             if group:   # not empty
+#                 if colour and group == self.actors['bullets']:
+#                     self.actors['bullets'].draw(screen, 'Green')
+#                 else:
+#                     group.draw(screen, colour)
 
-    def init(self):
-        if self.actors['actors']: # not empty
-            for actor in self.actors['actors']:
-                actor.init()
+#     def init(self):
+#         if self.actors['actors']: # not empty
+#             for actor in self.actors['actors']:
+#                 actor.init()
 
-    # get group
-    def get(self, name):
-        return self.actors.get(name)
+#     # get group
+#     def get(self, name):
+#         return self.actors.get(name)
 
-    # does nothing
-    def remove(self, name):
-        ...
+#     # does nothing
+#     def remove(self, name):
+#         ...
 
-    def empty(self, name):
-        if self.actors.get(name):
-            self.actors[name].empty()
+#     def empty(self, name):
+#         if self.actors.get(name):
+#             self.actors[name].empty()
 
-    def clear(self):
-        for group in self.actors.values():
-            if group:
-                group.empty()
+#     def clear(self):
+#         for group in self.actors.values():
+#             if group:
+#                 group.empty()
 
-    def __getitem__(self, index):
-        return self.get(index)
+#     def __getitem__(self, index):
+#         return self.get(index)
 
-    def __setitem__(self, index, value):
-        self.add(index, value)
+#     def __setitem__(self, index, value):
+#         self.add(index, value)
 
 class MyGroup(pygame.sprite.Group):
     def __init__(self, *sprites):
         super().__init__(*sprites)
-        
+
         # self.alpha_rect = pygame.Surface((100, 100)) #self.get_size()
         # print(self.alpha_rect.get_width(), " ", self.alpha_rect.get_height())
         # self.alpha_rect.set_alpha(100)
 
-    def draw(self, screen, colour = None, alpha = False):
+    def draw(self, screen, alpha = False):
         sprites = self.sprites()
         # print(len(sprites))
         if sprites:
             for sprite in sprites:
-                if colour and alpha:
+                if self.displayText and alpha:
+                    colour = "Red"
                     alpha_rect = self.create_alpha(colour, sprite.rect.size)
                     screen.blit(alpha_rect, sprite.rect)
                     
                 # screen.blit(sprite.image, sprite.rect)
                 sprite.draw(screen)
 
-                if colour and not alpha:
+                if self.displayText and not alpha:
+                    colour = "Red"
                     pygame.draw.rect(screen, colour, sprite.rect, 2)
-
-    def create_alpha(self, colour, size):
-        alpha_rect = pygame.Surface(size)
-        alpha_rect.fill(colour)
-        alpha_rect.set_alpha(100)
-        return alpha_rect
 
 
 class Groups:
@@ -179,7 +178,8 @@ class Groups:
         self.actors = Actors()
         self.dummies = Actors()
 
-        self.screen = pygame.display.get_surface()
+        self.drawer = Drawer()
+        # self.screen = pygame.display.get_surface()
 
     # add bat to a group
     def add_bat(self, bat):
@@ -197,11 +197,11 @@ class Groups:
         self.bullets.update()
         self.actors.update()
 
-    def draw(self, colour = None):
-        self.dummies.draw(self.screen, colour)
-        self.bats.draw(self.screen, colour)
-        self.bullets.draw(self.screen, colour)
-        self.actors.draw(self.screen, colour)
+    def draw(self):
+        self.drawer.draw(self.dummies)
+        self.drawer.draw(self.bats)
+        self.drawer.draw(self.bullets)
+        self.drawer.draw(self.actors)
 
     def clear(self):
         self.dummies.clear()

@@ -6,6 +6,7 @@ from pygame.math import Vector2
 from loot.Food import FoodCreator
 from actors.Groups import MyGroup
 from add.Path import resource_path
+from interface.Drawer import Drawer
 
 class Drops():
     def __init__(self):
@@ -15,6 +16,7 @@ class Drops():
 
         self.foodCreator = FoodCreator()
         self.screen = pygame.display.get_surface()
+        self.drawer = Drawer()
         # self.fallen_count = 0
 
     def createFallenDrop(self, start_pos):
@@ -48,10 +50,11 @@ class Drops():
             for drop in self.fallen_drops:
                 drop.update()
 
-    def draw(self, screen, colour):
-        self.bulletDrops.draw(screen, colour)
-        self.foodDrops.draw(screen, colour)
-        # self.foodCreator.draw(screen)
+    def draw(self):
+        self.drawer.draw(self.bulletDrops)
+        self.drawer.draw(self.foodDrops)
+        # self.foodCreator.blit_dict()
+        self.foodCreator.blit_other()
 
     def create_bulletDrop(self):
         new_bullet = BulletDrop()

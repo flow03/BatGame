@@ -47,3 +47,28 @@ class Game():
         self.screen.blit(self.background, self.bg_pos)
         self.text.blit_loading_text(self.screen)
         pygame.display.update()
+
+    def update_objects(self):
+        # bat_list.update()
+        self.player.update()
+        # bullets.update()
+        self.drops.update()
+        self.groups.update()
+        # Events.update()
+
+    def draw_objects(self):
+        # colourGreen, colourRed = Groups.get_colour(isBoundRects)
+        self.drops.draw()
+        self.groups.draw()
+        self.player.draw(self.screen) 
+
+    def restart(self):
+        self.player.init()
+        self.groups.clear()
+        self.drops.clear()
+        # jump.is_jump = False
+        self.Events.start()
+        self.dummies.create() # after groups.clear
+        self.text.change_BiggerFont()
+        # isTenBats = False
+

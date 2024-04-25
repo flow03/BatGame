@@ -153,10 +153,10 @@ class Player:
 
         self.is_moving = False
 
-    def draw(self, screen, colour = None):
+    def draw(self, screen):
         screen.blit(self.image, self.rect)
-        if colour:
-            pygame.draw.rect(screen, colour, self.rect, 2)
+        # if colour:
+        #     pygame.draw.rect(screen, colour, self.rect, 2)
 
         self.health_bar.draw(screen)
         self.bullet_bar.draw(screen)

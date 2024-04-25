@@ -22,42 +22,21 @@ game = Game()
 # createDummies(groups)
 
 # Update
-def update_objects():
-    # bat_list.update()
-    player.update()
-    # bullets.update()
-    drops.update()
-    groups.update()
-    # Events.update()
+
 
 # Draw
-def draw_objects(isBoundRects):
-    colourGreen, colourRed = Groups.get_colour(isBoundRects)
-    drops.draw(screen, colourGreen)
-    groups.draw(colourRed)
-    player.draw(screen, colourGreen)
+
 
 # Sound
 # bg_sound = pygame.mixer.Sound('sounds/Black Sabbath - Paranoid.mp3')
 # bg_sound.play()
 
 # Bool triggers
-displayText = False
 
 # isTenBats = False
 
 # gameplay = True
 run = True
-
-def initialize():
-    player.init()
-    groups.clear()
-    drops.clear()
-    # jump.is_jump = False
-    Events.start()
-    dummies.create() # after groups.clear
-    text.change_BiggerFont()
-    # isTenBats = False
 
 
 # Main loop
