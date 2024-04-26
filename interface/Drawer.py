@@ -7,11 +7,11 @@ class Drawer():
         # self.displayText = False
         self.drawer = Draw()
 
-    def draw(self, obj):
-        if isinstance(obj, pygame.sprite.Group):
-            self.drawer.draw_group(obj)
-        elif isinstance(obj, pygame.sprite.Sprite):
-            self.drawer.draw_sprite(obj)
+    def draw_group(self, group):
+        self.drawer.draw_group(group)
+
+    def draw(self, sprite):
+        self.drawer.draw_sprite(sprite)
 
     def common(self):
         self.drawer = Draw()
@@ -35,7 +35,7 @@ class Draw():
             for sprite in sprites:
                 self.draw_sprite(sprite)
 
-class DrawRect():
+class DrawRect(Draw):
     def __init__(self):
         super().__init__()
         self.colour = "Red"
@@ -44,7 +44,7 @@ class DrawRect():
         sprite.draw(self.screen)
         pygame.draw.rect(self.screen, self.colour, sprite.rect, 2)
 
-class DrawAlpha():
+class DrawAlpha(Draw):
     def __init__(self):
         super().__init__()
         self.colour = "Red"

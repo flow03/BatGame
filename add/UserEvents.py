@@ -96,16 +96,14 @@ class UserEvents:
             #     groups.actors_damage(5)
             #     player.set_damage(5)
 
-    # працює незалежно від player.gameplay
-    def restart_pressed(self):
-        for event in pygame.event.get():
-            if event.type == pygame.KEYDOWN:
-                if event.key == pygame.K_r:
-                    self.game.restart()
-                # if event.key == pygame.K_g:
-                #     gc.collect()
-                #     print(gc.get_stats())
-
+        # працює незалежно від player.gameplay
+        if event.type == pygame.KEYDOWN:
+            if event.key == pygame.K_r:
+                self.game.restart()
+            # if event.key == pygame.K_g:
+            #     gc.collect()
+            #     print(gc.get_stats())
+                
     def start_timer(self):
         pygame.time.set_timer(self.BAT_TIMER, 3500)
         pygame.time.set_timer(self.BULLET_DROP_TIMER, 4000)

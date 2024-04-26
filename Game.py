@@ -14,7 +14,6 @@ class Game():
         self.FPS = pygame.time.Clock()
         self.screen_init()
         self.screen_center = Vector2(self.screen.get_size())//2
-        print(self.screen_center)
 
         self.text = Text(self)
         self.blit_loading()
@@ -79,12 +78,12 @@ class Game():
         # isTenBats = False
 
     def switch_text(self):
-        if not displayText:
-            displayText = True
+        if not self.displayText:
+            self.displayText = True
         else:
-            displayText = False
+            self.displayText = False
 
-        if displayText:
+        if self.displayText:
             self.groups.drawer.rect()
             self.drops.drawer.rect()
         else:
@@ -105,8 +104,8 @@ class Game():
                 self.update_objects()
                 self.draw_objects()
                 
-                self.Events.update()
-                self.Events.restart_pressed()
+                # self.Events.update()
+                # self.Events.restart_pressed()
                             
                 self.text.display()
             else:
@@ -120,7 +119,7 @@ class Game():
             
             pygame.display.update()
 
-            # self.Events.update()
-            self.Events.restart_pressed()
+            self.Events.update()
+            # self.Events.restart_pressed()
 
         pygame.quit()

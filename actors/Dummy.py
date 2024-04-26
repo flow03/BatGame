@@ -7,14 +7,14 @@ from add.Path import resource_path
 from add.Clock import Clock
 
 class Dummy(pygame.sprite.Sprite):
-    def __init__(self, x, y, bullet_list, health_type = None, health = 100, shield = 0):
+    def __init__(self, pos, bullet_list, health_type = None, health = 100, shield = 0):
         super().__init__()
         
         self.health_type = health_type
         img_url = resource_path('img/training_dummy.png')
         self.image = pygame.image.load(img_url).convert_alpha()
         # self.resize_image(80)
-        self.rect = self.image.get_rect(center=(x, y))
+        self.rect = self.image.get_rect(center=pos)
         self.bullet_list = bullet_list
         self.re_delay = Clock(1000)
 

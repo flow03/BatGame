@@ -51,8 +51,8 @@ class Drops():
                 drop.update()
 
     def draw(self):
-        self.drawer.draw(self.bulletDrops)
-        self.drawer.draw(self.foodDrops)
+        self.drawer.draw_group(self.bulletDrops)
+        self.drawer.draw_group(self.foodDrops)
         # self.foodCreator.blit_dict()
         # self.foodCreator.blit_other()
 
