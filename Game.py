@@ -6,12 +6,15 @@ from actors.Groups import Groups
 from add.UserEvents import UserEvents
 from actors.Player import Player
 from actors.Dummy import DummyCreator
+from pygame.math import Vector2
 
 class Game():
     def __init__(self):
         pygame.init()
         self.FPS = pygame.time.Clock()
         self.screen_init()
+        self.screen_center = Vector2(self.screen.get_size())//2
+        print(self.screen_center)
 
         self.text = Text(self)
         self.blit_loading()
@@ -20,10 +23,11 @@ class Game():
         self.groups = Groups()
         self.Events = UserEvents(self)
 
-        self.player = Player(self.screen.get_size()//2, self.drops)
+        self.player = Player(self.screen_center, self.drops)
         self.dummies = DummyCreator(self.groups)
 
         self.displayText = False
+        self.active = True
 
     def screen_init(self):
         WIDTH = 1200
@@ -33,6 +37,7 @@ class Game():
         icon = pygame.image.load(resource_path('img/fangs.ico')).convert_alpha()
         pygame.display.set_icon(icon)
         self.bg_init(WIDTH, HEIGHT)
+        # self.screen_center = Vector2(WIDTH//2, HEIGHT//2)
 
     def bg_init(self, WIDTH, HEIGHT):
         bg = pygame.image.load(resource_path('img/bg/Work-2.jpg')).convert()
@@ -73,10 +78,22 @@ class Game():
         self.text.change_BiggerFont()
         # isTenBats = False
 
+    def switch_text(self):
+        if not displayText:
+            displayText = True
+        else:
+            displayText = False
+
+        if displayText:
+            self.groups.drawer.rect()
+            self.drops.drawer.rect()
+        else:
+            self.groups.drawer.common()
+            self.drops.drawer.common()
+
     # Main loop    
     def run(self):
-        run = True
-        while run:
+        while self.active:
             self.FPS.tick(60)
 
             self.screen.blit(self.background, self.bg_pos)
@@ -88,22 +105,22 @@ class Game():
                 self.update_objects()
                 self.draw_objects()
                 
+                self.Events.update()
+                self.Events.restart_pressed()
+                            
                 self.text.display()
             else:
-                # screen.fill("Black")
                 self.text.blitExitRects(self.screen)
 
                 mouse = pygame.mouse.get_pos()
                 if self.text.collide_restart(mouse):
                     self.restart()
                 elif self.text.collide_exit(mouse):
-                    run = False
+                    self.active = False
             
             pygame.display.update()
 
-            self.Events.update()
-
+            # self.Events.update()
+            self.Events.restart_pressed()
 
         pygame.quit()
-
-

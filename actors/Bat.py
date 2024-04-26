@@ -10,13 +10,13 @@ from loot.Drops import Drops
 import interface.Shields as Shields
 
 class Bat(ActorEffects):
-    def __init__(self, drops : Drops, player, bullets):
+    def __init__(self, game):
         super().__init__() # self.screen
 
         # self.screen = pygame.display.get_surface()
-        self.drops = drops
-        self.player = player
-        self.bullet_list = bullets
+        self.drops = game.drops
+        self.player = game.player
+        self.bullet_list = game.groups.bullets
 
         self.dir_image = None
         self.image = self.load_random_frame_new()

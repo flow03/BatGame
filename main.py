@@ -1,4 +1,4 @@
-import pygame
+# import pygame
 # import random
 # import spritesheet
 # from actors.Player import Player
@@ -8,11 +8,11 @@ import pygame
 # from interface.Text import Text
 # from add.Path import resource_path
 # from add.UserEvents import UserEvents
-from actors.Dance_Girl import Dance_Girl
-import actors.Bat as Bat
+# from actors.Dance_Girl import Dance_Girl
+# import actors.Bat as Bat
 # from Bullet_class import Bullet
 # from actors.Dummy import Dummy
-import actors.Groups as Groups
+# import actors.Groups as Groups
 # import gc # garbage collector
 # from Food import FoodCreator
 from Game import Game

@@ -107,7 +107,7 @@ class DummyCreator():
         self.groups = groups
         self.is_dummies = False
         screen = pygame.display.get_surface()
-        self.center = Vector2(screen.get_size()//2)
+        self.center = Vector2(screen.get_size())//2
 
     def create(self):
         if self.is_dummies:

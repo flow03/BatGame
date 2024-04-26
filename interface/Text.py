@@ -1,7 +1,7 @@
 import pygame
 from pygame.math import Vector2
 from add.Path import resource_path
-from random import randint, choice
+from random import choice
 
 # Text
 class Text:

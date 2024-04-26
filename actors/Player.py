@@ -7,7 +7,7 @@ import interface.Effects as Effects
 import interface.Shields as Shields
 
 class Player:
-    def __init__(self, x, y, drops):
+    def __init__(self, position, drops): # drops, groups.bullets
         self.animation_frames = {
             'down': [],
             'up': [],
@@ -15,7 +15,7 @@ class Player:
             'right': []
         }
         self.load_animation_frames()
-        self.start_pos = Vector2(x, y)
+        self.start_pos = Vector2(position)
         self.speed = 4
         self.defence = 0
         # self.bullet_speed_bonus = 0

@@ -53,7 +53,7 @@ class Drops():
     def draw(self):
         self.drawer.draw(self.bulletDrops)
         self.drawer.draw(self.foodDrops)
-        self.foodCreator.blit_dict()
+        # self.foodCreator.blit_dict()
         # self.foodCreator.blit_other()
 
     def create_bulletDrop(self):

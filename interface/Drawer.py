@@ -1,26 +1,26 @@
 import pygame
-from actors.Groups import MyGroup
+# from actors.Groups import MyGroup, Actors
 
 class Drawer():
     def __init__(self):
         # self.screen = pygame.display.get_surface()
         # self.displayText = False
-        self.draw = Draw()
+        self.drawer = Draw()
 
     def draw(self, obj):
-        if isinstance(obj, pygame.sprite.Group) or isinstance(obj, MyGroup):
-            self.draw.draw_group(obj)
+        if isinstance(obj, pygame.sprite.Group):
+            self.drawer.draw_group(obj)
         elif isinstance(obj, pygame.sprite.Sprite):
-            self.draw.draw_sprite(obj)
+            self.drawer.draw_sprite(obj)
 
     def common(self):
-        self.draw = Draw()
+        self.drawer = Draw()
 
     def rect(self):
-        self.draw = DrawRect()
+        self.drawer = DrawRect()
 
     def alpha(self):
-        self.draw = DrawAlpha()
+        self.drawer = DrawAlpha()
 
 class Draw():
     def __init__(self):
