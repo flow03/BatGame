@@ -13,6 +13,8 @@ class Text:
         self.center = Vector2(self.screen.get_rect().center)
         self.WIDTH = self.screen.get_width()
         self.HEIGHT = self.screen.get_height()
+        str_url = resource_path('fonts\\' + 'lang_s.txt')
+        self.strings = self.get_text(str_url)
         self.createExitRects()
         self.y = 15
         self.y_offset = 25
@@ -41,16 +43,28 @@ class Text:
 
         return pygame.font.Font(font_url, 60)
 
+    def get_text(self, filename):
+        strings = {}
+        with open(filename, 'r', encoding='utf-8') as file:
+            lines = file.readlines()
+            strings['over'] = lines[0].strip()
+            strings['over_add'] = lines[1].strip()
+            strings['restart'] = lines[2].strip()
+            strings['exit'] = lines[3].strip()
+        print(strings)
+        return strings
+
     def change_BiggerFont(self):
         self.myBiggerFont = self.get_BiggerFont()
         self.createExitRects()
 
     def createExitRects(self):
         # print("createExitRects call")
+        # self.strings = self.get_text(resource_path('lang_en.txt'))
         self.myBiggerFont = self.get_BiggerFont()
-        self.game_over = self.myBiggerFont.render('GAME OVER', False, 'Black')
+        self.game_over = self.myBiggerFont.render(self.strings['over'], False, 'Black')
         self.game_over_rect = self.game_over.get_rect()
-        self.game_over_2 = self.myBiggerFont.render('RESTART?', False, 'Black')
+        self.game_over_2 = self.myBiggerFont.render(self.strings['over_add'], False, 'Black')
         self.game_over_rect_2 = self.game_over_2.get_rect()
         # self.game_over.
         pos_y = self.center.y - (self.game_over_rect.height + self.game_over_rect_2.height)/2
@@ -61,11 +75,11 @@ class Text:
         self.game_over_rect_2.center = position
 
         position.y = self.game_over_rect_2.bottom + 50
-        self.restart_text = self.myfont.render('Again', False, 'Black')
+        self.restart_text = self.myfont.render(self.strings['restart'], False, 'Black')
         self.restart_text_rect = self.restart_text.get_rect(center=position)
 
         position.y = self.restart_text_rect.bottom + 30
-        self.exit_text = self.myfont.render('Another time', False, 'Black')
+        self.exit_text = self.myfont.render(self.strings['exit'], False, 'Black')
         self.exit_text_rect = self.exit_text.get_rect(center=position)
 
     def blitExitRects(self, screen):
