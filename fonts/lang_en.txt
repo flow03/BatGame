@@ -1,4 +1,4 @@
 GAME OVER
 RESTART?
-Again
+Try again
 Another time

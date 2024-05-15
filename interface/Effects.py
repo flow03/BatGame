@@ -151,7 +151,7 @@ class PoisonEffect(Effect):
         self.player.add_speed -= 1
         self.healthBar = self.player.health_bar.healthbar
         self.healthBar.change_colour("forestgreen")
-        self.default_damage = 5 # percent
+        self.default_damage = 2 # percent
         self.poison_damage = self.get_damage(self.default_damage)
 
         self.tick_timer = Clock(1200)
@@ -171,8 +171,8 @@ class PoisonEffect(Effect):
         # no restart
         if self.player.add_speed > -2:
             self.player.add_speed -= 1
-        if self.default_damage < 15:
-            self.default_damage += 5
+        if self.default_damage < 6:
+            self.default_damage += 2
             self.boost += 1
         self.poison_damage = self.get_damage(self.default_damage)
 

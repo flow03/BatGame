@@ -9,4 +9,17 @@ def resource_path(relative_path):
         base_path = os.path.abspath(".")
 
     return os.path.join(base_path, relative_path)
-    
+
+def get_num(string):
+    num = str()
+    for ch in string:
+        if ch.isdigit():
+            num += ch
+        elif num:
+            break
+
+    if num.isdigit():
+        num = int(num)
+        return num
+    else:
+        return None

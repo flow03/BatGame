@@ -153,9 +153,8 @@ class MyGroup(pygame.sprite.Group):
         # print(self.alpha_rect.get_width(), " ", self.alpha_rect.get_height())
         # self.alpha_rect.set_alpha(100)
 
-    def draw(self):
-        pass
-
+    # def draw(self):
+    #     pass
 
 class Groups:
     def __init__(self):

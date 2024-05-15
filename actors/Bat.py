@@ -4,9 +4,9 @@ import os
 from pygame.math import Vector2
 import interface.HealthBar as HealthBar
 # import interface.Effects as Effects
-from add.Path import resource_path
-from actors.Actor import Actor, ActorEffects
-from loot.Drops import Drops
+import add.Path as Path
+from actors.Actor import ActorEffects
+# from loot.Drops import Drops
 import interface.Shields as Shields
 
 class Bat(ActorEffects):
@@ -29,7 +29,7 @@ class Bat(ActorEffects):
   
     def load_random_frame(self):
         i = random.randint(0, 17) # max bat index
-        img_url = resource_path(f'img/bat/bat{i}.png')
+        img_url = Path.resource_path(f'img/bat/bat{i}.png')
         frame = pygame.image.load(img_url)
         
         self.createDirection(i, frame)
@@ -38,7 +38,7 @@ class Bat(ActorEffects):
 
     def load_random_frame_new(self):
         img_list = []
-        path = resource_path(f'img/bat')
+        path = Path.resource_path(f'img/bat')
         for img in os.listdir(path):
             if img.endswith(".png"):
                 img_path = os.path.join(path, img)
@@ -48,25 +48,11 @@ class Bat(ActorEffects):
         rand_img = random.choice(img_list)
         frame = pygame.image.load(rand_img)
 
-        index = self.get_num(os.path.basename(rand_img))
+        index = Path.get_num(os.path.basename(rand_img))
         # print("index: ", index)
         self.createDirection(index, frame)
 
         return frame
-
-    def get_num(self, string):
-        num = str()
-        for ch in string:
-            if ch.isdigit():
-                num += ch
-            elif num:
-                break
-
-        if num.isdigit():
-            num = int(num)
-            return num
-        else:
-            return None
 
     def createDirection(self, number, image):
         left_list = [0, 1, 3, 5, 9, 10, 11, 14, 15]
@@ -199,21 +185,21 @@ class BatSpecial(Bat):
         super().update() # effects
 
     def nearest_food(self):
-        nearest_d = None # distance
+        nearest_distance = None # distance
         nearest_pos = Vector2()
         if self.drops.foodDrops:
             bat_pos = Vector2(self.rect.center)
             for food in self.drops.foodDrops:
                 food_pos = Vector2(food.rect.center)
                 distance = bat_pos.distance_to(food_pos)
-                if not nearest_d:
-                    nearest_d = distance
+                if not nearest_distance:
+                    nearest_distance = distance
                     nearest_pos = food_pos
-                if distance < nearest_d: # ???
-                    nearest_d = distance
+                if distance < nearest_distance: # ???
+                    nearest_distance = distance
                     nearest_pos = food_pos
 
-        return nearest_d, nearest_pos
+        return nearest_pos
 
     def changeTarget(self):
         bat_pos = Vector2(self.rect.center)
@@ -221,11 +207,12 @@ class BatSpecial(Bat):
 
         if not self.health.full() and self.drops.foodDrops:
             player_d = bat_pos.distance_to(player_p)
-            food_d, food_p = self.nearest_food()
+            food_pos = self.nearest_food()
+            food_d = bat_pos.distance_to(food_pos)
 
             if food_d <= player_d:
-                self.target = food_p
-                # print(f"nearest food: {food_p}")
+                self.target = food_pos
+                # print(f"nearest food: {food_pos}")
                 # print(f"distance: {food_d}")
             else:
                 self.target = player_p

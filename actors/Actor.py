@@ -50,6 +50,9 @@ class Actor(pygame.sprite.Sprite):
             # print(f"defence_damage: {damage}")
         return round(damage)
 
+    def get_health(self):
+        return self.health.health
+
     def set_damage(self, damage: int):
         damage = self.defence_damage(damage)
         self.health_bar.set_damage(damage)

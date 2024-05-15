@@ -13,7 +13,7 @@ class Text:
         self.center = Vector2(self.screen.get_rect().center)
         self.WIDTH = self.screen.get_width()
         self.HEIGHT = self.screen.get_height()
-        str_url = resource_path('fonts\\' + 'lang_s.txt')
+        str_url = resource_path('fonts\\' + 'lang_en.txt')
         self.strings = self.get_text(str_url)
         self.createExitRects()
         self.y = 15
@@ -51,7 +51,7 @@ class Text:
             strings['over_add'] = lines[1].strip()
             strings['restart'] = lines[2].strip()
             strings['exit'] = lines[3].strip()
-        print(strings)
+        # print(strings)
         return strings
 
     def change_BiggerFont(self):
@@ -101,7 +101,7 @@ class Text:
         # self.print('loot on screen', len(drops.fallen_drops))
         self.print('killed bats', player.killedBats)
         # self.print('bullets', player.bullets_count)
-        # self.print('health', player.health_new.health)
+        self.print('health', player.health.health)
         self.print('speed', player.speed)
         self.print('add_speed', player.add_speed)
         self.print('defence', player.defence)

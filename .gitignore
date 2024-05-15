@@ -1,5 +1,7 @@
 __pycache__/
 build/
 dist/
+img/debug/
+
 *.exe
 lang_s.txt
