@@ -80,7 +80,8 @@ class UserEvents:
             if event.key == pygame.K_7 or event.key == pygame.K_x:
                 player.add_effect("bullets")
             if event.key == pygame.K_m: # unlimited recreates
-                groups.add_actor("girl", Dance_Girl(self.game))
+                if not groups.actors.get("girl"):
+                    groups.add_actor("girl", Dance_Girl(self.game))
             if event.key == pygame.K_c:
                 pygame.event.post(pygame.event.Event(self.BAT_SP_TIMER))
             if event.key == pygame.K_z:
