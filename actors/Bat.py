@@ -38,7 +38,7 @@ class Bat(ActorEffects):
 
     def load_random_frame_new(self):
         img_list = []
-        path = Path.resource_path(f'img/bat')
+        path = Path.resource_path(os.path.join('img','bat'))
         for img in os.listdir(path):
             if img.endswith(".png"):
                 img_path = os.path.join(path, img)

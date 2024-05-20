@@ -16,7 +16,7 @@ class Game():
         self.screen_center = Vector2(self.screen.get_size())//2
 
         self.text = Text(self)
-        self.blit_loading()
+        # self.blit_loading()
 
         self.drops = Drops()
         self.groups = Groups()
@@ -74,7 +74,7 @@ class Game():
         # jump.is_jump = False
         self.Events.start()
         self.dummies.create() # after groups.clear
-        self.text.change_BiggerFont()
+        self.text.exit.change_BiggerFont()
         # isTenBats = False
 
     def switch_text(self):
@@ -106,16 +106,17 @@ class Game():
                 
                 # self.Events.update()
                 # self.Events.restart_pressed()
-                            
-                self.text.display()
+                if self.displayText:            
+                    self.text.display()
             else:
-                self.text.blitExitRects(self.screen)
+                self.text.exit.blitExitButtons()
 
-                mouse = pygame.mouse.get_pos()
-                if self.text.collide_restart(mouse):
-                    self.restart()
-                elif self.text.collide_exit(mouse):
-                    self.active = False
+                if pygame.mouse.get_pressed()[0]:   # left mouse key
+                    mouse_pos = pygame.mouse.get_pos()
+                    if self.text.exit.restart_text.collide(mouse_pos):
+                        self.restart()
+                    elif self.text.exit.exit_text.collide(mouse_pos):
+                        self.active = False
             
             pygame.display.update()
 
