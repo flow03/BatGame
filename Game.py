@@ -7,6 +7,7 @@ from add.UserEvents import UserEvents
 from actors.Player import Player
 from actors.Dummy import DummyCreator
 from pygame.math import Vector2
+from interface.Jokes import Jokes
 
 class Game():
     def __init__(self):
@@ -17,12 +18,13 @@ class Game():
 
         self.text = Text(self)
         # self.blit_loading()
+        self.jokes = Jokes()
 
         self.drops = Drops()
         self.groups = Groups()
         self.Events = UserEvents(self)
 
-        self.player = Player(self.screen_center, self.drops)
+        self.player = Player(self.screen_center, self.drops, self.jokes)
         self.dummies = DummyCreator(self.groups)
 
         self.displayText = False

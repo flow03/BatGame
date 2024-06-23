@@ -1,4 +1,4 @@
-import pygame
+from pygame.time import get_ticks
 
 class Clock:
     # set delay
@@ -9,10 +9,10 @@ class Clock:
         # self.start()
 
     def clock(self):
-        return pygame.time.get_ticks()
+        return get_ticks()
 
     # check nextFrame and set new nextFrame if True
-    def isNextFrame(self):
+    def next(self):
         if self.nextFrame:
             if self.clock() >= self.nextFrame:
                 self.nextFrame += self.delay

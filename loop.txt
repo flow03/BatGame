@@ -1,0 +1,20 @@
+state = str()
+
+# main loop
+while game_loop:
+	if state == "game":
+		# game logic, or function
+		...
+	if state == "menu":
+		# menu logic
+		...
+	if state == "results":
+		# results logic
+		...
+	if state == "pause":
+		# pause logic
+		...
+	if state == "etc":
+		# etc logic
+		...
+	

@@ -1,4 +1,4 @@
-import pygame
+# import pygame
 from pygame.math import Vector2
 import interface.HealthBar as HealthBar
 from add.Clock import Clock
@@ -164,7 +164,7 @@ class PoisonEffect(Effect):
         return damage
 
     def update(self):
-        if self.tick_timer.isNextFrame():
+        if self.tick_timer.next():
             self.healthBar.health.set_damage(self.poison_damage) # directly, without defence        
 
     def increase(self):

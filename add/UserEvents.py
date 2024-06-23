@@ -90,6 +90,8 @@ class UserEvents:
                 drops.create_RedMushroom()
             if event.key == pygame.K_RIGHTBRACKET:
                 drops.create_BlueMushroom()
+            if event.key == pygame.K_j:
+                player.get_joke()
             # if event.key == pygame.K_h:
             #     groups.actors_heal(5)
             #     player.set_heal(5)

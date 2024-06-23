@@ -1,4 +1,5 @@
-import pygame
+import pygame.font
+from pygame.display import get_surface
 from pygame.math import Vector2
 from add.Path import resource_path
 from random import choice
@@ -11,7 +12,7 @@ class Text:
         self.myfont = pygame.font.SysFont("Montserrat", 30) # Arial Narrow, Montserrat
         # self.whitefont = pygame.font.SysFont("Montserrat", 31)
         # self.myBiggerFont = self.get_BiggerFont()
-        self.screen = pygame.display.get_surface()
+        self.screen = get_surface()
         # self.center = Vector2(self.screen.get_rect().center)
         self.WIDTH = self.screen.get_width()
         self.HEIGHT = self.screen.get_height()
@@ -145,7 +146,7 @@ class Text:
         screen.blit(loading_text, loading_text_rect)
 
 class Button:
-    def __init__(self, text, font : pygame.font.Font, pos):
+    def __init__(self, text : str, font : pygame.font.Font, pos):
         self.text = font.render(text, False, 'Black')
         self.rect = self.text.get_rect(center=pos)
 
@@ -166,7 +167,7 @@ class Exit:
         self.myfont = pygame.font.SysFont("Montserrat", 30) # Arial Narrow, Montserrat
         self.prev_font_name = None
         self.myBiggerFont = self.get_BiggerFont()
-        self.screen = pygame.display.get_surface()
+        self.screen = get_surface()
         self.center = Vector2(self.screen.get_rect().center)
 
         str_url = resource_path(join('fonts', 'lang_s.txt'))

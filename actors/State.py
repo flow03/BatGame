@@ -53,7 +53,7 @@ class FoodCircle:
         self.created_food = 0
 
     def spawnFood(self):
-        if self.food_clock.isNextFrame():
+        if self.food_clock.next():
             if self.created_food < 15:
                 self.drops.create_foodDrop_coords(self.food_coords)
                 self.food_coords = self.get_circle_coords()
@@ -92,7 +92,7 @@ class Dance:
         self.d_clock.start()
 
     def changeDance(self):
-        if self.d_clock.isNextFrame():
+        if self.d_clock.next():
             self.currentDance += 1
             self.girl.idle_animation = self.danceList[self.currentDance % len(self.danceList)]
 
