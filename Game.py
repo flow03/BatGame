@@ -1,13 +1,13 @@
 import pygame
 from add.Path import resource_path
-from interface.Text import Text
+from text.Text import Text
 from loot.Drops import Drops
 from actors.Groups import Groups
 from add.UserEvents import UserEvents
 from actors.Player import Player
 from actors.Dummy import DummyCreator
 from pygame.math import Vector2
-from interface.Jokes import Jokes
+from text.Jokes import Jokes
 
 class Game():
     def __init__(self):

@@ -1,7 +1,8 @@
 import pygame.font
+import pygame.draw
 from pygame.display import get_surface
 from pygame.math import Vector2
-from add.Path import resource_path
+from add.Path import resource_path, load_json
 from random import choice
 from os.path import join
 
@@ -21,7 +22,9 @@ class Text:
         self.y_offset = 25
         self.x_offset = 20
 
-        self.exit = Exit()
+        text_path = resource_path(join('text', 'lang_en.json'))
+        self.text = load_json(text_path)
+        self.exit = Exit(self.text)
 
     def display(self):
         # if self.game.displayText:
@@ -46,12 +49,12 @@ class Text:
         # self.print('food on screen', len(drops.foodDrops))
         # self.print('bullets on screen', len(drops.bulletDrops))
         # self.print('loot on screen', len(drops.fallen_drops))
-        self.print('killed bats', player.killedBats)
+        self.print(self.text['killed_bats'], player.killedBats)
         # self.print('bullets', player.bullets_count)
-        self.print('health', player.health.health)
-        self.print('speed', player.speed)
-        self.print('add_speed', player.add_speed)
-        self.print('defence', player.defence)
+        self.print(self.text['health'], player.health.health)
+        self.print(self.text['speed'], player.speed)
+        self.print(self.text['add_speed'], player.add_speed)
+        self.print(self.text['defence'], player.defence)
 
         # self.print('bats', len(groups.bats))
         # self.print('bullets', len(groups.bullets))
@@ -108,21 +111,21 @@ class Text:
 
     def print_help(self):
         self.y_right = 85
-        self.print_r_text("Moving: W A S D")
-        self.print_r_text("Fire: Any mouse key")
-        self.print_r_text("Effects: 1-7 number keys")
-        self.print_r_text("Add speed: Shift")
-        self.print_r_text("Add bullet speed: X")
-        self.print_r_text("Create random food: Z")
-        self.print_r_text("Create bat: C")
-        self.print_r_text("Create mushrooms: [ ]")
-        self.print_r_text("Create dummies: P")
-        self.print_r_text("Create Dance Girl: M")
+        self.print_r_text(self.text['moving'])
+        self.print_r_text(self.text['fire'])
+        self.print_r_text(self.text['effects'])
+        self.print_r_text(self.text['speed_key'])
+        self.print_r_text(self.text['b_speed_key'])
+        self.print_r_text(self.text['food'])
+        self.print_r_text(self.text['bat'])
+        self.print_r_text(self.text['mushrooms'])
+        self.print_r_text(self.text['dummies'])
+        self.print_r_text(self.text['girl'])
 
         self.print_r_text()
-        self.print_r_text("Stop\\start all events: T")
-        self.print_r_text("Restart: R")
-        self.print_r_text("Show\\hide this help: Tab")
+        self.print_r_text(self.text['events'])
+        self.print_r_text(self.text['restart'])
+        self.print_r_text(self.text['help'])
         self.print_r_text()
 
     def print(self, text : str, variable):
@@ -133,10 +136,11 @@ class Text:
         self.y += self.y_offset
 
     def print_r_text(self, text : str = None):
-        x_r_offset = 950
+        x_r_offset = 920
         if text:
             # self.screen.blit(self.whitefont.render(text, True, "White"), (self.x_offset, self.y))
             self.screen.blit(self.myfont.render(text, True, "Black"), (x_r_offset, self.y_right))
+            # print(f'"key" : "{text}",')
         self.y_right += self.y_offset
     
     def blit_loading_text(self, screen):
@@ -146,9 +150,15 @@ class Text:
         screen.blit(loading_text, loading_text_rect)
 
 class Button:
-    def __init__(self, text : str, font : pygame.font.Font, pos):
-        self.text = font.render(text, False, 'Black')
-        self.rect = self.text.get_rect(center=pos)
+    def __init__(self, text : str, font : pygame.font.Font, center=None, midbottom=None):
+        self.line = font.render(text, False, 'Black')
+        self.rect = self.line.get_rect()
+        if center:
+            self.rect.center = center
+            # print("center", center)
+        elif midbottom:
+            self.rect.midbottom = midbottom
+            # print("midbottom", midbottom)
 
     def get_center(self):
         return self.rect.center
@@ -160,39 +170,31 @@ class Button:
         return self.rect.collidepoint(pos)
 
     def draw(self, screen):
-        screen.blit(self.text, self.rect)
+        screen.blit(self.line, self.rect)
+        # pygame.draw.rect(screen, "Red", self.rect, 2)
+
+    def update_pos(self, midbottom):
+        self.rect.midbottom = midbottom
 
 class Exit:
-    def __init__(self):
+    def __init__(self, text):
         self.myfont = pygame.font.SysFont("Montserrat", 30) # Arial Narrow, Montserrat
-        self.prev_font_name = None
+        self.fonts = ["Romashulka.ttf", "moonlight.ttf", "graf.ttf" ]
         self.myBiggerFont = self.get_BiggerFont()
         self.screen = get_surface()
         self.center = Vector2(self.screen.get_rect().center)
 
-        str_url = resource_path(join('fonts', 'lang_s.txt'))
-        self.strings = self.get_text(str_url)
+        self.text = text
+        # print(self.text.keys())
 
         self.createExitButtons()
 
-    def get_text(self, filename):
-        strings = {}
-        with open(filename, 'r', encoding='utf-8') as file:
-            lines = file.readlines()
-            strings['over'] = lines[0].strip()
-            strings['over_add'] = lines[1].strip()
-            strings['restart'] = lines[2].strip()
-            strings['exit'] = lines[3].strip()
-        # print(strings)
-        return strings
-
     def get_BiggerFont(self):
-        # print(self.prev_font_name)
-        fonts = ["Romashulka.ttf", "moonlight.ttf", "graf.ttf" ]
-        if self.prev_font_name and self.prev_font_name in fonts:
-            fonts.remove(self.prev_font_name)
-        font_name = choice(fonts)
-        self.prev_font_name = font_name
+        if not self.fonts:
+            self.fonts = ["Romashulka.ttf", "moonlight.ttf", "graf.ttf" ]
+
+        font_name = choice(self.fonts)
+        self.fonts.remove(font_name)
         font_url = resource_path(join('fonts', font_name))
         
         return pygame.font.Font(font_url, 60)
@@ -207,13 +209,13 @@ class Exit:
         # ----------------------------------------------------------
         position = Vector2(self.center.x, self.center.y - 85)
         # print('new:', position) # (600, 215)
-        self.game_over = Button(self.strings['over'], self.myBiggerFont, position)
+        self.game_over = Button(self.text['over_1'], self.myBiggerFont, position)
         position.y = self.game_over.get_bottom() + 30
-        self.game_over_2 = Button(self.strings['over_add'], self.myBiggerFont, position)
+        self.game_over_2 = Button(self.text['over_2'], self.myBiggerFont, position)
         position.y = self.game_over_2.get_bottom() + 50
-        self.restart_text = Button(self.strings['restart'], self.myfont, position)
+        self.restart_text = Button(self.text['restart_button'], self.myfont, position)
         position.y = self.restart_text.get_bottom() + 30
-        self.exit_text = Button(self.strings['exit'], self.myfont, position)
+        self.exit_text = Button(self.text['exit_button'], self.myfont, position)
 
     def blitExitButtons(self):
         self.game_over.draw(self.screen)

@@ -4,4 +4,4 @@ dist/
 img/debug/
 
 *.exe
-lang_s.txt
+*_s.*

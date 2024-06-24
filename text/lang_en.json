@@ -1,0 +1,26 @@
+{
+    "over_1": "GAME OVER",
+    "over_2": "RESTART?",
+    "restart_button": "Try again",
+    "exit_button": "Another time",
+
+    "killed_bats": "killed bats",
+    "health": "health",
+    "speed": "speed",
+    "add_speed": "add_speed",
+    "defence": "defence",
+
+    "moving" : "Moving: W A S D",
+    "fire" : "Fire: Any mouse key",
+    "effects" : "Effects: 1-7 number keys",
+    "speed_key" : "Add speed: Shift",
+    "b_speed_key" : "Add bullet speed: X",
+    "food" : "Create random food: Z",
+    "bat" : "Create bat: C",
+    "mushrooms" : "Create mushrooms: [ ]",
+    "dummies" : "Create dummies: P",
+    "girl" : "Create Dance Girl: M",
+    "events" : "Stop\\start all events: T",
+    "restart" : "Restart: R",
+    "help" : "Show\\hide this help: Tab"
+}

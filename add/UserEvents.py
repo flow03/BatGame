@@ -5,11 +5,11 @@ from actors.Dance_Girl import Dance_Girl
 class UserEvents:
     def __init__(self, game):
         self.game = game
-        self.isEvents = True
+        self.isEvents = False
         self.isTenBats = False
 
         self.init()
-        self.start()
+        # self.start()
 
     def init(self):
         self.BAT_TIMER = pygame.USEREVENT + 1
@@ -129,7 +129,7 @@ class UserEvents:
         else:
             self.start_timer()
 
-    # reverse to switch
+    # ignores isEvents
     def start(self):
-        if self.isEvents:
-            self.start_timer()
+        # if self.isEvents:
+        self.start_timer()

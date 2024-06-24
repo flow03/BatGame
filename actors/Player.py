@@ -278,12 +278,13 @@ class Player:
     def get_joke(self):
         if not self.joke:
             self.joke = self.jokes.get_joke()
+            # self.joke = self.jokes.get_some_joke("first_date")
 
     def draw_joke(self):
         if self.joke:
             if self.joke.active:
                 pos = Vector2(self.rect.midtop)
-                pos.y -= 25
+                pos.y -= 20
                 self.joke.display(pos)
             else:
                 self.joke = None
