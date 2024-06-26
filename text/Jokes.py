@@ -1,7 +1,7 @@
 import json
 import sys
 import random
-from text.Text import Button
+from text.Text import WhiteButton
 import pygame.font
 from pygame.display import get_surface
 from add.Clock import Clock
@@ -37,7 +37,8 @@ class Joke:
         # self.font = pygame.font.SysFont("Montserrat", 25)
         # self.font = pygame.font.SysFont("Arial", 25)
         # self.font = pygame.font.SysFont("Verdana", 20)
-        self.font = pygame.font.SysFont("Tahoma", 18)
+        # self.font = pygame.font.SysFont("Tahoma", 16)
+        self.font = pygame.font.SysFont("Arial Narrow", 25)
         # self.font = pygame.font.SysFont("Calibri", 25)
         # self.font = pygame.font.SysFont("Courier New", 20)
         # self.font = pygame.font.SysFont("Times New Roman", 25)
@@ -79,7 +80,7 @@ class Line:
             char = self.data.get()
             # self.line += char
             self.line = self.line + char
-            return Button(self.line, self.font)
+            return WhiteButton(self.line, self.font)
 
     def update(self):
         if not self.data.empty():

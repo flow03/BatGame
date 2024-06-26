@@ -1,5 +1,7 @@
-import pygame.font
-import pygame.draw
+import pygame
+# import pygame.font
+# import pygame.draw
+# import pygame.Rect
 from pygame.display import get_surface
 from pygame.math import Vector2
 from add.Path import resource_path, load_json
@@ -149,33 +151,6 @@ class Text:
 
         screen.blit(loading_text, loading_text_rect)
 
-class Button:
-    def __init__(self, text : str, font : pygame.font.Font, center=None, midbottom=None):
-        self.line = font.render(text, False, 'Black')
-        self.rect = self.line.get_rect()
-        if center:
-            self.rect.center = center
-            # print("center", center)
-        elif midbottom:
-            self.rect.midbottom = midbottom
-            # print("midbottom", midbottom)
-
-    def get_center(self):
-        return self.rect.center
-
-    def get_bottom(self):
-        return self.rect.bottom
-
-    def collide(self, pos):
-        return self.rect.collidepoint(pos)
-
-    def draw(self, screen):
-        screen.blit(self.line, self.rect)
-        # pygame.draw.rect(screen, "Red", self.rect, 2)
-
-    def update_pos(self, midbottom):
-        self.rect.midbottom = midbottom
-
 class Exit:
     def __init__(self, text):
         self.myfont = pygame.font.SysFont("Montserrat", 30) # Arial Narrow, Montserrat
@@ -222,3 +197,51 @@ class Exit:
         self.game_over_2.draw(self.screen)
         self.restart_text.draw(self.screen)
         self.exit_text.draw(self.screen)
+
+class Button:
+    def __init__(self, text : str, font : pygame.font.Font, center=None, midbottom=None):
+        self.line = font.render(text, False, 'Black')
+        self.rect = self.line.get_rect()
+        if center:
+            self.rect.center = center
+            # print("center", center)
+        elif midbottom:
+            self.rect.midbottom = midbottom
+            # print("midbottom", midbottom)
+
+    def get_center(self):
+        return self.rect.center
+
+    def get_bottom(self):
+        return self.rect.bottom
+
+    def collide(self, pos):
+        return self.rect.collidepoint(pos)
+
+    def draw(self, screen):
+        screen.blit(self.line, self.rect)
+        # pygame.draw.rect(screen, "Red", self.rect, 2)
+
+    def update_pos(self, midbottom):
+        self.rect.midbottom = midbottom
+
+class WhiteButton(Button):
+    def __init__(self, *args):
+        super().__init__(*args)
+        self.white_rect = pygame.Rect(self.rect)
+        border = 5
+        self.white_rect.width += border * 2
+        self.white_rect.height += border * 2
+        self.white_rect.center = self.rect.center
+        # self.rect_health = pygame.Rect(self.rect.x + border, self.rect.y + border, 
+            # self.rect.width - border * 2, self.rect.height - border * 2)
+
+    def update_pos(self, midbottom):
+        self.rect.midbottom = midbottom
+        self.white_rect.center = self.rect.center
+
+    def draw(self, screen):
+        pygame.draw.rect(screen, "White", self.white_rect, border_radius=100)
+        pygame.draw.rect(screen, "Black", self.white_rect, width=1, border_radius=100)
+        # pygame.draw.rect(screen, "Red", self.rect, 2)
+        screen.blit(self.line, self.rect)
