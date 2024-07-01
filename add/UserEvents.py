@@ -18,7 +18,11 @@ class UserEvents:
         self.BAT_SP_TIMER = pygame.USEREVENT + 4
         self.MUSHROOMS = pygame.USEREVENT + 5
         self.TEN_BATS = pygame.USEREVENT + 6
-        # self.BAT_KILLED = pygame.USEREVENT + 7
+        self.BAT_KILLED = pygame.USEREVENT + 7
+        self.EXIT = pygame.USEREVENT + 8
+
+    def create(self, event):
+        pygame.event.post(pygame.event.Event(event))
 
     def update(self):
         drops = self.game.drops
@@ -40,11 +44,16 @@ class UserEvents:
                 drops.create_foodDrop()
             if event.type == self.MUSHROOMS:
                 drops.create_Mushrooms()
+            if event.type == self.BAT_KILLED:
+                self.game.killedBats += 1
+                # if self.game.killedBats == 10: # >=
+                if not self.game.killedBats % 10: # every 10
+                    self.create(self.TEN_BATS)
             if event.type == self.TEN_BATS:
-                for i in range(10):
+                for _ in range(5): # five bats
                     groups.add_bat(BatSpecial(self.game))
-            # if event.type == self.BAT_KILLED:
-            #     killedBats += 1
+            if event.type == self.EXIT:
+                self.game.state = "exit"
 
             self.key_pressed(event)
 
@@ -53,9 +62,9 @@ class UserEvents:
         groups = self.game.groups
         player = self.game.player
         # Створення кулі з позиції гравця до позиції миші
-        if player.gameplay and event.type == pygame.MOUSEBUTTONDOWN:
+        if self.game.game() and event.type == pygame.MOUSEBUTTONDOWN:
             player.shoot(self.game.groups.bullets, pygame.mouse.get_pos())
-        if player.gameplay and event.type == pygame.KEYDOWN:
+        if self.game.game() and event.type == pygame.KEYDOWN:
             # Створення кулі, яка летітиме у напрямку player.direction
             # if event.key == pygame.K_e or event.key == pygame.K_q:
             #     player.shoot(groups.bullets)
@@ -83,7 +92,7 @@ class UserEvents:
                 if not groups.actors.get("girl"):
                     groups.add_actor("girl", Dance_Girl(self.game))
             if event.key == pygame.K_c:
-                pygame.event.post(pygame.event.Event(self.BAT_SP_TIMER))
+               self.create(self.BAT_SP_TIMER)
             if event.key == pygame.K_z:
                 drops.create_foodDrop()
             if event.key == pygame.K_LEFTBRACKET or event.key == pygame.K_BACKQUOTE: # tilda

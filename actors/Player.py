@@ -8,7 +8,7 @@ import interface.Shields as Shields
 from text.Jokes import JokeHandler
 
 class Player:
-    def __init__(self, position, drops, jokes): # drops, groups.bullets
+    def __init__(self, position, game): # drops, groups.bullets
         self.animation_frames = {
             'down': [],
             'up': [],
@@ -21,8 +21,9 @@ class Player:
         self.defence = 0
         # self.bullet_speed_bonus = 0
         self.effects = Effects.EffectQueue_draw(self)
-        self.drops = drops
-        self.joke = JokeHandler(jokes)
+        self.drops = game.drops
+        self.joke = JokeHandler(game.jokes)
+        self.events = game.events
 
         self.createHealth()
         
@@ -38,8 +39,8 @@ class Player:
         self.velocity = Vector2(0)
 
         self.bullets_count = 32 # self.max_bullets_count
-        self.killedBats = 0
-        self.gameplay = True
+        # self.killedBats = 0
+        # self.gameplay = True
         self.is_moving = False
         # self.onepunch = False
         self.add_damage = 0
@@ -139,7 +140,10 @@ class Player:
         self.effects.update()
 
         if self.health.empty():
-            self.gameplay = False
+            self.events.create(self.events.EXIT)
+
+        # if self.killedBats >= 10:
+        #     self.events.create(self.events.TEN_BATS)
 
         self.update_animations()
         

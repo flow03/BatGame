@@ -14,6 +14,7 @@ class Bat(ActorEffects):
         super().__init__() # self.screen
 
         # self.screen = pygame.display.get_surface()
+        self.game = game
         self.drops = game.drops
         self.player = game.player
         self.bullet_list = game.groups.bullets
@@ -78,8 +79,8 @@ class Bat(ActorEffects):
         self.killed()
 
     def killed(self):
-        # pygame.event.post(pygame.event.Event(Events.BAT_KILLED))
-        self.player.killedBats += 1
+        self.game.events.create(self.game.events.BAT_KILLED)
+        # self.player.killedBats += 1
         self.drops.createFallenDrop(self.rect.center)
         self.kill()
 
@@ -134,6 +135,7 @@ class BatSpecial(Bat):
 
     def createRandomShield(self):
         isShield = random.randint(0, 2)
+        # isShield = 1
         # 0 = no shield
         if isShield == 1:
             self.createBlueShield()
@@ -143,15 +145,15 @@ class BatSpecial(Bat):
 
     def createBlueShield(self): # , AllBar : Shields.AllHealthBars
         maximum = 3
-        max_shield = random.randint(1, maximum)
+        max_shield = random.randint(1, 2)
 
         if max_shield:
-            shield = HealthBar.Health(max_shield)
             if max_shield == maximum:
                 shield_width = self.rect.width
             else:
                 shield_width = self.rect.width/maximum * max_shield
 
+            shield = HealthBar.Health(max_shield)
             shield_bar_rect = pygame.Rect(self.rect.midtop, (shield_width, 7))
             shield_bar_temp = Shields.BlueShield(shield_bar_rect, shield, 1)
             shield_bar_temp.shifting = True
@@ -274,14 +276,14 @@ class BatSpecial(Bat):
 
         self.rect.center = (new_x, new_y)
 
-class BatBomb(Bat):
-    def __init__(self, *args):
-        super().__init__(*args)
-        pass
+# class BatBomb(Bat):
+#     def __init__(self, *args):
+#         super().__init__(*args)
+#         pass
 
-class Bomb(pygame.sprite.Sprite):
-    def __init__(self):
-        pass
+# class Bomb(pygame.sprite.Sprite):
+#     def __init__(self):
+#         pass
 
 class DirectionImage():
     # Takes left image as an argument

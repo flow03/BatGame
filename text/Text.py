@@ -49,13 +49,13 @@ class Text:
 
     def print_debug_info(self):
         # self.y = 85
-        groups = self.game.groups
+        # groups = self.game.groups
         # drops = self.game.drops
         player = self.game.player
         # self.print('food on screen', len(drops.foodDrops))
         # self.print('bullets on screen', len(drops.bulletDrops))
         # self.print('loot on screen', len(drops.fallen_drops))
-        self.print(self.text['killed_bats'], player.killedBats)
+        self.print(self.text['killed_bats'], self.game.killedBats)
         # self.print('bullets', player.bullets_count)
         self.print(self.text['health'], player.health.health)
         self.print(self.text['speed'], player.speed)

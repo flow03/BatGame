@@ -22,13 +22,19 @@ class Game():
 
         self.drops = Drops()
         self.groups = Groups()
-        self.Events = UserEvents(self)
+        self.events = UserEvents(self)
 
-        self.player = Player(self.screen_center, self.drops, self.jokes)
+        self.player = Player(self.screen_center, self)
         self.dummies = DummyCreator(self.groups)
 
         self.displayText = False
         self.active = True
+        self.state = "game"
+
+        self.killedBats = 0
+
+    def game(self):
+        return self.state == "game"
 
     def screen_init(self):
         WIDTH = 1200
@@ -74,10 +80,12 @@ class Game():
         self.groups.clear()
         self.drops.clear()
         # jump.is_jump = False
-        self.Events.start()
+        self.events.start()
         self.dummies.create() # after groups.clear
         self.text.exit.change_BiggerFont()
         # isTenBats = False
+        self.state = "game"
+        self.killedBats = 0
 
     def switch_text(self):
         if not self.displayText:
@@ -99,18 +107,18 @@ class Game():
 
             self.screen.blit(self.background, self.bg_pos)
 
-            if self.player.gameplay:
+            if self.state == "game": # self.game()
                 
                 self.player.input()
 
                 self.update_objects()
                 self.draw_objects()
                 
-                # self.Events.update()
-                # self.Events.restart_pressed()
+                # self.events.update()
+                # self.events.restart_pressed()
                 if self.displayText:            
                     self.text.display()
-            else:
+            elif self.state == "exit":
                 self.text.exit.blitExitButtons()
 
                 if pygame.mouse.get_pressed()[0]:   # left mouse key
@@ -122,7 +130,7 @@ class Game():
             
             pygame.display.update()
 
-            self.Events.update()
-            # self.Events.restart_pressed()
+            self.events.update()
+            # self.events.restart_pressed()
 
         pygame.quit()
