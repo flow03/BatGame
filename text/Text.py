@@ -7,6 +7,7 @@ from pygame.math import Vector2
 from add.Path import resource_path, load_json
 from random import choice
 from os.path import join
+from sys import argv
 
 # Text
 class Text:
@@ -24,7 +25,10 @@ class Text:
         self.y_offset = 25
         self.x_offset = 20
 
-        text_path = resource_path(join('text', 'lang_en.json'))
+        if "-s" in argv: # sys
+            text_path = resource_path(join('text', 'lang_s.json'))
+        else:
+            text_path = resource_path(join('text', 'lang_en.json'))
         self.text = load_json(text_path)
         self.exit = Exit(self.text)
 

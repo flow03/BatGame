@@ -23,6 +23,10 @@ class Health:
         else:
             return False
 
+    def get_percent(self, percent):
+        damage = round(self.max_health * (percent / 100))
+        return damage
+
     def set_heal(self, heal: int):
         self.health += int(heal)
         if self.health > self.max_health:

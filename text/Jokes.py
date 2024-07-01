@@ -1,5 +1,3 @@
-import json
-import sys
 import random
 from text.Text import WhiteButton
 import pygame.font
@@ -8,12 +6,22 @@ from add.Clock import Clock
 import queue
 from add.Path import resource_path, load_json
 from os.path import join
+from sys import argv
+
 
 class Jokes:
     def __init__(self):
-        path = resource_path(join('text','Jokes.json'))
-        self.data = load_json(path)
+        self.data = {}
+        self.load_jokes('text','Jokes.json')
+        if "-s" in argv: # sys
+            self.load_jokes('text','Jokes_t.json')
         self.jokes = list(self.data.keys())
+        # print(self.jokes)
+
+    def load_jokes(self, folder, file):
+        path = resource_path(join(folder, file))
+        temp_dict = load_json(path)
+        self.data.update(temp_dict)
 
     def get_joke(self):
         if not self.jokes:
@@ -26,7 +34,8 @@ class Jokes:
         return Joke(joke)
     
     def get_some_joke(self, key):
-        return Joke(self.data[key])
+        if self.data.get(key, None):
+            return Joke(self.data[key])
 
 class Joke:
     def __init__(self, joke_list : list):

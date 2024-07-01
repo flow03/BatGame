@@ -278,7 +278,7 @@ class Player:
     def get_joke(self):
         if not self.joke:
             self.joke = self.jokes.get_joke()
-            # self.joke = self.jokes.get_some_joke("jaraxxus")
+            # self.joke = self.jokes.get_some_joke("kass")
 
     def draw_joke(self):
         if self.joke:

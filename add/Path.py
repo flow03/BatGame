@@ -35,4 +35,5 @@ def load_json(json_file):
                 print(f"Неможливо прочитати JSON з файлу '{json_file}'")
                 print(f"Line: {e.lineno}, Column: {e.colno}, {e.msg}")
                 print(f"Content: {e.doc.splitlines()[e.lineno - 1]}")
-                sys.exit(1) 
+                sys.exit(1)
+                 

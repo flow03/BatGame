@@ -11,12 +11,16 @@ class EffectQueue:
 
     def add(self, effect_key):
         if not self.get(effect_key):
-            effect = self.createEffect(effect_key)
-            if effect: # not None
-                self.queue[effect_key] = effect
-                # print(effect_key, "added to queue")
-            # else:
-            #     print(effect_key, "not valid key")
+            if effect_key == "poison" or effect_key == "stand":
+                if self.get("speed"):
+                    self.remove("speed")
+                    # print("speed removed")
+            elif effect_key == "speed":
+                if self.get("poison") or self.get("stand"):
+                    effect_key = None
+                    # print("speed ignored")
+
+            self.createEffect(effect_key) # creation and adding
         else: 
             self.queue[effect_key].increase()
             # print(effect_key, "increased")
@@ -70,7 +74,10 @@ class EffectQueue:
             effect = StandingEffect(self.player)
         if effect_key == "bullets":
             effect = BulletsEffect(self.player)
-        return effect
+
+        if effect: # not None
+            self.queue[effect_key] = effect
+        # return effect
 
 class EffectQueue_draw(EffectQueue):
     def __init__(self, player):
@@ -79,10 +86,8 @@ class EffectQueue_draw(EffectQueue):
     def add(self, key):
         super().add(key)
 
-        if not self.queue[key].effect_bar:
-            # warning! cyclic references
-            # GC will not delete this object while it is referenced
-            self.queue[key].effect_bar = HealthBar.EffectBar(self.queue[key])     
+        if self.get(key):
+            self.queue[key].create_effect_bar()     
 
     # super.check calls
     # def remove(self, key):
@@ -142,6 +147,12 @@ class Effect:
     def __del__(self):
         pass
 
+    def create_effect_bar(self):
+        # warning! cyclic references
+        # GC will not delete this object while it is referenced
+        if not self.effect_bar:
+            self.effect_bar = HealthBar.EffectBar(self)
+
 # ignores defence
 class PoisonEffect(Effect):
     def __init__(self, player):
@@ -151,16 +162,15 @@ class PoisonEffect(Effect):
         self.player.add_speed -= 1
         self.healthBar = self.player.health_bar.healthbar
         self.healthBar.change_colour("forestgreen")
-        self.default_damage = 2 # percent
-        self.poison_damage = self.get_damage(self.default_damage)
+        # self.damage_percent = 2 # percent
+        self.poison_damage = 5
 
         self.tick_timer = Clock(1200)
         self.tick_timer.start()
         # self.healthBar.health.set_damage(self.poison_damage) # first tick
 
     def get_damage(self, percent):
-        damage = round(self.healthBar.health.max_health * (percent / 100))
-        # print('poison damage: ', damage)
+        damage = self.healthBar.health.get_percent(percent)
         return damage
 
     def update(self):
@@ -169,12 +179,20 @@ class PoisonEffect(Effect):
 
     def increase(self):
         # no restart
+        # if self.player.add_speed > -2:
+        #     self.player.add_speed -= 1
+        if self.poison_damage < 10:
+            self.poison_damage += 2
+            self.boost += 1
+
+    def increase_old(self):
+        # no restart
         if self.player.add_speed > -2:
             self.player.add_speed -= 1
-        if self.default_damage < 6:
-            self.default_damage += 2
+        if self.damage_percent < 6:
+            self.damage_percent += 2
             self.boost += 1
-        self.poison_damage = self.get_damage(self.default_damage)
+        self.poison_damage = self.get_damage(self.damage_percent)
 
     def __del__(self):
         self.healthBar.change_colour("red")
