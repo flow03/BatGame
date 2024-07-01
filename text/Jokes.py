@@ -2,6 +2,7 @@ import random
 from text.Text import WhiteButton
 import pygame.font
 from pygame.display import get_surface
+from pygame.math import Vector2
 from add.Clock import Clock
 import queue
 from add.Path import resource_path, load_json
@@ -106,3 +107,24 @@ class Line:
         # text = Button(self.line, self.font, midbottom=pos)
         self.text.update_pos(pos)
         self.text.draw(screen)
+
+class JokeHandler:
+    def __init__(self, jokes : Jokes):
+        self.jokes = jokes
+        # self.rect = rect
+        self.joke = None
+    
+    def get_joke(self):
+        if not self.joke:
+            self.joke = self.jokes.get_joke()
+            # self.joke = self.jokes.get_some_joke("kass")
+
+    def draw_joke(self, midtop):
+        if self.joke:
+            if self.joke.active:
+                pos = Vector2(midtop)
+                pos.y -= 20
+                self.joke.display(pos)
+            else:
+                self.joke = None
+                

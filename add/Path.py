@@ -2,6 +2,16 @@ import sys
 import os
 import json
 
+def resource_path_args(*args):
+    if args:
+        if len(args) > 1:
+            path = os.path.join(*args)
+        else:
+            path = args[0]
+
+        # print("path:", path)
+        return resource_path(path)
+
 def resource_path(relative_path):
     try:
     # PyInstaller creates a temp folder and stores path in _MEIPASS

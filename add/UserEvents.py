@@ -91,7 +91,7 @@ class UserEvents:
             if event.key == pygame.K_RIGHTBRACKET:
                 drops.create_BlueMushroom()
             if event.key == pygame.K_j:
-                player.get_joke()
+                player.joke.get_joke()
             # if event.key == pygame.K_h:
             #     groups.actors_heal(5)
             #     player.set_heal(5)
@@ -111,7 +111,7 @@ class UserEvents:
         pygame.time.set_timer(self.BAT_TIMER, 3500)
         pygame.time.set_timer(self.BULLET_DROP_TIMER, 4000)
         pygame.time.set_timer(self.FOOD_DROP_TIMER, 5000)
-        pygame.time.set_timer(self.BAT_SP_TIMER, 4000)
+        pygame.time.set_timer(self.BAT_SP_TIMER, 4500)
         # pygame.time.set_timer(self.MUSHROOMS, 50)
         self.isEvents = True
 

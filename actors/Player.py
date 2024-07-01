@@ -5,6 +5,7 @@ from actors.Bullet import Bullet
 import interface.HealthBar as HealthBar
 import interface.Effects as Effects
 import interface.Shields as Shields
+from text.Jokes import JokeHandler
 
 class Player:
     def __init__(self, position, drops, jokes): # drops, groups.bullets
@@ -21,7 +22,7 @@ class Player:
         # self.bullet_speed_bonus = 0
         self.effects = Effects.EffectQueue_draw(self)
         self.drops = drops
-        self.jokes = jokes
+        self.joke = JokeHandler(jokes)
 
         self.createHealth()
         
@@ -52,7 +53,6 @@ class Player:
         self.bullet_bar.update(self.bullets_count)
         # self.createBlueShield(4) # del after debug
         # self.createGrayShield(50)
-        self.joke = None
 
     def createHealth(self):
         start_pos = Vector2(20, 30)
@@ -167,7 +167,7 @@ class Player:
         if self.effects:
             self.effects.draw(screen)  
 
-        self.draw_joke()
+        self.joke.draw_joke(self.rect.midtop)
             
     def get_colour_rect(self, colour):
         colour_rect = pygame.Surface(self.rect.size)
@@ -274,17 +274,3 @@ class Player:
             # elif isinstance(target, tuple):
             #     print("target is tuple")
             #     new_bullet.velocity_by_mouse(target)
-
-    def get_joke(self):
-        if not self.joke:
-            self.joke = self.jokes.get_joke()
-            # self.joke = self.jokes.get_some_joke("kass")
-
-    def draw_joke(self):
-        if self.joke:
-            if self.joke.active:
-                pos = Vector2(self.rect.midtop)
-                pos.y -= 20
-                self.joke.display(pos)
-            else:
-                self.joke = None

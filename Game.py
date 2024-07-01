@@ -1,5 +1,5 @@
 import pygame
-from add.Path import resource_path
+from add.Path import resource_path_args
 from text.Text import Text
 from loot.Drops import Drops
 from actors.Groups import Groups
@@ -35,13 +35,13 @@ class Game():
         HEIGHT = 600
         self.screen = pygame.display.set_mode((WIDTH, HEIGHT))
         pygame.display.set_caption("Bat Game")
-        icon = pygame.image.load(resource_path('img/fangs.ico')).convert_alpha()
+        icon = pygame.image.load(resource_path_args('img','fangs.ico')).convert_alpha()
         pygame.display.set_icon(icon)
         self.bg_init(WIDTH, HEIGHT)
         # self.screen_center = Vector2(WIDTH//2, HEIGHT//2)
 
     def bg_init(self, WIDTH, HEIGHT):
-        bg = pygame.image.load(resource_path('img/bg/Work-2.jpg')).convert()
+        bg = pygame.image.load(resource_path_args('img','bg','Work-2.jpg')).convert()
         bg_width, bg_height = bg.get_size()
         scale_factor = max(WIDTH / bg_width, HEIGHT / bg_height)
         scaled_bg_width = int(bg_width * scale_factor)
