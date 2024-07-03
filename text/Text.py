@@ -156,21 +156,23 @@ class Text:
         screen.blit(loading_text, loading_text_rect)
 
 class Exit:
-    def __init__(self, text):
+    def __init__(self, text : dict):
         self.myfont = pygame.font.SysFont("Montserrat", 30) # Arial Narrow, Montserrat
-        self.fonts = ["Romashulka.ttf", "moonlight.ttf", "graf.ttf" ]
+        self.default_fonts = ["Romashulka.ttf", "moonlight.ttf", "graf.ttf" ]
+        self.fonts = list(self.default_fonts)
         self.myBiggerFont = self.get_BiggerFont()
         self.screen = get_surface()
         self.center = Vector2(self.screen.get_rect().center)
 
         self.text = text
         # print(self.text.keys())
+        self.buttons = {}
 
         self.createExitButtons()
 
     def get_BiggerFont(self):
         if not self.fonts:
-            self.fonts = ["Romashulka.ttf", "moonlight.ttf", "graf.ttf" ]
+            self.fonts = list(self.default_fonts)
 
         font_name = choice(self.fonts)
         self.fonts.remove(font_name)
@@ -181,31 +183,55 @@ class Exit:
     def change_BiggerFont(self):
         self.myBiggerFont = self.get_BiggerFont()
         self.createExitButtons()
+    
+    def createButtons(self, buttons : list, font : pygame.font.Font, pos : Vector2):
+        # pos = pos
+        for key in buttons:
+            self.buttons[key] = Button(self.text[key], font, pos)
+            pos.y = self.buttons[key].get_bottom() + 30
 
     def createExitButtons(self):
         # print("createExitRects call")
         # self.myBiggerFont = self.get_BiggerFont()
         # ----------------------------------------------------------
+        # position = Vector2(self.center.x, self.center.y - 85)
+        # self.game_over = Button(self.text['over_1'], self.myBiggerFont, position)
+        # position.y = self.game_over.get_bottom() + 30
+        # self.game_over_2 = Button(self.text['over_2'], self.myBiggerFont, position)
+        # position.y = self.game_over_2.get_bottom() + 50
+        # self.restart_text = Button(self.text['restart_button'], self.myfont, position)
+        # position.y = self.restart_text.get_bottom() + 30
+        # self.exit_text = Button(self.text['exit_button'], self.myfont, position)
+        # ----------------------------------------------------------
         position = Vector2(self.center.x, self.center.y - 85)
-        # print('new:', position) # (600, 215)
-        self.game_over = Button(self.text['over_1'], self.myBiggerFont, position)
-        position.y = self.game_over.get_bottom() + 30
-        self.game_over_2 = Button(self.text['over_2'], self.myBiggerFont, position)
-        position.y = self.game_over_2.get_bottom() + 50
-        self.restart_text = Button(self.text['restart_button'], self.myfont, position)
-        position.y = self.restart_text.get_bottom() + 30
-        self.exit_text = Button(self.text['exit_button'], self.myfont, position)
+        buttons = ['over_1', 'over_2']
+        self.createButtons(buttons, self.myBiggerFont, position)
 
-    def blitExitButtons(self):
-        self.game_over.draw(self.screen)
-        self.game_over_2.draw(self.screen)
-        self.restart_text.draw(self.screen)
-        self.exit_text.draw(self.screen)
+        position.y = self.buttons['over_2'].get_bottom() + 50
+        buttons = ['restart_button', 'exit_button']
+        self.createButtons(buttons, self.myfont, position)
+
+    def update(self):
+        if pygame.mouse.get_pressed()[0]:   # left mouse key
+        # if pygame.mouse.
+            mouse_pos = pygame.mouse.get_pos()
+            for key in self.buttons:
+                if self.buttons[key].collide(mouse_pos):
+                    print(key)
+                    return key
+
+    def display(self):
+        # self.game_over.draw(self.screen)
+        # self.game_over_2.draw(self.screen)
+        # self.restart_text.draw(self.screen)
+        # self.exit_text.draw(self.screen)
+        for button in self.buttons.values():
+            button.draw(self.screen)
 
 class Button:
     def __init__(self, text : str, font : pygame.font.Font, center=None, midbottom=None):
-        self.line = font.render(text, False, 'Black')
-        self.rect = self.line.get_rect()
+        self.image = font.render(text, False, 'Black')
+        self.rect = self.image.get_rect()
         if center:
             self.rect.center = center
             # print("center", center)
@@ -223,7 +249,7 @@ class Button:
         return self.rect.collidepoint(pos)
 
     def draw(self, screen):
-        screen.blit(self.line, self.rect)
+        screen.blit(self.image, self.rect)
         # pygame.draw.rect(screen, "Red", self.rect, 2)
 
     def update_pos(self, midbottom):
@@ -248,4 +274,4 @@ class WhiteButton(Button):
         pygame.draw.rect(screen, "White", self.white_rect, border_radius=100)
         pygame.draw.rect(screen, "Black", self.white_rect, width=1, border_radius=100)
         # pygame.draw.rect(screen, "Red", self.rect, 2)
-        screen.blit(self.line, self.rect)
+        screen.blit(self.image, self.rect)

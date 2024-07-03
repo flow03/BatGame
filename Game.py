@@ -118,18 +118,21 @@ class Game():
                 # self.events.restart_pressed()
                 if self.displayText:            
                     self.text.display()
+
             elif self.state == "exit":
-                self.text.exit.blitExitButtons()
+                self.events.stop_timer()
+                self.text.exit.display()
 
-                if pygame.mouse.get_pressed()[0]:   # left mouse key
-                    mouse_pos = pygame.mouse.get_pos()
-                    if self.text.exit.restart_text.collide(mouse_pos):
+                key = self.text.exit.update()
+                if key:
+                    if key == 'restart_button':
                         self.restart()
-                    elif self.text.exit.exit_text.collide(mouse_pos):
+                    elif key == 'exit_button':
                         self.active = False
-            
-            pygame.display.update()
 
+            pygame.display.update() 
+
+            # події продовжуюють оновлюватись навіть після виходу у меню програми
             self.events.update()
             # self.events.restart_pressed()
 
