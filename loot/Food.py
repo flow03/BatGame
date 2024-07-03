@@ -239,7 +239,7 @@ class Crab(Food):
 
     def do(self, actor):
         super().do(actor)
-        actor.createGrayShield(self.shield)
+        actor.health_bar.createGrayShield(self.shield)
 
 class Egg(Food):
     def __init__(self, image):

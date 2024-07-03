@@ -50,10 +50,11 @@ class Player:
         # self.standing = False
         self.effects.clear()
 
-        self.health_bar.init()
+        self.health_bar.init() # restore
         self.bullet_bar.update(self.bullets_count)
-        # self.createBlueShield(4) # del after debug
-        # self.createGrayShield(50)
+        # self.health_bar.createBlueShield(4) # del after debug
+        # self.health_bar.createGrayShield(50)
+        self.health_bar.set_damage(90)
 
     def createHealth(self):
         start_pos = Vector2(20, 30)
@@ -69,33 +70,7 @@ class Player:
         self.bullet_bar = HealthBar.BulletBar(start_pos, 254, 16) # 15+13+(2*2)
 
         # shield_bar
-        # self.createBlueShield(10)
-
-    def createBlueShield(self, shield_value):
-        shield_height = 8
-        shield_width = self.health_bar.healthbar.rect.width/2 # /5 * 5
-        start_pos = Vector2(self.health_bar.healthbar.rect.topleft)
-        # start_pos.x += 2
-        start_pos.y -= 5 + shield_height
-
-        shield = HealthBar.Health(shield_value)
-        shield_bar_rect = pygame.Rect(start_pos, (shield_width, shield_height))
-        shield_bar_temp = Shields.BlueShield(shield_bar_rect, shield, 1)
-        self.health_bar.shieldbar = shield_bar_temp
-        self.health_bar.align = 'left'
-
-    def createGrayShield(self, shield_value):
-        shield_height = 8
-        shield_width = self.health_bar.healthbar.rect.width
-        start_pos = Vector2(self.health_bar.healthbar.rect.topleft)
-        # start_pos.x += 2
-        start_pos.y -= 5 + shield_height
-
-        shield = HealthBar.Health(shield_value)
-        shield_bar_rect = pygame.Rect(start_pos, (shield_width, shield_height))
-        shield_bar_temp = Shields.GrayShield(shield_bar_rect, shield, 1)
-        self.health_bar.shieldbar = shield_bar_temp
-        self.health_bar.align = 'left'
+        # self.health_bar.createBlueShield(10)
 
     def add_effect(self, effect_key : str):
         self.effects.add(effect_key)

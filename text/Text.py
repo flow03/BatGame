@@ -8,6 +8,7 @@ from add.Path import resource_path, load_json
 from random import choice
 from os.path import join
 from sys import argv
+from text.Iterator import BidirectionalIterator
 
 # Text
 class Text:
@@ -166,9 +167,13 @@ class Exit:
 
         self.text = text
         # print(self.text.keys())
+        self.labels = {}
         self.buttons = {}
+        self.active = None
+        self.active_color = "Red"
+        # self.b_iter = None
 
-        self.createExitButtons()
+        self.create()
 
     def get_BiggerFont(self):
         if not self.fonts:
@@ -182,15 +187,21 @@ class Exit:
 
     def change_BiggerFont(self):
         self.myBiggerFont = self.get_BiggerFont()
-        self.createExitButtons()
+        self.create()
     
-    def createButtons(self, buttons : list, font : pygame.font.Font, pos : Vector2):
+    def createButtons(self, buttons : list, pos : Vector2):
         # pos = pos
         for key in buttons:
-            self.buttons[key] = Button(self.text[key], font, pos)
+            self.buttons[key] = Button(self.text[key], self.myfont, pos)
             pos.y = self.buttons[key].get_bottom() + 30
 
-    def createExitButtons(self):
+    def createLabels(self, labels : list, pos : Vector2):
+        # pos = pos
+        for key in labels:
+            self.labels[key] = Button(self.text[key], self.myBiggerFont, pos)
+            pos.y = self.labels[key].get_bottom() + 30
+
+    def create(self):
         # print("createExitRects call")
         # self.myBiggerFont = self.get_BiggerFont()
         # ----------------------------------------------------------
@@ -204,32 +215,75 @@ class Exit:
         # self.exit_text = Button(self.text['exit_button'], self.myfont, position)
         # ----------------------------------------------------------
         position = Vector2(self.center.x, self.center.y - 85)
-        buttons = ['over_1', 'over_2']
-        self.createButtons(buttons, self.myBiggerFont, position)
+        labels = ['over_1', 'over_2']
+        self.createLabels(labels, position)
 
-        position.y = self.buttons['over_2'].get_bottom() + 50
+        last_label = next(reversed(self.labels)) # reversed iterator
+        # print('last_label', last_label)
+        position.y = self.labels[last_label].get_bottom() + 50
         buttons = ['restart_button', 'exit_button']
-        self.createButtons(buttons, self.myfont, position)
+        self.createButtons(buttons, position)
+        
+        # create iterator
+        self.active_iterator()
+
+    def active_iterator(self):
+        if self.buttons:
+            # if self.active:
+            #     self.buttons[self.active].change_color("Black")
+            self.active = BidirectionalIterator(list(self.buttons.keys()))
+            self.buttons[self.active.current].change_color(self.active_color)
 
     def update(self):
-        if pygame.mouse.get_pressed()[0]:   # left mouse key
         # if pygame.mouse.
-            mouse_pos = pygame.mouse.get_pos()
-            for key in self.buttons:
-                if self.buttons[key].collide(mouse_pos):
+        mouse_pos = pygame.mouse.get_pos()
+        for key in self.buttons:
+            if self.buttons[key].collide(mouse_pos):
+                if key != self.active.current:
+                    self.buttons[self.active.current].change_color("Black")
+                    self.active.set_index(key)
+                    self.buttons[self.active.current].change_color(self.active_color)
+                if pygame.mouse.get_pressed()[0]:   # left mouse key
                     print(key)
                     return key
+        # else:
+        #     mouse_pos = pygame.mouse.get_pos()
+        #     for key in self.buttons:
+        #         if self.buttons[key].collide(mouse_pos):
+
+        keys = pygame.key.get_pressed()
+        if not key_pressed:
+            if keys and keys[pygame.K_RETURN]:
+                return self.active.current
+            elif (keys[pygame.K_UP] or keys[pygame.K_w]):
+                key_pressed = True
+                print("up")
+                self.buttons[self.active.current].change_color("Black")
+                self.buttons[self.active.prev].change_color(self.active_color)
+                # pygame.time.delay(200)
+            # elif not (keys[pygame.K_UP] or keys[pygame.K_w]):
+            #     key_pressed = False
+            elif (keys[pygame.K_DOWN] or keys[pygame.K_s]):
+                key_pressed = True
+                print("down")
+                self.buttons[self.active.current].change_color("Black")
+                self.buttons[self.active.next].change_color(self.active_color)
+        elif not (keys[pygame.K_DOWN] or keys[pygame.K_s] or keys[pygame.K_UP] or keys[pygame.K_w]):
+            key_pressed = False
+        else:
+            print("Key still pressed")
 
     def display(self):
-        # self.game_over.draw(self.screen)
-        # self.game_over_2.draw(self.screen)
-        # self.restart_text.draw(self.screen)
-        # self.exit_text.draw(self.screen)
+        for label in self.labels.values():
+            label.draw(self.screen)
         for button in self.buttons.values():
             button.draw(self.screen)
 
 class Button:
     def __init__(self, text : str, font : pygame.font.Font, center=None, midbottom=None):
+        self.text = text
+        self.font = font
+
         self.image = font.render(text, False, 'Black')
         self.rect = self.image.get_rect()
         if center:
@@ -238,6 +292,9 @@ class Button:
         elif midbottom:
             self.rect.midbottom = midbottom
             # print("midbottom", midbottom)
+
+    def change_color(self, color):
+        self.image = self.font.render(self.text, False, color)
 
     def get_center(self):
         return self.rect.center

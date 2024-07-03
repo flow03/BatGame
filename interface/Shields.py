@@ -58,6 +58,32 @@ class AllHealthBars:
     def set_heal(self, heal : int):
         self.healthbar.set_heal(heal)
 
+    def createBlueShield(self, shield_value):
+        shield_height = 8
+        shield_width = self.healthbar.rect.width/2 # /5 * 5
+        start_pos = Vector2(self.healthbar.rect.topleft)
+        # start_pos.x += 2
+        start_pos.y -= 5 + shield_height
+
+        shield = HealthBar.Health(shield_value)
+        shield_bar_rect = pygame.Rect(start_pos, (shield_width, shield_height))
+        shield_bar_temp = BlueShield(shield_bar_rect, shield, 1)
+        self.shieldbar = shield_bar_temp
+        self.align = 'left'
+
+    def createGrayShield(self, shield_value):
+        shield_height = 8
+        shield_width = self.healthbar.rect.width
+        start_pos = Vector2(self.healthbar.rect.topleft)
+        # start_pos.x += 2
+        start_pos.y -= 5 + shield_height
+
+        shield = HealthBar.Health(shield_value)
+        shield_bar_rect = pygame.Rect(start_pos, (shield_width, shield_height))
+        shield_bar_temp = GrayShield(shield_bar_rect, shield, 1)
+        self.shieldbar = shield_bar_temp
+        self.align = 'left'
+
 class BlueShield(HealthBar.CellHealthBar):
     def __init__(self, rect : pygame.Rect, health : HealthBar.Health, border = 1):
         super().__init__(rect, health, border, "Blue")
@@ -92,7 +118,7 @@ class BlueShield(HealthBar.CellHealthBar):
                     self.decreased_cell = None
                     self.fit_rect(self.cell_visible_width()) # update_pos inside
 
-    # def update_rect_pos(self, rect : pygame.Rect, y_shift):
+    # def update_pos(self, rect : pygame.Rect, y_shift):
     #     print('align: ', self.align)
     #     if self.align == 'center':
     #         shield_pos = Vector2(rect.center)
