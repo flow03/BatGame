@@ -36,12 +36,47 @@ class BidirectionalIterator:
         return self.data[self.index]
 
 
-# keys = pygame.key.get_pressed()
+class ButtonsHandler:
+    def __init__(self, buttons):
+        self.buttons = buttons
+        self.active_color = "Red"
 
-# if keys[pygame.K_SPACE] and not key_pressed and (current_time - last_press_time > 500):
-#     print("Space key pressed")
-#     key_pressed = True
-#     last_press_time = current_time
-#     pygame.time.delay(200)  # затримка на 200 мс
-# elif not keys[pygame.K_SPACE]:
-#     key_pressed = False
+        self.active = None
+        self.key_pressed = False
+        self.active_iterator()
+
+    def active_iterator(self):
+        if self.buttons:
+            # if self.active:
+            #     self.buttons[self.active].change_color("Black")
+            self.active = BidirectionalIterator(list(self.buttons.keys()))
+            self.buttons[self.active.current].change_color(self.active_color)
+    
+    def get_active(self):
+        return self.active.current
+
+    def set_active(self, key):
+        if key != self.active.current:
+            self.buttons[self.active.current].change_color("Black")
+            self.active.set_index(key)
+            self.buttons[self.active.current].change_color(self.active_color)
+
+    def up(self):
+        self.key_pressed = True
+        self.buttons[self.active.current].change_color("Black")
+        self.buttons[self.active.prev].change_color(self.active_color)
+
+    def down(self):
+        self.key_pressed = True
+        self.buttons[self.active.current].change_color("Black")
+        self.buttons[self.active.next].change_color(self.active_color)
+
+    @property
+    def pressed(self):
+        return self.key_pressed
+    # @property_name.getter призначений для зміни існуючого getter-а, 
+    # раніше визначеного з допомогою @property 
+
+    # @pressed.getter
+    # def pressed(self, value : bool):
+    #     self.key_pressed = value

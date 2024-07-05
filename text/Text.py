@@ -8,7 +8,7 @@ from add.Path import resource_path, load_json
 from random import choice
 from os.path import join
 from sys import argv
-from text.Iterator import BidirectionalIterator
+from text.Iterator import ButtonsHandler
 
 # Text
 class Text:
@@ -170,7 +170,8 @@ class Exit:
         self.labels = {}
         self.buttons = {}
         self.active = None
-        self.active_color = "Red"
+        # self.active_color = "Red"
+        # self.key_pressed = False
         # self.b_iter = None
 
         self.create()
@@ -225,24 +226,14 @@ class Exit:
         self.createButtons(buttons, position)
         
         # create iterator
-        self.active_iterator()
-
-    def active_iterator(self):
-        if self.buttons:
-            # if self.active:
-            #     self.buttons[self.active].change_color("Black")
-            self.active = BidirectionalIterator(list(self.buttons.keys()))
-            self.buttons[self.active.current].change_color(self.active_color)
+        self.active = ButtonsHandler(self.buttons)
 
     def update(self):
         # if pygame.mouse.
         mouse_pos = pygame.mouse.get_pos()
         for key in self.buttons:
             if self.buttons[key].collide(mouse_pos):
-                if key != self.active.current:
-                    self.buttons[self.active.current].change_color("Black")
-                    self.active.set_index(key)
-                    self.buttons[self.active.current].change_color(self.active_color)
+                self.active.set_active(key)
                 if pygame.mouse.get_pressed()[0]:   # left mouse key
                     print(key)
                     return key
@@ -252,24 +243,22 @@ class Exit:
         #         if self.buttons[key].collide(mouse_pos):
 
         keys = pygame.key.get_pressed()
-        if not key_pressed:
+        if not self.active.pressed:
             if keys and keys[pygame.K_RETURN]:
-                return self.active.current
+                return self.active.get_active()
             elif (keys[pygame.K_UP] or keys[pygame.K_w]):
-                key_pressed = True
+                # self.key_pressed = True
                 print("up")
-                self.buttons[self.active.current].change_color("Black")
-                self.buttons[self.active.prev].change_color(self.active_color)
+                self.active.up()
                 # pygame.time.delay(200)
             # elif not (keys[pygame.K_UP] or keys[pygame.K_w]):
             #     key_pressed = False
             elif (keys[pygame.K_DOWN] or keys[pygame.K_s]):
-                key_pressed = True
+                # self.key_pressed = True
                 print("down")
-                self.buttons[self.active.current].change_color("Black")
-                self.buttons[self.active.next].change_color(self.active_color)
+                self.active.down()
         elif not (keys[pygame.K_DOWN] or keys[pygame.K_s] or keys[pygame.K_UP] or keys[pygame.K_w]):
-            key_pressed = False
+            self.active.key_pressed = False
         else:
             print("Key still pressed")
 
