@@ -1,5 +1,5 @@
 import pygame
-from random import randint, uniform
+from random import randint #, uniform
 # import math
 from pygame.math import Vector2
 # from add.Spritesheet import SpriteSheet
@@ -20,13 +20,13 @@ class Drops():
         # self.fallen_count = 0
 
     def createFallenDrop(self, start_pos):
-        rand_drop = randint(0, 1)
+        # rand_drop = randint(0, 1)
         new_drop = None
 
-        if rand_drop:
+        if randint(0, 1): # 1
             new_drop = self.foodCreator.createFood()
             self.foodDrops.add(new_drop)
-        else:
+        else: # 0
             new_drop = BulletDrop()
             self.bulletDrops.add(new_drop)
 
@@ -36,7 +36,10 @@ class Drops():
         max_y = self.screen.get_height() - new_drop.rect.height//2
 
         if max_y > start_pos.y:
-            dest_pos.y = randint(start_pos.y, max_y)
+            # print(start_pos.y, max_y)
+            dest_pos.y = randint(int(start_pos.y), max_y)
+            # print("dest_pos.y", dest_pos)
+            # dest_pos.y = int(uniform(start_pos.y, max_y))
         else:
             dest_pos.y = start_pos.y
 
@@ -121,7 +124,7 @@ class Drops():
     def check_and_set_circle_coords(self, obj, group, center, radius):
         # exclude self collide
         if group.has(obj):
-            group.remove(obj) 
+            group.remove(obj)
 
         self.set_circle_coords(obj, center, radius)
         count = 0

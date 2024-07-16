@@ -59,8 +59,9 @@ class Text:
         self.print(self.text['killed_bats'], self.game.killedBats)
         # self.print('bullets', player.bullets_count)
         self.print(self.text['health'], player.health.health)
-        self.print(self.text['speed'], player.speed)
-        self.print(self.text['add_speed'], player.add_speed)
+        # self.print(self.text['speed'], player.speed)
+        self.print_plus(self.text['speed'], player.speed, player.add_speed)
+        self.print_plus(self.text['bullet_speed'], player.b_speed, player.add_b_speed)
         self.print(self.text['defence'], player.defence)
 
         # self.print('bats', len(groups.bats))
@@ -128,6 +129,7 @@ class Text:
         self.print_r_text(self.text['mushrooms'])
         self.print_r_text(self.text['dummies'])
         self.print_r_text(self.text['girl'])
+        self.print_r_text(self.text['joke'])
 
         self.print_r_text()
         self.print_r_text(self.text['events'])
@@ -137,6 +139,11 @@ class Text:
 
     def print(self, text : str, variable):
         self.screen.blit(self.myfont.render(text + ": " + str(variable), True, "Black"), (self.x_offset, self.y))
+        self.y += self.y_offset
+
+    def print_plus(self, text : str, variable_1, variable_2):
+        text = text + ": " + str(variable_1) + " + " + str(variable_2)
+        self.screen.blit(self.myfont.render(text, True, "Black"), (self.x_offset, self.y))
         self.y += self.y_offset
     
     def print_empty(self):

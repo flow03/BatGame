@@ -7,6 +7,7 @@
     "killed_bats": "killed bats",
     "health": "health",
     "speed": "speed",
+    "bullet_speed": "bullet speed",
     "add_speed": "add_speed",
     "defence": "defence",
 
@@ -20,6 +21,8 @@
     "mushrooms" : "Create mushrooms: [ ]",
     "dummies" : "Create dummies: P",
     "girl" : "Create Dance Girl: M",
+    "joke" : "Random joke: J",
+
     "events" : "Stop\\start all events: T",
     "restart" : "Restart: R",
     "help" : "Show\\hide this help: Tab"

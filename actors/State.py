@@ -4,6 +4,7 @@ from pygame.math import Vector2
 from add.Clock import Clock
 # from Drops import Food
 # from Dance_Girl_class import Dance_Girl
+from random import randint
 
 class Circle:
     def __init__(self, radius):
@@ -90,6 +91,8 @@ class Dance:
         self.currentDance = 0
         self.dance_over.start()
         self.d_clock.start()
+        if randint(0, 1):
+            self.girl.joke.get_joke()
 
     def changeDance(self):
         if self.d_clock.next():

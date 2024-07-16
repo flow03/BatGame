@@ -96,8 +96,10 @@ class UserEvents:
             if event.key == pygame.K_z:
                 drops.create_foodDrop()
             if event.key == pygame.K_LEFTBRACKET or event.key == pygame.K_BACKQUOTE: # tilda
+                # print("K_LEFTBRACKET")
                 drops.create_RedMushroom()
             if event.key == pygame.K_RIGHTBRACKET:
+                # print("K_RIGHTBRACKET")
                 drops.create_BlueMushroom()
             if event.key == pygame.K_j:
                 player.joke.get_joke()

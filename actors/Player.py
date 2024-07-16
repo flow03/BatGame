@@ -18,6 +18,7 @@ class Player:
         self.load_animation_frames()
         self.start_pos = Vector2(position)
         self.speed = 4
+        self.b_speed = 10   # bullet speed
         self.defence = 0
         # self.bullet_speed_bonus = 0
         self.effects = Effects.EffectQueue_draw(self)
@@ -54,7 +55,7 @@ class Player:
         self.bullet_bar.update(self.bullets_count)
         # self.health_bar.createBlueShield(4) # del after debug
         # self.health_bar.createGrayShield(50)
-        self.health_bar.set_damage(90)
+        # self.health_bar.set_damage(90)
 
     def createHealth(self):
         start_pos = Vector2(20, 30)
@@ -222,7 +223,7 @@ class Player:
     def shoot(self, bullet_group, target = None):
         if not self.effects.get('harmless'):
             if self.bullets_count > 0 or self.effects.get('onepunch'):
-                new_bullet = Bullet(self.rect.center)
+                new_bullet = Bullet(self.rect.center, self.b_speed)
                 new_bullet.damage += self.add_damage
                 new_bullet.speed += self.add_b_speed
                 # print('add_b_speed: ', self.add_b_speed)

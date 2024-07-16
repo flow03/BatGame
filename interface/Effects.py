@@ -241,7 +241,7 @@ class OnepunchEffect(Effect):
     def __init__(self, player):
         time = 8000
         super().__init__(player, time)
-        self.player.add_b_speed = 10
+        self.player.add_b_speed = 20
         self.player.add_damage = 1000000
     
     def __del__(self):

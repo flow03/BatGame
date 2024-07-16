@@ -8,6 +8,7 @@ from add.Spritesheet import SpriteSheet
 from loot.Drops import Drops
 from interface.HealthBar import Health
 import actors.State
+from text.Jokes import JokeHandler
 
 class Dance_Girl(pygame.sprite.Sprite):
     def __init__(self, game):
@@ -27,6 +28,7 @@ class Dance_Girl(pygame.sprite.Sprite):
         self.player = game.player
         self.actors = game.groups.actors
         self.drops = game.drops
+        self.joke = JokeHandler(game.jokes)
         
         self.init()
 
@@ -131,6 +133,7 @@ class Dance_Girl(pygame.sprite.Sprite):
 
     def draw(self, screen):
         screen.blit(self.image, self.rect)
+        self.joke.draw_joke(self.rect.midtop)
 
     def move(self, direction : str):
         if direction == 'down':
