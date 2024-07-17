@@ -24,7 +24,6 @@ class Clock:
     def end(self):
         if self.nextFrame:
             if self.clock() >= self.nextFrame:
-                self.nextFrame = None
                 return True
 
         return False

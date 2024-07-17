@@ -8,8 +8,8 @@
     "health": "health",
     "speed": "speed",
     "bullet_speed": "bullet speed",
-    "add_speed": "add_speed",
     "defence": "defence",
+    "jokes": "jokes",
 
     "moving" : "Moving: W A S D",
     "fire" : "Fire: Any mouse key",
@@ -23,7 +23,7 @@
     "girl" : "Create Dance Girl: M",
     "joke" : "Random joke: J",
 
-    "events" : "Stop\\start all events: T",
+    "events" : "Stop/start all events: T",
     "restart" : "Restart: R",
-    "help" : "Show\\hide this help: Tab"
+    "help" : "Show/hide this help: Tab"
 }

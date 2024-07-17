@@ -82,17 +82,15 @@ class Dance:
     def __init__(self, girl):
         self.girl = girl
         self.danceList = ['hips','slide','snap']
-        self.d_clock = Clock(2200) # dance clock
-        self.dance_over = Clock(2200 * 4) # one time tick
-        self.foodCircle = FoodCircle(self.girl.drops, self.girl.rect.center)
+        self.d_clock = Clock(2200) # dance changing clock
+        self.dance_over = Clock(2200 * 4) # one time tick * 4
+        # self.foodCircle = FoodCircle(self.girl.drops, self.girl.rect.center)
         self.init()
 
     def init(self):
         self.currentDance = 0
         self.dance_over.start()
         self.d_clock.start()
-        if randint(0, 1):
-            self.girl.joke.get_joke()
 
     def changeDance(self):
         if self.d_clock.next():
@@ -103,7 +101,7 @@ class Dance:
 
     def update(self):
         self.changeDance()
-        self.foodCircle.spawnFood()
+        # self.foodCircle.spawnFood()
 
     def isDanceOver(self):
         return self.dance_over.end()
@@ -172,14 +170,22 @@ class danceState(IState):
         super().__init__(npc)
         self.name = "dance"
         self.dance = Dance(npc)
+        self.foodCircle = FoodCircle(self.npc.drops, self.npc.rect.center)
+        if randint(0, 1):
+            self.npc.joke.get_joke()
     
     def doState(self):
         # if not self.dance:
         #     self.dance = Dance()
         if not self.dance.isDanceOver():
             self.dance.update()
+            self.foodCircle.spawnFood()
             # self.is_moving = False
             # print("dance")
+            return self
+        elif self.npc.joke.active():
+            # print("joke still active")
+            # self.dance.update() # doesn't change
             return self
         else:
             # self.dance = None

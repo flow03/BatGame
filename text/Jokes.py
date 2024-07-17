@@ -120,11 +120,20 @@ class JokeHandler:
             # self.joke = self.jokes.get_some_joke("kass")
 
     def draw_joke(self, midtop):
+        if self.active():
+            pos = Vector2(midtop)
+            pos.y -= 20
+            self.joke.display(pos)
+
+    def active(self):
         if self.joke:
             if self.joke.active:
-                pos = Vector2(midtop)
-                pos.y -= 20
-                self.joke.display(pos)
+                return True
             else:
                 self.joke = None
-                
+        #         return False
+        # else:
+        #     return False
+
+        return False
+    
