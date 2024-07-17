@@ -1,5 +1,5 @@
 import random
-from text.Text import WhiteButton
+from text.Button import WhiteButton
 import pygame.font
 from pygame.display import get_surface
 from pygame.math import Vector2

@@ -8,6 +8,7 @@ from actors.Player import Player
 from actors.Dummy import DummyCreator
 from pygame.math import Vector2
 from text.Jokes import Jokes
+from text.Menu import Exit
 
 class Game():
     def __init__(self):
@@ -30,6 +31,7 @@ class Game():
         self.displayText = False
         self.active = True
         self.state = "game"
+        self.exit = Exit(self.text.text)
 
         self.killedBats = 0
 
@@ -82,7 +84,7 @@ class Game():
         # jump.is_jump = False
         self.events.start()
         self.dummies.create() # after groups.clear
-        self.text.exit.change_BiggerFont()
+        self.exit.change_BiggerFont()
         # isTenBats = False
         self.state = "game"
         self.killedBats = 0
@@ -121,9 +123,9 @@ class Game():
 
             elif self.state == "exit":
                 self.events.stop_timer()
-                self.text.exit.display()
+                self.exit.display()
 
-                key = self.text.exit.update()
+                key = self.exit.update()
                 if key:
                     if key == 'restart_button':
                         self.restart()
