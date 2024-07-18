@@ -113,7 +113,7 @@ class JokeHandler:
         self.jokes = jokes
         # self.rect = rect
         self.joke = None
-    
+
     def get_joke(self):
         if not self.joke:
             self.joke = self.jokes.get_joke()
@@ -136,4 +136,3 @@ class JokeHandler:
         #     return False
 
         return False
-    

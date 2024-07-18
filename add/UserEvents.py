@@ -65,6 +65,7 @@ class UserEvents:
         if self.game.game() and event.type == pygame.MOUSEBUTTONDOWN:
             player.shoot(self.game.groups.bullets, pygame.mouse.get_pos())
         if self.game.game() and event.type == pygame.KEYDOWN:
+            # print(f'Key down: {event.key}, Unicode: {event.unicode}')
             # Створення кулі, яка летітиме у напрямку player.direction
             # if event.key == pygame.K_e or event.key == pygame.K_q:
             #     player.shoot(groups.bullets)
@@ -95,10 +96,10 @@ class UserEvents:
                self.create(self.BAT_SP_TIMER)
             if event.key == pygame.K_z:
                 drops.create_foodDrop()
-            if event.key == pygame.K_LEFTBRACKET or event.key == pygame.K_BACKQUOTE: # tilda
+            if event.key == pygame.K_LEFTBRACKET or event.key == 1093: # х
                 # print("K_LEFTBRACKET")
                 drops.create_RedMushroom()
-            if event.key == pygame.K_RIGHTBRACKET:
+            if event.key == pygame.K_RIGHTBRACKET or event.key == 1111: # ї
                 # print("K_RIGHTBRACKET")
                 drops.create_BlueMushroom()
             if event.key == pygame.K_j:

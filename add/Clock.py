@@ -13,20 +13,22 @@ class Clock:
 
     # check nextFrame and set new nextFrame if True
     def next(self):
-        if self.nextFrame:
-            if self.clock() >= self.nextFrame:
-                self.nextFrame += self.delay
-                return True
+        if self.nextFrame and self.clock() >= self.nextFrame:
+            self.nextFrame += self.delay
+            return True
         
-        return False
+        # return False
+    
+    def active(self):
+        if self.nextFrame and self.clock() < self.nextFrame:
+            return True
+        # return bool(self.nextFrame)
 
-    # check nextFrame and disable nextFrame if True
+    # reverse to active
     def end(self):
-        if self.nextFrame:
-            if self.clock() >= self.nextFrame:
-                return True
-
-        return False
+        if self.nextFrame and self.clock() >= self.nextFrame:
+            # self.nextFrame = None
+            return True
 
     # set nextFrame
     def start(self):
@@ -41,6 +43,3 @@ class Clock:
         if self.nextFrame:
             time = self.nextFrame - self.clock()
         return time
-
-    def active(self):
-        return bool(self.nextFrame)

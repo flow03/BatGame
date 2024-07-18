@@ -107,14 +107,14 @@ class BlueShield(HealthBar.CellHealthBar):
                 cell.draw(screen)
             elif not cell.health.empty():
                 cell.draw(screen)
-            elif cell.is_decrease():
+            elif cell.decrease:
                 cell.draw(screen)
 
     def update_health(self):
         super().update_health()
         if self.shifting and not self.visible_empty:
             if self.decreased_cell:
-                if not self.decreased_cell.is_decrease():
+                if not self.decreased_cell.decrease:
                     self.decreased_cell = None
                     self.fit_rect(self.cell_visible_width()) # update_pos inside
 

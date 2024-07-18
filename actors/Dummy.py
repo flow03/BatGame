@@ -20,6 +20,7 @@ class Dummy(pygame.sprite.Sprite):
 
         self.health = Health(health)
         self.shield = None
+        self.dead = False
         if shield:
             self.shield = Health(shield)
 
@@ -57,15 +58,17 @@ class Dummy(pygame.sprite.Sprite):
     def init(self):
         # self.health_bar.init()
         self.healthBarCreate(self.health_type)
+        self.dead = False
 
     def update(self):
         self.collide_bullet()
         
-        if self.re_delay.end():
+        if self.dead and self.re_delay.end():
             self.health.restore()
             if self.shield:
                 self.shield.restore()
             self.healthBarCreate(self.health_type)
+            self.dead = False
 
         self.health_bar.update_health()
 
@@ -89,7 +92,8 @@ class Dummy(pygame.sprite.Sprite):
     def set_damage(self, damage):
         self.health_bar.set_damage(damage)
         if self.health.empty():
-            self.re_delay.start()
+            self.dead = True
+            self.re_delay.restart()
 
     def set_heal(self, heal : int):
         self.health_bar.set_heal(heal)

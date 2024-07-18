@@ -123,9 +123,9 @@ class FancyHealthBar(HealthBar):
         super().__init__(*params)
     
         self.yellow_rect = pygame.Rect(self.rect_health)
-        self.yellow_clock = Clock(500)  # delay before decrease
+        self.yellow_delay = Clock(500)  # delay before decrease
         self.green_rect = pygame.Rect(self.rect_health)
-        self.green_clock = Clock(500)   # delay before increase
+        self.green_delay = Clock(500)   # delay before increase
 
         self.init()
 
@@ -166,49 +166,69 @@ class FancyHealthBar(HealthBar):
             if self.health.health < self.prev_health:
                 self.green_rect.width = round(self.max_width * ratio)
                 # self.rect_health.width = self.green_rect.width
-                self.yellow_clock.start()
+                self.decrease = True
+                # print("decrease True")
+                self.yellow_delay.restart()
             elif self.health.health > self.prev_health:
                 self.green_rect.width = round(self.max_width * ratio)
-                self.green_clock.start()
+                self.increase = True
+                # print("increase True")
+                self.green_delay.restart()
 
             self.prev_health = round(self.health.health)
 
-        if self.yellow_clock.end():
-            self.decrease = True
-        if self.decrease:
+        if self.decrease and self.yellow_delay.end():
             self.yellow_decrease()
-
-        if self.green_clock.end():
-            self.increase = True
-        if self.increase:
-            self.red_increase()
-        
-        if not self.is_decrease():
+        elif not self.decrease:
             self.yellow_rect.width = self.green_rect.width
-        if not self.is_increase():
-            self.rect_health.width = self.green_rect.width
-    
-    def is_decrease(self):
-        # delay or decrease
-        return self.yellow_clock.active() or self.decrease
 
-    def is_increase(self):
-        # delay or increase
-        return self.green_clock.active() or self.increase
+        if self.increase and self.green_delay.end():
+            self.red_increase()
+        elif not self.increase:
+            self.rect_health.width = self.green_rect.width
+
+        # if self.yellow_clock.end():
+        #     self.decrease = True
+        # if self.decrease:
+        #     self.yellow_decrease()
+
+        # if self.green_clock.end():
+        #     self.increase = True
+        # if self.increase:
+        #     self.red_increase()
+        
+        # if not self.is_decrease():
+        #     self.yellow_rect.width = self.green_rect.width
+        # if not self.is_increase():
+        #     self.rect_health.width = self.green_rect.width
+    
+    # def is_decrease(self):
+    #     # delay or decrease
+    #     return self.yellow_delay.active() or self.decrease
+
+    # def is_increase(self):
+    #     # delay or increase
+    #     return self.green_delay.active() or self.increase
 
     def yellow_decrease(self):
+        # print("yellow_decrease")
         if self.yellow_rect.width > self.green_rect.width:
-                self.yellow_rect.width -= self.anim_speed
+            self.yellow_rect.width -= self.anim_speed
         else:
             self.yellow_rect.width = self.green_rect.width
             self.decrease = False
+            # print("decrease False")
+            # print()
 
     def red_increase(self):
+        # print("red_increase")
         if self.rect_health.width < self.green_rect.width:
             self.rect_health.width += self.anim_speed
         else:
             self.rect_health.width = self.green_rect.width
             self.increase = False
+            # print("increase False")
+            # print()
 
 class BoundHealthBar(HealthBar):
     def __init__(self, *params):
