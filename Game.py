@@ -3,12 +3,12 @@ from add.Path import resource_path_args
 from text.Text import Text
 from loot.Drops import Drops
 from actors.Groups import Groups
-from add.UserEvents import UserEvents
+from Events import Events
 from actors.Player import Player
 from actors.Dummy import DummyCreator
 from pygame.math import Vector2
 from text.Jokes import Jokes
-from text.Menu import Exit
+from text.Menu import Exit, Pause
 
 class Game():
     def __init__(self):
@@ -23,7 +23,7 @@ class Game():
 
         self.drops = Drops()
         self.groups = Groups()
-        self.events = UserEvents(self)
+        self.events = Events(self)
 
         self.player = Player(self.screen_center, self)
         self.dummies = DummyCreator(self.groups)
@@ -32,6 +32,7 @@ class Game():
         self.active = True
         self.state = "game"
         self.exit = Exit(self.text.text)
+        self.pause = Pause(self.text.text)
 
         self.killedBats = 0
 
@@ -123,14 +124,13 @@ class Game():
 
             elif self.state == "exit":
                 self.events.stop_timer()
+                self.exit.update()
                 self.exit.display()
 
-                key = self.exit.update()
-                if key:
-                    if key == 'restart_button':
-                        self.restart()
-                    elif key == 'exit_button':
-                        self.active = False
+            elif self.state == "pause":
+                self.events.stop_timer()
+                self.pause.update()
+                self.pause.display()
 
             pygame.display.update() 
 

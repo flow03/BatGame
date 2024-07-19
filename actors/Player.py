@@ -50,6 +50,7 @@ class Player:
         # self.harmless = False
         # self.standing = False
         self.effects.clear()
+        self.joke.clear()
 
         self.health_bar.init() # restore
         self.bullet_bar.update(self.bullets_count)

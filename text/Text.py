@@ -54,7 +54,7 @@ class Text:
         # groups = self.game.groups
         # drops = self.game.drops
         player = self.game.player
-        # self.print('food on screen', len(drops.foodDrops))
+        self.print(self.text['bats'], len(self.game.groups.bats))
         # self.print('bullets on screen', len(drops.bulletDrops))
         # self.print('loot on screen', len(drops.fallen_drops))
         self.print(self.text['killed_bats'], self.game.killedBats)

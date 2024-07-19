@@ -136,3 +136,6 @@ class JokeHandler:
         #     return False
 
         return False
+
+    def clear(self):
+        self.joke = None

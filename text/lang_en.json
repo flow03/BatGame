@@ -4,6 +4,10 @@
     "restart_button": "Try again",
     "exit_button": "Another time",
 
+    "pause": "PAUSE",
+    "continue": "Continue",
+
+    "bats": "bats",
     "killed_bats": "killed bats",
     "health": "health",
     "speed": "speed",

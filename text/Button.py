@@ -62,6 +62,7 @@ class ButtonsHandler:
 
         self.active = None
         self.key_pressed = False
+        self.mouse_pressed = False
         self.active_iterator()
 
     def active_iterator(self):
@@ -81,18 +82,18 @@ class ButtonsHandler:
             self.buttons[self.active.current].change_color(self.active_color)
 
     def up(self):
-        self.key_pressed = True
+        # self.key_pressed = True
         self.buttons[self.active.current].change_color("Black")
         self.buttons[self.active.prev].change_color(self.active_color)
 
     def down(self):
-        self.key_pressed = True
+        # self.key_pressed = True
         self.buttons[self.active.current].change_color("Black")
         self.buttons[self.active.next].change_color(self.active_color)
 
-    @property
-    def pressed(self):
-        return self.key_pressed
+    # @property
+    # def pressed(self):
+    #     return self.key_pressed
     # @property_name.getter призначений для зміни існуючого getter-а, 
     # раніше визначеного з допомогою @property 
 
@@ -106,9 +107,13 @@ class ButtonsHandler:
         for key in self.buttons:
             if self.buttons[key].collide(mouse_pos):
                 self.set_active(key)
-                if pygame.mouse.get_pressed()[0]:   # left mouse key
-                    print(key)
-                    return key
+                left_mouse = pygame.mouse.get_pressed()[0]  # left mouse key
+                if not self.mouse_pressed and left_mouse:
+                    # print(key)
+                    self.mouse_pressed = True
+                    self.post(key)
+                elif not left_mouse:
+                    self.mouse_pressed = False
         # else:
         #     mouse_pos = pygame.mouse.get_pos()
         #     for key in self.buttons:
@@ -116,21 +121,31 @@ class ButtonsHandler:
 
     def update_keys(self):
         keys = pygame.key.get_pressed()
-        if not self.pressed:
-            if keys and keys[pygame.K_RETURN]:
-                return self.get_active()
+        if keys and not self.key_pressed:
+            if keys[pygame.K_RETURN]:
+                # print(self.get_active())
+                # return self.get_active()
+                self.key_pressed = True
+                self.post(self.get_active())
             elif (keys[pygame.K_UP] or keys[pygame.K_w]):
-                # self.key_pressed = True
+                self.key_pressed = True
                 print("up")
                 self.up()
                 # pygame.time.delay(200)
             # elif not (keys[pygame.K_UP] or keys[pygame.K_w]):
             #     key_pressed = False
             elif (keys[pygame.K_DOWN] or keys[pygame.K_s]):
-                # self.key_pressed = True
+                self.key_pressed = True
                 print("down")
                 self.down()
-        elif not (keys[pygame.K_DOWN] or keys[pygame.K_s] or keys[pygame.K_UP] or keys[pygame.K_w]):
+        elif not (keys[pygame.K_DOWN] or keys[pygame.K_s] or keys[pygame.K_UP] or keys[pygame.K_w] or keys[pygame.K_RETURN]):
             self.key_pressed = False
-        else:
-            print("Key still pressed")
+        # else:
+        #     print("Key still pressed")
+
+    def post(self, keyname : str):
+        # self.key_pressed = True
+        event = pygame.event.Event(pygame.KEYDOWN, key=keyname)
+        pygame.event.post(event)
+        print(f"Event KEYDOWN {keyname} posted")
+        

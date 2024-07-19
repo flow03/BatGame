@@ -2,14 +2,14 @@ import pygame
 from actors.Bat import BatMoving, BatSpecial
 from actors.Dance_Girl import Dance_Girl
 
-class UserEvents:
+class Events:
     def __init__(self, game):
         self.game = game
         self.isEvents = False
-        self.isTenBats = False
+        # self.isTenBats = False
 
         self.init()
-        # self.start()
+        self.start()
 
     def init(self):
         self.BAT_TIMER = pygame.USEREVENT + 1
@@ -111,10 +111,19 @@ class UserEvents:
             #     groups.actors_damage(5)
             #     player.set_damage(5)
 
-        # працює незалежно від player.gameplay
+        # працює незалежно від game.game()
         if event.type == pygame.KEYDOWN:
             if event.key == pygame.K_r:
                 self.game.restart()
+            elif event.key == pygame.K_ESCAPE:
+                self.game.state = "pause"
+            if event.key == 'restart_button':
+                self.game.restart()
+            elif event.key == 'exit_button':
+                self.game.active = False
+            elif event.key == 'continue':
+                self.start_timer()
+                self.game.state = "game"
             # if event.key == pygame.K_g:
             #     gc.collect()
             #     print(gc.get_stats())

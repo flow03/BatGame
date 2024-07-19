@@ -6,12 +6,28 @@ from os.path import join
 from random import choice
 from text.Button import Button, ButtonsHandler
 
-class Exit:
-    def __init__(self, text : dict):
+class BiggerFont:
+    def __init__(self):
         self.myfont = pygame.font.SysFont("Montserrat", 30) # Arial Narrow, Montserrat
+        self.myBiggerFont = None
+        
         self.default_fonts = ["Romashulka.ttf", "moonlight.ttf", "graf.ttf" ]
         self.fonts = list(self.default_fonts)
-        self.myBiggerFont = self.get_BiggerFont()
+        self.change_BiggerFont()
+
+    def change_BiggerFont(self):
+        if not self.fonts:
+            self.fonts = list(self.default_fonts)
+
+        font_name = choice(self.fonts)
+        self.fonts.remove(font_name)
+        font_url = resource_path(join('fonts', font_name))
+        
+        self.myBiggerFont = pygame.font.Font(font_url, 60)
+
+class Menu:
+    def __init__(self, text : dict):
+        self.font = BiggerFont()
         self.screen = get_surface()
         self.center = Vector2(self.screen.get_rect().center)
 
@@ -20,39 +36,22 @@ class Exit:
         self.labels = {}
         self.buttons = {}
         self.buttons_handler = None
-        # self.active_color = "Red"
-        # self.key_pressed = False
-        # self.b_iter = None
 
-        self.create()
+        # self.create()
 
-    def get_BiggerFont(self):
-        if not self.fonts:
-            self.fonts = list(self.default_fonts)
-
-        font_name = choice(self.fonts)
-        self.fonts.remove(font_name)
-        font_url = resource_path(join('fonts', font_name))
-        
-        return pygame.font.Font(font_url, 60)
-
-    def change_BiggerFont(self):
-        self.myBiggerFont = self.get_BiggerFont()
-        self.create()
-    
     def createButtons(self, buttons : list, pos : Vector2):
         # pos = pos
         for key in buttons:
-            self.buttons[key] = Button(self.text[key], self.myfont, pos)
+            self.buttons[key] = Button(self.text[key], self.font.myfont, pos)
             pos.y = self.buttons[key].get_bottom() + 30
 
     def createLabels(self, labels : list, pos : Vector2):
         # pos = pos
         for key in labels:
-            self.labels[key] = Button(self.text[key], self.myBiggerFont, pos)
+            self.labels[key] = Button(self.text[key], self.font.myBiggerFont, pos)
             pos.y = self.labels[key].get_bottom() + 30
 
-    def create(self):
+    def create(self, labels : list, buttons : list):
         # print("createExitRects call")
         # self.myBiggerFont = self.get_BiggerFont()
         # ----------------------------------------------------------
@@ -66,13 +65,11 @@ class Exit:
         # self.exit_text = Button(self.text['exit_button'], self.myfont, position)
         # ----------------------------------------------------------
         position = Vector2(self.center.x, self.center.y - 85)
-        labels = ['over_1', 'over_2']
         self.createLabels(labels, position)
 
         last_label = next(reversed(self.labels)) # reversed iterator
         # print('last_label', last_label)
         position.y = self.labels[last_label].get_bottom() + 50
-        buttons = ['restart_button', 'exit_button']
         self.createButtons(buttons, position)
         
         # create iterator
@@ -92,3 +89,22 @@ class Exit:
             label.draw(self.screen)
         for button in self.buttons.values():
             button.draw(self.screen)
+
+    def change_BiggerFont(self):
+        self.font.change_BiggerFont()
+        self.create(list(self.labels.keys()), list(self.buttons.keys()))
+
+class Exit(Menu):
+    def __init__(self, text : dict):
+        super().__init__(text)
+        labels = ['over_1', 'over_2']
+        buttons = ['restart_button', 'exit_button']
+        self.create(labels, buttons)
+
+class Pause(Menu):
+    def __init__(self, text : dict):
+        super().__init__(text)
+        labels = ['pause']
+        buttons = ['continue', 'restart_button', 'exit_button']
+        self.create(labels, buttons)
+    
