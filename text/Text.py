@@ -27,12 +27,19 @@ class Text:
         self.y_offset = 25
         self.x_offset = 20
 
-        if "-s" in argv: # sys
-            text_path = resource_path(join('text', 'lang_s.json'))
-        else:
+        # self.text = {}
+
+        if "-en" in argv: # sys
             text_path = resource_path(join('text', 'lang_en.json'))
-        self.text = load_json(text_path)
+        else:
+            text_path = resource_path(join('text', 'lang_uk.json'))
+
+        self.text = dict(load_json(text_path))
         # self.exit = Exit(self.text)
+
+        if "-s" in argv: # sys
+            over_s = load_json(resource_path(join('text', 'over_s.json')))
+            self.text.update(over_s)
 
     def display(self):
         # if self.game.displayText:

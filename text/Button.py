@@ -129,14 +129,14 @@ class ButtonsHandler:
                 self.post(self.get_active())
             elif (keys[pygame.K_UP] or keys[pygame.K_w]):
                 self.key_pressed = True
-                print("up")
+                # print("up")
                 self.up()
                 # pygame.time.delay(200)
             # elif not (keys[pygame.K_UP] or keys[pygame.K_w]):
             #     key_pressed = False
             elif (keys[pygame.K_DOWN] or keys[pygame.K_s]):
                 self.key_pressed = True
-                print("down")
+                # print("down")
                 self.down()
         elif not (keys[pygame.K_DOWN] or keys[pygame.K_s] or keys[pygame.K_UP] or keys[pygame.K_w] or keys[pygame.K_RETURN]):
             self.key_pressed = False

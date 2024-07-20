@@ -1,4 +1,0 @@
-GAME OVER
-RESTART?
-Try again
-Another time
