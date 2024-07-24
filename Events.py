@@ -116,8 +116,13 @@ class Events:
             if event.key == pygame.K_r:
                 self.game.restart()
             elif event.key == pygame.K_ESCAPE:
-                self.game.state = "pause"
-            if event.key == 'restart_button':
+                if self.game.state == "game":
+                    self.stop_timer()
+                    self.game.state = "pause"
+                elif self.game.state == "pause":
+                    self.start_timer()
+                    self.game.state = "game"
+            elif event.key == 'restart_button':
                 self.game.restart()
             elif event.key == 'exit_button':
                 self.game.active = False

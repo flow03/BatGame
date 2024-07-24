@@ -65,6 +65,8 @@ class ButtonsHandler:
         self.mouse_pressed = False
         self.active_iterator()
 
+        self.mouse_pos = None
+
     def active_iterator(self):
         if self.buttons:
             # if self.active:
@@ -101,23 +103,41 @@ class ButtonsHandler:
     # def pressed(self, value : bool):
     #     self.key_pressed = value
 
-    def update_mouse(self):
-        # if pygame.mouse.
-        mouse_pos = pygame.mouse.get_pos()
+    # повертає key першої клавіші, з якою відбулася колізія
+    def collide_mouse(self, pos):
         for key in self.buttons:
-            if self.buttons[key].collide(mouse_pos):
+            if self.buttons[key].collide(pos):
+                return key
+            
+    # оновлює self.mouse_pos
+    # повертає False, якщо нова позиція миші співпадає з попередньою
+    def mouse_move(self):
+        new_pos = pygame.mouse.get_pos()
+        if new_pos != self.mouse_pos:
+            self.mouse_pos = new_pos
+            return True
+        else:
+            # print("Same mouse pos", self.mouse_pos)
+            return False
+
+    def update_mouse(self):
+        # оновлює активну button, якщо миша рухається
+        if self.mouse_move():   # not the same
+            key = self.collide_mouse(self.mouse_pos)
+            if key:
                 self.set_active(key)
-                left_mouse = pygame.mouse.get_pressed()[0]  # left mouse key
-                if not self.mouse_pressed and left_mouse:
-                    # print(key)
+
+        # обробляє натиск лівої кнопки миші
+        left_mouse = pygame.mouse.get_pressed()[0]  # left mouse key
+        if left_mouse:
+            if not self.mouse_pressed:
+                mouse_pos = pygame.mouse.get_pos()
+                key = self.collide_mouse(mouse_pos)
+                if key:
                     self.mouse_pressed = True
                     self.post(key)
-                elif not left_mouse:
-                    self.mouse_pressed = False
-        # else:
-        #     mouse_pos = pygame.mouse.get_pos()
-        #     for key in self.buttons:
-        #         if self.buttons[key].collide(mouse_pos):
+        else:   # left mouse not pressed
+            self.mouse_pressed = False
 
     def update_keys(self):
         keys = pygame.key.get_pressed()

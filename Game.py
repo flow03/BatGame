@@ -128,7 +128,7 @@ class Game():
                 self.exit.display()
 
             elif self.state == "pause":
-                self.events.stop_timer()
+                # self.events.stop_timer()
                 self.pause.update()
                 self.pause.display()
 
