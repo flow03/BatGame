@@ -8,7 +8,7 @@ from actors.Player import Player
 from actors.Dummy import DummyCreator
 from pygame.math import Vector2
 from text.Jokes import Jokes
-from text.Menu import Exit, Pause
+from text.Menu import MenuContex
 
 class Game():
     def __init__(self):
@@ -31,8 +31,8 @@ class Game():
         self.displayText = False
         self.active = True
         self.state = "game"
-        self.exit = Exit(self.text.text)
-        self.pause = Pause(self.text.text)
+        self.menu = MenuContex(self.text.text)
+        # self.pause = Pause(self.text.text)
 
         self.killedBats = 0
 
@@ -85,7 +85,7 @@ class Game():
         # jump.is_jump = False
         self.events.start()
         self.dummies.create() # after groups.clear
-        self.exit.change_BiggerFont()
+        self.menu.change_BiggerFont()
         # isTenBats = False
         self.state = "game"
         self.killedBats = 0
@@ -122,15 +122,14 @@ class Game():
                 if self.displayText:            
                     self.text.display()
 
-            elif self.state == "exit":
-                self.events.stop_timer()
-                self.exit.update()
-                self.exit.display()
+            elif self.state == "menu":
+                self.menu.update()
+                self.menu.display()
 
-            elif self.state == "pause":
-                # self.events.stop_timer()
-                self.pause.update()
-                self.pause.display()
+            # elif self.state == "pause":
+            #     # self.events.stop_timer()
+            #     self.pause.update()
+            #     self.pause.display()
 
             pygame.display.update() 
 
@@ -139,3 +138,8 @@ class Game():
             # self.events.restart_pressed()
 
         pygame.quit()
+
+    def change_menu(self, key):
+        self.events.stop_timer()
+        self.menu.change(key)
+        self.state = "menu"

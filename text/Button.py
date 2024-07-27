@@ -1,4 +1,5 @@
 import pygame
+from pygame.math import Vector2
 from text.Iterator import BidirectionalIterator
 
 class Button:
@@ -33,6 +34,12 @@ class Button:
 
     def update_pos(self, midbottom):
         self.rect.midbottom = midbottom
+
+    def shift(self, vector : Vector2):
+        # print(vector)
+        # print(self.rect.center)
+        new_pos = Vector2(self.rect.center) + Vector2(vector)
+        self.rect.center = new_pos
 
 class WhiteButton(Button):
     def __init__(self, *args):
@@ -122,7 +129,7 @@ class ButtonsHandler:
 
     def update_mouse(self):
         # оновлює активну button, якщо миша рухається
-        if self.mouse_move():   # not the same
+        if self.mouse_move():   # not the same pos
             key = self.collide_mouse(self.mouse_pos)
             if key:
                 self.set_active(key)
@@ -131,12 +138,13 @@ class ButtonsHandler:
         left_mouse = pygame.mouse.get_pressed()[0]  # left mouse key
         if left_mouse:
             if not self.mouse_pressed:
-                mouse_pos = pygame.mouse.get_pos()
-                key = self.collide_mouse(mouse_pos)
+                # mouse_pos = pygame.mouse.get_pos()
+                key = self.collide_mouse(self.mouse_pos)
                 if key:
                     self.mouse_pressed = True
                     self.post(key)
-        else:   # left mouse not pressed
+                    # return key
+        else:   # left mouse key is not pressed
             self.mouse_pressed = False
 
     def update_keys(self):
@@ -147,6 +155,7 @@ class ButtonsHandler:
                 # return self.get_active()
                 self.key_pressed = True
                 self.post(self.get_active())
+                # return key
             elif (keys[pygame.K_UP] or keys[pygame.K_w]):
                 self.key_pressed = True
                 # print("up")

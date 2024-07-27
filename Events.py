@@ -53,7 +53,7 @@ class Events:
                 for _ in range(5): # five bats
                     groups.add_bat(BatSpecial(self.game))
             if event.type == self.EXIT:
-                self.game.state = "exit"
+                self.game.change_menu("exit")
 
             self.key_pressed(event)
 
@@ -113,22 +113,29 @@ class Events:
 
         # працює незалежно від game.game()
         if event.type == pygame.KEYDOWN:
-            if event.key == pygame.K_r:
+            if event.key == pygame.K_r or event.key == 'restart_button':
                 self.game.restart()
             elif event.key == pygame.K_ESCAPE:
                 if self.game.state == "game":
-                    self.stop_timer()
-                    self.game.state = "pause"
-                elif self.game.state == "pause":
+                    # self.stop_timer()
+                    self.game.change_menu("pause")
+                elif self.game.state == "menu":
                     self.start_timer()
                     self.game.state = "game"
-            elif event.key == 'restart_button':
-                self.game.restart()
             elif event.key == 'exit_button':
                 self.game.active = False
             elif event.key == 'continue':
                 self.start_timer()
                 self.game.state = "game"
+            elif event.key == "controls":
+                self.game.change_menu("controls")
+            elif event.key == "back":
+                self.game.change_menu("back")
+            # TODO як варіант, можна додати усі потрібні клавіші у list
+            # І створити такий же list для клавіш керування
+            # elif event.key in menu_keys_list:
+            #     self.game.change_menu(event.key)
+            
             # if event.key == pygame.K_g:
             #     gc.collect()
             #     print(gc.get_stats())

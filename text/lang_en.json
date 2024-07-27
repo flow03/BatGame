@@ -6,6 +6,8 @@
 
     "pause": "PAUSE",
     "continue": "Continue",
+    "controls": "Controls",
+    "back": "Back",
 
     "bats": "bats",
     "killed_bats": "killed bats",

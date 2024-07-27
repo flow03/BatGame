@@ -14,8 +14,8 @@ class Jokes:
     def __init__(self):
         self.data = {}
         self.load_jokes('text','Jokes.json')
-        # if "-s" in argv: # sys
-        self.load_jokes('text','Jokes_t.json')
+        if "-s" in argv: # sys
+            self.load_jokes('text','Jokes_t.json')
         self.jokes = list(self.data.keys())
         # print(self.jokes)
 
@@ -116,8 +116,8 @@ class JokeHandler:
 
     def get_joke(self):
         if not self.joke:
-            # self.joke = self.jokes.get_joke()
-            self.joke = self.jokes.get_some_joke("odyssey") # jonny, kass
+            self.joke = self.jokes.get_joke()
+            # self.joke = self.jokes.get_some_joke("snow_white") # jonny, kass
 
     def draw_joke(self, midtop):
         if self.active():
