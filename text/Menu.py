@@ -93,6 +93,9 @@ class Menu:
         # self.font.change_BiggerFont()
         self.create(list(self.labels.keys()), list(self.buttons.keys()))
 
+    def back(self):
+        return None
+    
 class Exit(Menu):
     def __init__(self, *argv):
         super().__init__(*argv)
@@ -105,6 +108,16 @@ class Pause(Menu):
         super().__init__(*argv)
         labels = ['pause']
         buttons = ['continue', 'controls', 'restart_button', 'exit_button']
+        self.create(labels, buttons)
+
+    def back(self):
+        return "game"
+
+class Start(Menu):
+    def __init__(self, *argv):
+        super().__init__(*argv)
+        labels = ['start']
+        buttons = ['new_game', 'controls', 'exit_button']
         self.create(labels, buttons)
 
 class Controls(Menu):
@@ -124,11 +137,14 @@ class Controls(Menu):
         'girl',
         'joke',
         'events',
-        'restart',
+        # 'restart',
         'help',
         'back']
         self.SPACING = 15
         self.create(labels, buttons)
+
+    def back(self):
+        return "back"
 
     def create(self, labels : list, buttons : list):
         position = Vector2(self.center.x, 50)
@@ -150,9 +166,11 @@ class MenuContex:
         self.exit = Exit(text, self.font)
         self.pause = Pause(text, self.font)
         self.controls = Controls(text, self.font)
+        self.start = Start(text, self.font)
 
-        self.menu = self.pause
-        self.main_menu = self.pause
+        self.menu = self.start
+        self.back_menu = self.start
+        # self.main_menu = self.pause
 
     def update(self):
         self.menu.update()
@@ -162,14 +180,21 @@ class MenuContex:
         if key:
             if key == "pause":
                 self.menu = self.pause
-            elif key == "controls":
-                self.menu = self.controls
+                # self.back = None
             elif key == "exit":
                 self.menu = self.exit
+                # self.back = self.exit
+                # self.back = None
+            elif key == "controls":
+                self.back_menu = self.menu
+                self.menu = self.controls
             elif key == "back":
-                self.menu = self.main_menu
-                # self.prev_menu = None
-            print("Menu changed:", key)
+                self.menu = self.back_menu
+
+            # print("Menu changed:", key)
+
+    def back(self):
+        return self.menu.back()
 
     def display(self):
         self.menu.display()
@@ -180,3 +205,4 @@ class MenuContex:
         self.exit.change_Font()
         self.pause.change_Font()
         self.controls.change_Font()
+        self.start.change_Font()

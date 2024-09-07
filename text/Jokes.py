@@ -14,8 +14,8 @@ class Jokes:
     def __init__(self):
         self.data = {}
         self.load_jokes('text','Jokes.json')
-        if "-s" in argv: # sys
-            self.load_jokes('text','Jokes_t.json')
+        # if "-s" in argv: # sys
+        self.load_jokes('text','Jokes_t.json')
         self.jokes = list(self.data.keys())
         # print(self.jokes)
 

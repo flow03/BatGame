@@ -136,6 +136,7 @@ class ButtonsHandler:
 
         # обробляє натиск лівої кнопки миші
         left_mouse = pygame.mouse.get_pressed()[0]  # left mouse key
+        right_mouse = pygame.mouse.get_pressed()[2]  # right mouse key
         if left_mouse:
             if not self.mouse_pressed:
                 # mouse_pos = pygame.mouse.get_pos()
@@ -144,6 +145,10 @@ class ButtonsHandler:
                     self.mouse_pressed = True
                     self.post(key)
                     # return key
+        elif right_mouse:
+            if not self.mouse_pressed:
+                self.mouse_pressed = True
+                self.post("back")
         else:   # left mouse key is not pressed
             self.mouse_pressed = False
 
@@ -176,5 +181,5 @@ class ButtonsHandler:
         # self.key_pressed = True
         event = pygame.event.Event(pygame.KEYDOWN, key=keyname)
         pygame.event.post(event)
-        print(f"Event KEYDOWN {keyname} posted")
+        # print(f"Event KEYDOWN {keyname} posted")
         

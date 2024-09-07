@@ -30,7 +30,7 @@ class Game():
 
         self.displayText = False
         self.active = True
-        self.state = "game"
+        self.state = "menu"
         self.menu = MenuContex(self.text.text)
         # self.pause = Pause(self.text.text)
 
@@ -84,7 +84,8 @@ class Game():
         self.drops.clear()
         # jump.is_jump = False
         self.events.start()
-        self.dummies.create() # after groups.clear
+        # self.dummies.create() # after groups.clear
+        self.dummies.is_dummies = False
         self.menu.change_BiggerFont()
         # isTenBats = False
         self.state = "game"
@@ -139,7 +140,16 @@ class Game():
 
         pygame.quit()
 
-    def change_menu(self, key):
+    def menu_change(self, key):
         self.events.stop_timer()
         self.menu.change(key)
         self.state = "menu"
+
+    def menu_back(self):
+        state = self.menu.back()
+        # print(state)
+        if state == "game":
+            self.events.start_timer()
+            self.state = "game"
+        elif state == "back":
+            self.menu_change("back")

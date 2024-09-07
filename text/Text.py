@@ -7,7 +7,7 @@ from pygame.display import get_surface
 from add.Path import resource_path, load_json
 # from random import choice
 from os.path import join
-from sys import argv
+# from sys import argv
 # from text.Iterator import ButtonsHandler
 # from text.Menu import Exit
 
@@ -29,17 +29,17 @@ class Text:
 
         # self.text = {}
 
-        if "-en" in argv: # sys
-            text_path = resource_path(join('text', 'lang_en.json'))
-        else:
-            text_path = resource_path(join('text', 'lang_uk.json'))
+        # if "-en" in argv: # sys
+        #     text_path = resource_path(join('text', 'lang_en.json'))
+        # else:
+        text_path = resource_path(join('text', 'lang_uk.json'))
 
         self.text = dict(load_json(text_path))
         # self.exit = Exit(self.text)
 
-        if "-s" in argv: # sys
-            over_s = load_json(resource_path(join('text', 'over_s.json')))
-            self.text.update(over_s)
+        # if "-s" in argv: # sys
+        # over_s = load_json(resource_path(join('text', 'over_s.json')))
+        # self.text.update(over_s)
 
     def display(self):
         # if self.game.displayText:
@@ -137,13 +137,13 @@ class Text:
         self.print_r_text(self.text['food'])
         self.print_r_text(self.text['bat'])
         self.print_r_text(self.text['mushrooms'])
-        self.print_r_text(self.text['dummies'])
         self.print_r_text(self.text['girl'])
+        self.print_r_text(self.text['dummies'])
         self.print_r_text(self.text['joke'])
 
         self.print_r_text()
         self.print_r_text(self.text['events'])
-        self.print_r_text(self.text['restart'])
+        # self.print_r_text(self.text['restart'])
         self.print_r_text(self.text['help'])
         self.print_r_text()
 

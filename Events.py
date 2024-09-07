@@ -9,7 +9,7 @@ class Events:
         # self.isTenBats = False
 
         self.init()
-        self.start()
+        # self.start()
 
     def init(self):
         self.BAT_TIMER = pygame.USEREVENT + 1
@@ -53,7 +53,7 @@ class Events:
                 for _ in range(5): # five bats
                     groups.add_bat(BatSpecial(self.game))
             if event.type == self.EXIT:
-                self.game.change_menu("exit")
+                self.game.menu_change("exit")
 
             self.key_pressed(event)
 
@@ -63,7 +63,8 @@ class Events:
         player = self.game.player
         # Створення кулі з позиції гравця до позиції миші
         if self.game.game() and event.type == pygame.MOUSEBUTTONDOWN:
-            player.shoot(self.game.groups.bullets, pygame.mouse.get_pos())
+            if event.button == 1 or event.button == 2 or event.button == 3: # ліва, права і середня клавіші
+                player.shoot(self.game.groups.bullets, pygame.mouse.get_pos())
         if self.game.game() and event.type == pygame.KEYDOWN:
             # print(f'Key down: {event.key}, Unicode: {event.unicode}')
             # Створення кулі, яка летітиме у напрямку player.direction
@@ -113,28 +114,27 @@ class Events:
 
         # працює незалежно від game.game()
         if event.type == pygame.KEYDOWN:
-            if event.key == pygame.K_r or event.key == 'restart_button':
+            if event.key == 'restart_button': # event.key == pygame.K_r or 
                 self.game.restart()
             elif event.key == pygame.K_ESCAPE:
                 if self.game.state == "game":
                     # self.stop_timer()
-                    self.game.change_menu("pause")
+                    self.game.menu_change("pause")
                 elif self.game.state == "menu":
-                    self.start_timer()
-                    self.game.state = "game"
+                    self.game.menu_back()
             elif event.key == 'exit_button':
                 self.game.active = False
-            elif event.key == 'continue':
+            elif event.key == 'continue' or event.key == 'new_game':
                 self.start_timer()
                 self.game.state = "game"
             elif event.key == "controls":
-                self.game.change_menu("controls")
+                self.game.menu_change("controls")
             elif event.key == "back":
-                self.game.change_menu("back")
+                self.game.menu_back()
             # TODO як варіант, можна додати усі потрібні клавіші у list
             # І створити такий же list для клавіш керування
             # elif event.key in menu_keys_list:
-            #     self.game.change_menu(event.key)
+            #     self.game.menu_change(event.key)
             
             # if event.key == pygame.K_g:
             #     gc.collect()

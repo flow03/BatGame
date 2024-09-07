@@ -11,7 +11,7 @@ class Dummy(pygame.sprite.Sprite):
         super().__init__()
         
         self.health_type = health_type
-        img_url = resource_path('img/training_dummy.png')
+        img_url = resource_path('img/dummy/training_dummy.png')
         self.image = pygame.image.load(img_url).convert_alpha()
         # self.resize_image(80)
         self.rect = self.image.get_rect(center=pos)

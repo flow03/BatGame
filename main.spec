@@ -14,7 +14,9 @@ datas_list.append(('img/*.*', 'img/'))
 datas_list.append(('img/bat/*.png', 'img/bat/'))
 datas_list.append(('img/spritesheets/*.png', 'img/spritesheets/'))
 datas_list.append(('img/bg/*', 'img/bg/'))
+datas_list.append(('img/dummy/*.png', 'img/dummy/'))
 datas_list.append(('fonts/*', 'fonts/'))
+datas_list.append(('text/*.json', 'text/'))
 
 # datas_list = [('img/*.png', 'img/'),('img/bat/*.png', 'img/bat/'),('img/bg/*', 'img/bg/'),('img/spritesheets/*.png', 'img/spritesheets/'),('fonts/*', 'fonts/')]
 

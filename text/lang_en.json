@@ -9,6 +9,9 @@
     "controls": "Controls",
     "back": "Back",
 
+    "start": "MENU",
+    "new_game": "New game",
+
     "bats": "bats",
     "killed_bats": "killed bats",
     "health": "health",
@@ -25,8 +28,8 @@
     "food" : "Create random food: Z",
     "bat" : "Create bat: C",
     "mushrooms" : "Create mushrooms: [ ]",
-    "dummies" : "Create dummies: P",
     "girl" : "Create Dance Girl: M",
+    "dummies" : "Show/hide dummies: P",
     "joke" : "Random joke: J",
 
     "events" : "Stop/start all events: T",
