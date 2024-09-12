@@ -7,10 +7,9 @@ from add.Path import resource_path
 from add.Clock import Clock
 
 class Dummy(pygame.sprite.Sprite):
-    def __init__(self, pos, bullet_list, health_type = None, health = 100, shield = 0):
+    def __init__(self, pos, bullet_list, health = 100):
         super().__init__()
         
-        self.health_type = health_type
         img_url = resource_path('img/dummy/training_dummy.png')
         self.image = pygame.image.load(img_url).convert_alpha()
         # self.resize_image(80)
@@ -19,12 +18,11 @@ class Dummy(pygame.sprite.Sprite):
         self.re_delay = Clock(1000)
 
         self.health = Health(health)
-        self.shield = None
+        # self.shield = None
         self.dead = False
-        if shield:
-            self.shield = Health(shield)
 
-        self.healthBarCreate(self.health_type)
+        self.healthBarCreate()
+        # self.update_bar_pos()
         # print("dummy ", self.health_bar.bordered_rect.width, self.health_bar.bordered_rect.height)
 
     def update_bar_pos(self):
@@ -32,42 +30,26 @@ class Dummy(pygame.sprite.Sprite):
         new_pos.y -= 10
         self.health_bar.update_pos(new_pos)
 
-    def healthBarCreate(self, health_type = None):
+    def healthBarCreate(self):
+        self.health.restore()
         health_bar_rect = pygame.Rect((0, 0), (100, 8)) # (0, 0) position
-
-        if health_type == "cell":
-            self.health_bar = HealthBar.CellHealthBar(health_bar_rect, self.health, 1)
-        elif health_type == "blue":
-            self.health_bar = Shields.BlueShield(health_bar_rect, self.health, 1)
-            self.health_bar.shifting = True
-        elif health_type == "gray":
-            self.health_bar = Shields.GrayShield(health_bar_rect, self.health, 1)
-        elif health_type == "fancy_gray":
-            health_bar = HealthBar.FancyHealthBar(health_bar_rect, self.health, 1)
-            shield_bar = Shields.GrayShield(health_bar_rect, self.shield, 1)
-            self.health_bar = Shields.AllHealthBars(health_bar, shield_bar)
-        elif health_type == "fancy_blue":
-            health_bar = HealthBar.FancyHealthBar(health_bar_rect, self.health, 1)
-            shield_bar = Shields.BlueShield(health_bar_rect, self.shield, 1)
-            self.health_bar = Shields.AllHealthBars(health_bar, shield_bar)
-        else:
-            self.health_bar = HealthBar.FancyBoundHealthBar(health_bar_rect, self.health, 1)
+        self.health_bar = HealthBar.FancyBoundHealthBar(health_bar_rect, self.health, 1)
 
         self.update_bar_pos()
 
     def init(self):
         # self.health_bar.init()
-        self.healthBarCreate(self.health_type)
+        self.healthBarCreate()
         self.dead = False
 
     def update(self):
         self.collide_bullet()
         
         if self.dead and self.re_delay.end():
-            self.health.restore()
-            if self.shield:
-                self.shield.restore()
-            self.healthBarCreate(self.health_type)
+            # self.health.restore()
+            # if self.shield:
+            #     self.shield.restore()
+            self.healthBarCreate()
             self.dead = False
 
         self.health_bar.update_health()
@@ -106,6 +88,67 @@ class Dummy(pygame.sprite.Sprite):
 
         self.image = pygame.transform.scale(self.image, (new_w, new_h))
 
+class CellDummy(Dummy):
+    def __init__(self, *args):
+        super().__init__(*args)
+
+    def healthBarCreate(self):
+        self.health.restore()
+        health_bar_rect = pygame.Rect((0, 0), (100, 8))
+        self.health_bar = HealthBar.CellHealthBar(health_bar_rect, self.health, 1)
+        self.update_bar_pos()
+
+class BlueDummy(Dummy):
+    def __init__(self, *args):
+        super().__init__(*args)
+
+    def healthBarCreate(self):
+        self.health.restore()
+        health_bar_rect = pygame.Rect((0, 0), (100, 8))
+        self.health_bar = Shields.BlueShield(health_bar_rect, self.health, 1)
+        self.health_bar.shifting = True
+        self.update_bar_pos()
+
+class GrayDummy(Dummy):
+    def __init__(self, *args):
+        super().__init__(*args)
+
+    def healthBarCreate(self):
+        self.health.restore()
+        health_bar_rect = pygame.Rect((0, 0), (100, 8))
+        self.health_bar = Shields.GrayShield(health_bar_rect, self.health, 1)
+        self.update_bar_pos()
+
+class FancyBlueDummy(Dummy):
+    def __init__(self, shield = 0, *args):
+        self.shield = Health(shield)
+        print("shield", shield)
+        print("*args", *args)
+        super().__init__(*args)
+
+    def healthBarCreate(self):
+        self.health.restore()
+        self.shield.restore()
+        health_bar_rect = pygame.Rect((0, 0), (100, 8))
+        health_bar = HealthBar.FancyHealthBar(health_bar_rect, self.health, 1)
+        shield_bar = Shields.BlueShield(health_bar_rect, self.shield, 1)
+        self.health_bar = Shields.AllHealthBars(health_bar, shield_bar)
+        self.update_bar_pos()
+
+class FancyGrayDummy(Dummy):
+    def __init__(self, shield = 0, *args):
+        self.shield = Health(shield)
+        super().__init__(*args)
+
+    def healthBarCreate(self):
+        self.health.restore()
+        self.shield.restore()
+        health_bar_rect = pygame.Rect((0, 0), (100, 8))
+        health_bar = HealthBar.FancyHealthBar(health_bar_rect, self.health, 1)
+        shield_bar = Shields.GrayShield(health_bar_rect, self.shield, 1)
+        self.health_bar = Shields.AllHealthBars(health_bar, shield_bar)
+        self.update_bar_pos()
+
 class DummyCreator():
     def __init__(self, groups):
         self.groups = groups
@@ -119,15 +162,15 @@ class DummyCreator():
 
     def createDummies(self):
         pos = Vector2(self.center.x - 200, self.center.y)
-        left_dummy = Dummy(pos, self.groups.bullets,"fancy_blue", 50, 5)
+        left_dummy = FancyBlueDummy(5, pos, self.groups.bullets, 50)
         pos = Vector2(self.center.x + 200, self.center.y)
-        right_dummy = Dummy(pos, self.groups.bullets, "fancy_gray", 50, 30)
+        right_dummy = FancyGrayDummy(30, pos, self.groups.bullets, 50)
         pos = Vector2(self.center.x - 200, self.center.y - 200)
-        topleft_dummy = Dummy(pos, self.groups.bullets,"blue", 3)
+        topleft_dummy = BlueDummy(pos, self.groups.bullets, 3)
         pos = Vector2(self.center.x + 200, self.center.y - 200)
-        topright_dummy = Dummy(pos, self.groups.bullets, "gray", 50)
+        topright_dummy = GrayDummy(pos, self.groups.bullets, 50)
         pos = Vector2(self.center.x, self.center.y + 200)
-        down_dummy = Dummy(pos, self.groups.bullets, "cell", 15)
+        down_dummy = CellDummy(pos, self.groups.bullets, 15)
 
         self.groups.dummies.add_actor("left_dummy", left_dummy)
         self.groups.dummies.add_actor("right_dummy", right_dummy)
@@ -145,3 +188,9 @@ class DummyCreator():
         else:
             self.createDummies()
             self.is_dummies = True
+
+# class NewDummy(Dummy):
+#     def __init__(self, *args):
+#         super().__init__(*args)
+
+        
