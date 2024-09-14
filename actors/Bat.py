@@ -89,13 +89,15 @@ class BatMoving(Bat):
         super().__init__(*args)
         self.rect.center = self.get_right_position()
 
+    # повертає випадкову крайню праву позицію за межами екрану
     def get_right_position(self):
         WIDTH = self.screen.get_width()
         HEIGHT = self.screen.get_height()
         half_image = self.image.get_height()//2
+        min_heigth = 0 + half_image
         max_heigth = HEIGHT - half_image
 
-        bat_y = random.randint(0 + half_image, max_heigth)
+        bat_y = random.randint(min_heigth, max_heigth)
 
         return Vector2(WIDTH + half_image, bat_y)
 

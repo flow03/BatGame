@@ -80,6 +80,8 @@ class Actor(pygame.sprite.Sprite):
 
         return direction
 
+# TODO ефекти мають бути в окремому класі, не в Actor
+# об'єкт якого створюватиметься всередині потрібних класів
 class ActorEffects(Actor):
     def __init__(self):
         super().__init__()

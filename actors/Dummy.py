@@ -1,4 +1,5 @@
 import pygame
+import os.path
 from pygame.math import Vector2
 from interface.HealthBar import Health
 import interface.HealthBar as HealthBar
@@ -10,21 +11,41 @@ class Dummy(pygame.sprite.Sprite):
     def __init__(self, pos, bullet_list, health = 100):
         super().__init__()
         
-        img_url = resource_path('img/dummy/training_dummy.png')
-        self.image = pygame.image.load(img_url).convert_alpha()
-        # self.resize_image(80)
+        self.load_images()
         self.rect = self.image.get_rect(center=pos)
+
         self.bullet_list = bullet_list
         self.re_delay = Clock(1000)
+        self.turn_delay = Clock(400)
 
         self.health = Health(health)
         # self.shield = None
         self.dead = False
+        self.turned = False
 
         self.healthBarCreate()
         # self.update_bar_pos()
         # print("dummy ", self.health_bar.bordered_rect.width, self.health_bar.bordered_rect.height)
 
+    def load_images(self):
+        self.images = {}
+        self.images['front'] = self.get_image('dummy_front.png')
+        self.images['back'] = self.get_image('dummy_back.png')
+        self.images['left'] = self.get_image('dummy_left.png')
+        self.images['right'] = self.get_image('dummy_right.png')
+        # self.images['right'] = pygame.transform.flip(self.images['left'], True, False)
+        # for key in self.images:
+        #     self.images[key] = self.resize_image(self.images[key], 100)
+            
+        self.image = self.images['front']
+
+    def get_image(self, name):
+        path = resource_path('img/dummy')
+        img_url = os.path.join(path, name)
+        image = pygame.image.load(img_url).convert_alpha()
+        return image
+
+    # TODO достатньо одного методу у об'єкті health_bar 
     def update_bar_pos(self):
         new_pos = Vector2(self.rect.midtop)
         new_pos.y -= 10
@@ -45,12 +66,16 @@ class Dummy(pygame.sprite.Sprite):
     def update(self):
         self.collide_bullet()
         
-        if self.dead and self.re_delay.end():
-            # self.health.restore()
-            # if self.shield:
-            #     self.shield.restore()
-            self.healthBarCreate()
-            self.dead = False
+        if self.dead:
+            if self.re_delay.end():
+                self.healthBarCreate()
+                self.dead = False
+                self.image = self.images['front']
+        else:
+            if self.turned and self.turn_delay.end():
+                self.turned = False
+                self.image = self.images['front']
+            # place for another not dead logic...
 
         self.health_bar.update_health()
 
@@ -62,6 +87,7 @@ class Dummy(pygame.sprite.Sprite):
         if self.bullet_list:
             bullet = pygame.sprite.spritecollideany(self, self.bullet_list)
             if bullet:
+                self.turn(bullet)
                 self.set_damage(bullet.damage)
                 bullet.kill()
 
@@ -76,17 +102,33 @@ class Dummy(pygame.sprite.Sprite):
         if self.health.empty():
             self.dead = True
             self.re_delay.restart()
+            self.image = self.images['back']
 
     def set_heal(self, heal : int):
         self.health_bar.set_heal(heal)
 
-    def resize_image(self, new_h):
-        original_w = self.image.get_width()
-        original_h = self.image.get_height()
+    def resize_image(self, image : pygame.Surface, new_h):
+        original_w = image.get_width()
+        original_h = image.get_height()
         new_w = int(original_w * (new_h/original_h))
         # print(f"new_h: {new_h}, new_w: {new_w}")
 
-        self.image = pygame.transform.scale(self.image, (new_w, new_h))
+        return pygame.transform.scale(image, (new_w, new_h))
+    
+    def get_direction(self, target : Vector2):
+        target = Vector2(target)
+        pos = Vector2(self.rect.center)
+        diff = pos.x - target.x
+        if diff > 0:
+            return 'left'
+        else:
+            return 'right'
+
+    def turn(self, bullet):
+        self.turned = True
+        direction = self.get_direction(bullet.rect.center)
+        self.image = self.images[direction]
+        self.turn_delay.restart()
 
 class CellDummy(Dummy):
     def __init__(self, *args):
@@ -122,8 +164,6 @@ class GrayDummy(Dummy):
 class FancyBlueDummy(Dummy):
     def __init__(self, shield = 0, *args):
         self.shield = Health(shield)
-        print("shield", shield)
-        print("*args", *args)
         super().__init__(*args)
 
     def healthBarCreate(self):
