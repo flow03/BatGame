@@ -15,7 +15,9 @@ class Jokes:
         self.data = {}
         self.load_jokes('text','Jokes.json')
         # if "-s" in argv: # sys
-        self.load_jokes('text','Jokes_t.json')
+        self.load_jokes('text','Jokes_tits.json')   # tits
+        self.load_jokes('text','Jokes_abs.json')    # abscenity
+        self.load_jokes('text','Jokes_prof.json')   # profanity
         self.jokes = list(self.data.keys())
         # print(self.jokes)
 
@@ -29,13 +31,15 @@ class Jokes:
             self.jokes = list(self.data.keys())
 
         key = random.choice(self.jokes)
-        joke = self.data[key]
+        joke = Joke(self.data[key])
         self.jokes.remove(key)
         # print(key)
-        return Joke(joke)
+        return joke
     
     def get_some_joke(self, key):
         if self.data.get(key, None):
+            # if key in self.jokes:
+            #     self.jokes.remove(key)
             return Joke(self.data[key])
 
 class Joke:
@@ -117,7 +121,7 @@ class JokeHandler:
     def get_joke(self):
         if not self.joke:
             self.joke = self.jokes.get_joke()
-            # self.joke = self.jokes.get_some_joke("snow_white") # jonny, kass
+            # self.joke = self.jokes.get_some_joke("heater") # jonny, kass, snow_white
 
     def draw_joke(self, midtop):
         if self.active():
