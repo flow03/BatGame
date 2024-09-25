@@ -5,7 +5,7 @@ from actors.Dance_Girl import Dance_Girl
 class Events:
     def __init__(self, game):
         self.game = game
-        self.isEvents = False
+        self.isEvents = False # True щоб увімкнути події
         # self.isTenBats = False
 
         self.init()
@@ -125,7 +125,7 @@ class Events:
             elif event.key == 'exit_button':
                 self.game.active = False
             elif event.key == 'continue' or event.key == 'new_game':
-                self.start_timer()
+                self.start()
                 self.game.state = "game"
             elif event.key == "controls":
                 self.game.menu_change("controls")
@@ -162,7 +162,7 @@ class Events:
         else:
             self.start_timer()
 
-    # ignores isEvents
+    # якщо події вимкнено, то цей метод ігноруватиметься
     def start(self):
-        # if self.isEvents:
-        self.start_timer()
+        if self.isEvents:
+            self.start_timer()

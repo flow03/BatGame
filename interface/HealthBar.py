@@ -419,11 +419,11 @@ class CellHealthBar:
         width = midright.x - midleft.x
         return int(width)
 
-    def cell_visible_width(self):
-        midleft = Vector2(self.cell_list[0].rect.midleft)
-        midright = Vector2(self.current_cell().rect.midright)
-        width = midright.x - midleft.x
-        return int(width)
+    # def cell_visible_width(self):
+    #     midleft = Vector2(self.cell_list[0].rect.midleft)
+    #     midright = Vector2(self.current_cell().rect.midright)
+    #     width = midright.x - midleft.x
+    #     return int(width)
 
     # changes rect width if necessary
     def fit_rect(self, new_width):

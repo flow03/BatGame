@@ -147,8 +147,8 @@ class BlueDummy(Dummy):
     def healthBarCreate(self):
         self.health.restore()
         health_bar_rect = pygame.Rect((0, 0), (100, 8))
-        self.health_bar = Shields.BlueShield(health_bar_rect, self.health, 1)
-        self.health_bar.shifting = True
+        self.health_bar = Shields.ShiftBlueShield(health_bar_rect, self.health, 1)
+        # self.health_bar.shifting = True
         self.update_bar_pos()
 
 class GrayDummy(Dummy):

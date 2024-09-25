@@ -87,15 +87,13 @@ class AllHealthBars:
 class BlueShield(HealthBar.CellHealthBar):
     def __init__(self, rect : pygame.Rect, health : HealthBar.Health, border = 1):
         super().__init__(rect, health, border, "Blue")
-        self.visible_empty = False
-        self.shifting = False
-        self.decreased_cell = None
+        # self.visible_empty = True
+        # self.shifting = False
         # self.start_width = rect.width
         
         # self.change_colour("Blue")
 
     def set_damage(self, damage : int):
-        self.decreased_cell = self.current_cell()
         return self.health.set_damage(1)
         
     def set_heal(self, heal : int):
@@ -103,20 +101,15 @@ class BlueShield(HealthBar.CellHealthBar):
 
     def draw(self, screen):
         for cell in self.cell_list:
-            if self.visible_empty:
+            # if self.visible_empty:
+            #     cell.draw(screen)
+            if not cell.health.empty():
                 cell.draw(screen)
-            elif not cell.health.empty():
-                cell.draw(screen)
-            elif cell.decrease:
+            elif cell.decrease: # затримка анімації зникнення комірки
                 cell.draw(screen)
 
     def update_health(self):
         super().update_health()
-        if self.shifting and not self.visible_empty:
-            if self.decreased_cell:
-                if not self.decreased_cell.decrease:
-                    self.decreased_cell = None
-                    self.fit_rect(self.cell_visible_width()) # update_pos inside
 
     # def update_pos(self, rect : pygame.Rect, y_shift):
     #     print('align: ', self.align)
@@ -128,6 +121,28 @@ class BlueShield(HealthBar.CellHealthBar):
     #         shield_pos = Vector2(rect.midleft)
     #         shield_pos.y -= y_shift
     #         super().update_pos_left(shield_pos)
+
+class ShiftBlueShield(BlueShield):
+    def __init__(self, rect : pygame.Rect, health : HealthBar.Health, border = 1):
+        super().__init__(rect, health, border)
+        self.decreased_cell = None # для затримки анімації зникнення комірки
+
+    def set_damage(self, damage : int):
+        self.decreased_cell = self.current_cell()
+        return self.health.set_damage(1)
+
+    def update_health(self):
+        super().update_health()
+        if self.decreased_cell:
+            if not self.decreased_cell.decrease:
+                self.decreased_cell = None
+                self.fit_rect(self.cell_visible_width()) # update_pos inside
+    
+    def cell_visible_width(self):
+        midleft = Vector2(self.cell_list[0].rect.midleft)
+        midright = Vector2(self.current_cell().rect.midright)
+        width = midright.x - midleft.x
+        return int(width)
 
 class GrayShield(HealthBar.HealthBar):
     def __init__(self, rect : pygame.Rect, health : HealthBar.Health, border = 1):

@@ -84,8 +84,8 @@ class Game():
         self.drops.clear()
         # jump.is_jump = False
         self.events.start()
-        # self.dummies.create() # after groups.clear
-        self.dummies.is_dummies = False
+        self.dummies.is_dummies = True
+        self.dummies.create() # after groups.clear
         self.menu.change_BiggerFont()
         # isTenBats = False
         self.state = "game"
@@ -106,6 +106,9 @@ class Game():
 
     # Main loop    
     def run(self):
+        self.dummies.is_dummies = True
+        self.dummies.create()
+
         while self.active:
             self.FPS.tick(60)
 
@@ -149,7 +152,7 @@ class Game():
         state = self.menu.back()
         # print(state)
         if state == "game":
-            self.events.start_timer()
+            self.events.start()
             self.state = "game"
         elif state == "back":
             self.menu_change("back")
