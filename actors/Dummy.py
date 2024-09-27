@@ -184,7 +184,7 @@ class FancyGrayDummy(Dummy):
         self.health.restore()
         self.shield.restore()
         health_bar_rect = pygame.Rect((0, 0), (100, 8))
-        health_bar = HealthBar.FancyHealthBar(health_bar_rect, self.health, 1)
+        health_bar = HealthBar.FancyBoundHealthBar(health_bar_rect, self.health, 1)
         shield_bar = Shields.GrayShield(health_bar_rect, self.shield, 1)
         self.health_bar = Shields.AllHealthBars(health_bar, shield_bar)
         self.update_bar_pos()

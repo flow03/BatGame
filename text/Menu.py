@@ -34,12 +34,13 @@ class Menu:
 
         self.text = text
         # print(self.text.keys())
+        self.titles = {}
         self.labels = {}
         self.buttons = {}
         self.buttons_handler = None
 
         # self.create()
-        self.LABEL_SP = 50
+        self.TITLE_SPACING = 50
         self.SPACING = 30
 
     def createButtons(self, buttons : list, pos : Vector2):
@@ -51,29 +52,31 @@ class Menu:
     def createLabels(self, labels : list, pos : Vector2):
         # pos = pos
         for key in labels:
-            self.labels[key] = Button(self.text[key], self.font.myBiggerFont, pos)
+            self.labels[key] = Button(self.text[key], self.font.myfont, pos)
             pos.y = self.labels[key].get_bottom() + self.SPACING
 
-    def create(self, labels : list, buttons : list):
-        # print("createExitRects call")
-        # self.myBiggerFont = self.get_BiggerFont()
-        # ----------------------------------------------------------
-        # position = Vector2(self.center.x, self.center.y - 85)
-        # self.game_over = Button(self.text['over_1'], self.myBiggerFont, position)
-        # position.y = self.game_over.get_bottom() + 30
-        # self.game_over_2 = Button(self.text['over_2'], self.myBiggerFont, position)
-        # position.y = self.game_over_2.get_bottom() + 50
-        # self.restart_text = Button(self.text['restart_button'], self.myfont, position)
-        # position.y = self.restart_text.get_bottom() + 30
-        # self.exit_text = Button(self.text['exit_button'], self.myfont, position)
-        # ----------------------------------------------------------
-        position = Vector2(self.center.x, self.center.y - 85)
-        self.createLabels(labels, position)
+    def createTitles(self, titles : list, pos : Vector2):
+        # pos = pos
+        for key in titles:
+            self.titles[key] = Button(self.text[key], self.font.myBiggerFont, pos)
+            pos.y = self.titles[key].get_bottom() + self.SPACING
 
-        last_label = next(reversed(self.labels)) # reversed iterator
-        # print('last_label', last_label)
-        # TODO потенційна помилка, якщо self.labels пустий
-        position.y = self.labels[last_label].get_bottom() + self.LABEL_SP
+    def create(self, titles : list, buttons : list, labels : list = None, position : Vector2 = None):
+        if not position:
+            position = Vector2(self.center.x, self.center.y - 85)
+        # ----------------------------------------------------------------
+        self.createTitles(titles, position)
+        # TODO потенційна помилка, якщо self.titles пустий
+        # last_title = next(reversed(self.titles)) # reversed iterator
+        last_title = titles[-1]
+        position.y = self.titles[last_title].get_bottom() + self.TITLE_SPACING
+        # ----------------------------------------------------------------
+        if labels:
+            self.createLabels(labels, position)
+            # last_label = next(reversed(self.labels)) # reversed iterator
+            last_label = labels[-1]
+            position.y = self.labels[last_label].get_bottom() + self.SPACING
+        # ----------------------------------------------------------------
         self.createButtons(buttons, position)
         
         # create iterator
@@ -84,6 +87,8 @@ class Menu:
         self.buttons_handler.update_keys()
 
     def display(self):
+        for title in self.titles.values():
+            title.draw(self.screen)
         for label in self.labels.values():
             label.draw(self.screen)
         for button in self.buttons.values():
@@ -91,7 +96,7 @@ class Menu:
 
     def change_Font(self, ):
         # self.font.change_BiggerFont()
-        self.create(list(self.labels.keys()), list(self.buttons.keys()))
+        self.create(list(self.titles.keys()), list(self.buttons.keys()))
 
     def back(self):
         return None
@@ -99,16 +104,16 @@ class Menu:
 class Exit(Menu):
     def __init__(self, *argv):
         super().__init__(*argv)
-        labels = ['over_1', 'over_2']
+        titles = ['over_1', 'over_2']
         buttons = ['restart_button', 'exit_button']
-        self.create(labels, buttons)
+        self.create(titles, buttons)
 
 class Pause(Menu):
     def __init__(self, *argv):
         super().__init__(*argv)
-        labels = ['pause']
+        titles = ['pause']
         buttons = ['continue', 'controls', 'restart_button', 'exit_button']
-        self.create(labels, buttons)
+        self.create(titles, buttons)
 
     def back(self):
         return "game"
@@ -116,15 +121,16 @@ class Pause(Menu):
 class Start(Menu):
     def __init__(self, *argv):
         super().__init__(*argv)
-        labels = ['start']
+        titles = ['start']
         buttons = ['new_game', 'controls', 'exit_button']
-        self.create(labels, buttons)
+        self.create(titles, buttons)
 
 class Controls(Menu):
     def __init__(self, *argv):
         super().__init__(*argv)
-        labels = ['controls']
-        buttons = [
+        titles = ['controls']
+        # self.titles = dict.fromkeys(titles)
+        labels = [
         'moving',
         'fire',
         'effects',
@@ -138,26 +144,32 @@ class Controls(Menu):
         'joke',
         'events',
         # 'restart',
-        'help',
-        'back']
+        'help']
+        buttons = ['back']
+        # self.buttons = dict.fromkeys(buttons)
         self.SPACING = 15
-        self.create(labels, buttons)
+        
+        self.create(titles, buttons, labels, Vector2(self.center.x, 50))
+        self.buttons['back'].shift((0, self.SPACING))
 
     def back(self):
         return "back"
 
-    def create(self, labels : list, buttons : list):
-        position = Vector2(self.center.x, 50)
-        self.createLabels(labels, position)
+    # def create(self):
+    #     position = Vector2(self.center.x, 50)
+    #     # ----------------------------------------------------------------
+    #     self.createTitles(self.titles, position)
+    #     position.y = self.titles['controls'].get_bottom() + self.TITLE_SPACING
+    #     # ----------------------------------------------------------------
+    #     self.createLabels(self.labels, position)
+    #     last_label = next(reversed(self.labels)) # reversed iterator
+    #     position.y = self.labels[last_label].get_bottom() + self.SPACING
+    #     # ----------------------------------------------------------------    
+    #     self.createButtons(self.buttons, position)
+    #     self.buttons['back'].shift((0, self.SPACING))
 
-        # last_label = next(reversed(self.labels)) # reversed iterator
-        position.y = self.labels['controls'].get_bottom() + self.LABEL_SP
-        self.createButtons(buttons, position)
-        # self.buttons['back'].rect.center += 30
-        self.buttons['back'].shift((0, self.SPACING))
-
-        # create iterator
-        self.buttons_handler = ButtonsHandler(self.buttons)
+    #     # create iterator
+    #     self.buttons_handler = ButtonsHandler(self.buttons)
 
 class MenuContex:
     def __init__(self, text : dict):
