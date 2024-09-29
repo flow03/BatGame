@@ -9,6 +9,10 @@
     "controls": "Controls",
     "back": "Back",
 
+    "settings": "Settings",
+    "language": "Language",
+    "language_choice": "English",
+
     "start": "MENU",
     "new_game": "New game",
 
@@ -18,7 +22,7 @@
     "speed": "speed",
     "bullet_speed": "bullet speed",
     "defence": "defence",
-    "jokes": "jokes",
+    "jokes": "Jokes",
 
     "moving" : "Moving: W A S D",
     "fire" : "Fire: Any mouse key",

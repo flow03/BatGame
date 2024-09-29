@@ -118,7 +118,6 @@ class Events:
                 self.game.restart()
             elif event.key == pygame.K_ESCAPE:
                 if self.game.state == "game":
-                    # self.stop_timer()
                     self.game.menu_change("pause")
                 elif self.game.state == "menu":
                     self.game.menu_back()
@@ -127,8 +126,8 @@ class Events:
             elif event.key == 'continue' or event.key == 'new_game':
                 self.start()
                 self.game.state = "game"
-            elif event.key == "controls":
-                self.game.menu_change("controls")
+            elif event.key == "controls" or event.key == "settings":
+                self.game.menu_change(event.key)
             elif event.key == "back":
                 self.game.menu_back()
             # TODO як варіант, можна додати усі потрібні клавіші у list
@@ -154,7 +153,7 @@ class Events:
         pygame.time.set_timer(self.FOOD_DROP_TIMER, 0)
         pygame.time.set_timer(self.BAT_SP_TIMER, 0)
         # pygame.time.set_timer(self.MUSHROOMS, 0)
-        self.isEvents = False 
+        self.isEvents = False
 
     def switch(self):
         if self.isEvents:

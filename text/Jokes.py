@@ -15,9 +15,9 @@ class Jokes:
         self.data = {}
         self.load_jokes('text','Jokes.json')
         # if "-s" in argv: # sys
-        self.load_jokes('text','Jokes_tits.json')   # tits
-        self.load_jokes('text','Jokes_abs.json')    # abscenity
         self.load_jokes('text','Jokes_prof.json')   # profanity
+        self.load_jokes('text','Jokes_abs.json')    # abscenity
+        self.load_jokes('text','Jokes_tits.json')   # tits
         self.jokes = list(self.data.keys())
         # print(self.jokes)
 
