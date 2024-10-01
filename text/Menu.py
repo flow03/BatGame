@@ -57,6 +57,20 @@ class Menu:
             self.labels[key] = Button(self.text[key], self.font.myfont, pos)
             pos.y = self.labels[key].get_bottom() + self.SPACING
 
+    def createText(self, key : str, text : str, pos : Vector2):
+        self.labels[key] = Button(text, self.font.myfont, pos)
+        # return self.labels[key]
+
+    # розміщує дві кнопки/написи рівновіддалено по боках від заданої точки
+    def set_position(self, button1 : Button, button2 : Button, pos : Vector2, shift = 70):
+        left = Vector2(pos)
+        left.x -= shift
+        button1.update_pos(left)
+
+        right = Vector2(pos)
+        right.x += shift
+        button2.update_pos(right)
+
     def createTitles(self, titles : list, pos : Vector2):
         for key in titles:
             self.titles[key] = Button(self.text[key], self.font.myBiggerFont, pos)
@@ -158,12 +172,13 @@ class Controls(Menu):
         return "back"
 
 class Settings(Menu):
-    def __init__(self, *argv):
-        super().__init__(*argv)
+    def __init__(self, text, font, jokes):
+        super().__init__(text, font)
         titles = ['settings']
-        labels = ['language', 'jokes']
-        buttons = ['language_choice', 'back']
+        labels = ['language', 'color', 'jokes']
+        buttons = ['language_select', 'color_select', 'back']
         
+        self.jokes = jokes
         self.create(titles, buttons, labels)
 
     def back(self):
@@ -174,18 +189,24 @@ class Settings(Menu):
             position = Vector2(self.center)
         # ----------------------------------------------------------------
         self.createTitles(titles, position) # змінює position.y
+        back = Vector2(position)
         # ----------------------------------------------------------------
-        position.x -= 70   # self.center.x - 70
-        y = position.y
         self.createLabels(labels, position) # змінює position.y
         # ----------------------------------------------------------------
-        position.x = self.center.x + 70
-        position.y = y
         self.createButtons(buttons, position) # змінює position.y
         # print("position after createButtons", position)
         # ----------------------------------------------------------------
-        position.x = self.center.x
-        position.y += self.SPACING
+        text = self.jokes.get_text()
+        self.createText('jokes_count', text, Vector2(position))
+        # ----------------------------------------------------------------
+        position = Vector2(back)
+        self.set_position(self.labels['language'], self.buttons['language_select'], Vector2(position))
+        position.y = self.labels['language'].get_bottom() + self.SPACING
+        self.set_position(self.labels['color'], self.buttons['color_select'], Vector2(position))
+        position.y = self.labels['color'].get_bottom() + self.SPACING
+        self.set_position(self.labels['jokes'], self.labels['jokes_count'], Vector2(position))
+        # ----------------------------------------------------------------
+        position.y = self.labels['jokes'].get_bottom() + self.SPACING
         self.buttons['back'].update_pos(position)
         # print("position after update_pos", position)
         
@@ -193,7 +214,7 @@ class Settings(Menu):
         self.buttons_handler = ButtonsHandler(self.buttons)
 
 class MenuContex:
-    def __init__(self, text : dict):
+    def __init__(self, text : dict, jokes):
         # таким чином усі меню мають однаковий шрифт
         # якби він був всередині класу Menu, усі меню мали б різний шрифт
         self.font = BiggerFont()
@@ -201,7 +222,7 @@ class MenuContex:
         self.start = Start(text, self.font)
         self.pause = Pause(text, self.font)
         self.controls = Controls(text, self.font)
-        self.settings = Settings(text, self.font)
+        self.settings = Settings(text, self.font, jokes)
         self.exit = Exit(text, self.font)
 
         self.menu = self.start

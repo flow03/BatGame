@@ -11,7 +11,9 @@
 
     "settings": "Settings",
     "language": "Language",
-    "language_choice": "English",
+    "language_select": "English",
+    "color": "Menu color",
+    "color_select": "Red",
 
     "start": "MENU",
     "new_game": "New game",

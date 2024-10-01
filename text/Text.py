@@ -71,7 +71,7 @@ class Text:
         self.print_plus(self.text['speed'], player.speed, player.add_speed)
         self.print_plus(self.text['bullet_speed'], player.b_speed, player.add_b_speed)
         self.print(self.text['defence'], player.defence)
-        jokes_text = str(len(self.game.jokes.jokes)) + "/" + str(len(self.game.jokes.data))
+        jokes_text = self.game.jokes.get_text()
         self.print(self.text['jokes'], jokes_text)
 
         # self.print('bats', len(groups.bats))

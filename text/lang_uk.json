@@ -11,7 +11,9 @@
 
     "settings": "Налаштування",
     "language": "Мова",
-    "language_choice": "Українська",
+    "language_select": "Українська",
+    "color": "Колір меню",
+    "color_select": "Червоний",
 
     "start": "МЕНЮ",
     "new_game": "Погнали",

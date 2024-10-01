@@ -32,8 +32,8 @@ class Button:
         screen.blit(self.image, self.rect)
         # pygame.draw.rect(screen, "Red", self.rect, 2)
 
-    def update_pos(self, midbottom):
-        self.rect.midbottom = midbottom
+    def update_pos(self, pos):
+        self.rect.center = pos
 
     def shift(self, vector : Vector2):
         # print(vector)

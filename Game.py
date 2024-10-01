@@ -31,7 +31,7 @@ class Game():
         self.displayText = False
         self.active = True
         self.state = "menu"
-        self.menu = MenuContex(self.text.text)
+        self.menu = MenuContex(self.text.text, self.jokes)
         # self.pause = Pause(self.text.text)
 
         self.killedBats = 0

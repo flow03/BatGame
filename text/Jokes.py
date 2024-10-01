@@ -42,6 +42,12 @@ class Jokes:
             #     self.jokes.remove(key)
             return Joke(self.data[key])
 
+    # повертає рядок з кількостю жартів для виводу на екран чи в меню
+    def get_text(self):
+        text = str(len(self.jokes)) + "/" + str(len(self.data))
+        return text
+
+
 class Joke:
     def __init__(self, joke_list : list):
         self.data = queue.Queue()
