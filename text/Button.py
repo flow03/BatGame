@@ -1,20 +1,15 @@
 import pygame
 from pygame.math import Vector2
-from text.Iterator import BidirectionalIterator
+from text.Iterator import ActiveIterator
 
 class Button:
-    def __init__(self, text : str, font : pygame.font.Font, center=None, midbottom=None):
+    def __init__(self, text : str, font : pygame.font.Font, position):
         self.text = text
         self.font = font
 
         self.image = font.render(text, False, 'Black')
         self.rect = self.image.get_rect()
-        if center:
-            self.rect.center = center
-            # print("center", center)
-        elif midbottom:
-            self.rect.midbottom = midbottom
-            # print("midbottom", midbottom)
+        self.rect.center = position
 
     def change_color(self, color):
         self.image = self.font.render(self.text, False, color)
@@ -63,52 +58,15 @@ class WhiteButton(Button):
         screen.blit(self.image, self.rect)
 
 class ButtonsHandler:
-    def __init__(self, buttons):
+    def __init__(self, buttons : dict):
         self.buttons = buttons
-        self.active_color = "Red"
+        # self.active_color = "Red"
 
-        self.active = None
         self.key_pressed = False
         self.mouse_pressed = False
-        self.active_iterator()
+        self.active = ActiveIterator(self.buttons)
 
         self.mouse_pos = None
-
-    def active_iterator(self):
-        if self.buttons:
-            # if self.active:
-            #     self.buttons[self.active].change_color("Black")
-            self.active = BidirectionalIterator(list(self.buttons.keys()))
-            self.buttons[self.active.current].change_color(self.active_color)
-    
-    def get_active(self):
-        return self.active.current
-
-    def set_active(self, key):
-        if key != self.active.current:
-            self.buttons[self.active.current].change_color("Black")
-            self.active.set_index(key)
-            self.buttons[self.active.current].change_color(self.active_color)
-
-    def up(self):
-        # self.key_pressed = True
-        self.buttons[self.active.current].change_color("Black")
-        self.buttons[self.active.prev].change_color(self.active_color)
-
-    def down(self):
-        # self.key_pressed = True
-        self.buttons[self.active.current].change_color("Black")
-        self.buttons[self.active.next].change_color(self.active_color)
-
-    # @property
-    # def pressed(self):
-    #     return self.key_pressed
-    # @property_name.getter призначений для зміни існуючого getter-а, 
-    # раніше визначеного з допомогою @property 
-
-    # @pressed.getter
-    # def pressed(self, value : bool):
-    #     self.key_pressed = value
 
     # повертає key першої клавіші, з якою відбулася колізія
     def collide_mouse(self, pos):
@@ -132,7 +90,7 @@ class ButtonsHandler:
         if self.mouse_move():   # not the same pos
             key = self.collide_mouse(self.mouse_pos)
             if key:
-                self.set_active(key)
+                self.active.set_active(key)
 
         # обробляє натиск лівої кнопки миші
         left_mouse = pygame.mouse.get_pressed()[0]  # left mouse key
@@ -156,22 +114,20 @@ class ButtonsHandler:
         keys = pygame.key.get_pressed()
         if keys and not self.key_pressed:
             if keys[pygame.K_RETURN]:
-                # print(self.get_active())
-                # return self.get_active()
                 self.key_pressed = True
-                self.post(self.get_active())
+                self.post(self.active.get_active())
                 # return key
             elif (keys[pygame.K_UP] or keys[pygame.K_w]):
                 self.key_pressed = True
                 # print("up")
-                self.up()
+                self.active.up()
                 # pygame.time.delay(200)
             # elif not (keys[pygame.K_UP] or keys[pygame.K_w]):
             #     key_pressed = False
             elif (keys[pygame.K_DOWN] or keys[pygame.K_s]):
                 self.key_pressed = True
                 # print("down")
-                self.down()
+                self.active.down()
         elif not (keys[pygame.K_DOWN] or keys[pygame.K_s] or keys[pygame.K_UP] or keys[pygame.K_w] or keys[pygame.K_RETURN]):
             self.key_pressed = False
         # else:
@@ -182,4 +138,9 @@ class ButtonsHandler:
         event = pygame.event.Event(pygame.KEYDOWN, key=keyname)
         pygame.event.post(event)
         # print(f"Event KEYDOWN {keyname} posted")
-        
+
+class ButtonSwitch(Button):
+    def __init__(self, states : list, *args):
+        super().__init__(*args)
+        self.states = states
+
