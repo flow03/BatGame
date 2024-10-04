@@ -3,7 +3,8 @@ from pygame.math import Vector2
 from text.Iterator import ActiveIterator
 
 class Button:
-    def __init__(self, text : str, font : pygame.font.Font, position):
+    def __init__(self, key : str, text : str, font : pygame.font.Font, position):
+        self.key = key
         self.text = text
         self.font = font
 
@@ -35,6 +36,10 @@ class Button:
         # print(self.rect.center)
         new_pos = Vector2(self.rect.center) + Vector2(vector)
         self.rect.center = new_pos
+
+    def press(self):
+        # print("press", self.key)
+        return self.key
 
 class WhiteButton(Button):
     def __init__(self, *args):
@@ -72,27 +77,19 @@ class ButtonsHandler:
     def collide_mouse(self, pos):
         for key in self.buttons:
             if self.buttons[key].collide(pos):
+                # self.active.set_active(key)
                 return key
             
-    # оновлює self.mouse_pos
-    # повертає False, якщо нова позиція миші співпадає з попередньою
-    def mouse_move(self):
-        new_pos = pygame.mouse.get_pos()
-        if new_pos != self.mouse_pos:
-            self.mouse_pos = new_pos
-            return True
-        else:
-            # print("Same mouse pos", self.mouse_pos)
-            return False
-
     def update_mouse(self):
         # оновлює активну button, якщо миша рухається
-        if self.mouse_move():   # not the same pos
+        new_pos = pygame.mouse.get_pos()
+        if new_pos != self.mouse_pos:  # not the same pos
+            self.mouse_pos = new_pos
             key = self.collide_mouse(self.mouse_pos)
             if key:
-                self.active.set_active(key)
+                self.active.set_active(self.buttons[key])
 
-        # обробляє натиск лівої кнопки миші
+        # обробляє натиск лівої і правоої кнопок миші
         left_mouse = pygame.mouse.get_pressed()[0]  # left mouse key
         right_mouse = pygame.mouse.get_pressed()[2]  # right mouse key
         if left_mouse:
@@ -101,7 +98,7 @@ class ButtonsHandler:
                 key = self.collide_mouse(self.mouse_pos)
                 if key:
                     self.mouse_pressed = True
-                    self.post(key)
+                    self.post(self.buttons[key].press())
                     # return key
         elif right_mouse:
             if not self.mouse_pressed:
@@ -115,7 +112,8 @@ class ButtonsHandler:
         if keys and not self.key_pressed:
             if keys[pygame.K_RETURN]:
                 self.key_pressed = True
-                self.post(self.active.get_active())
+                button = self.active.get_active()
+                self.post(button.press())
                 # return key
             elif (keys[pygame.K_UP] or keys[pygame.K_w]):
                 self.key_pressed = True
@@ -139,8 +137,8 @@ class ButtonsHandler:
         pygame.event.post(event)
         # print(f"Event KEYDOWN {keyname} posted")
 
-class ButtonSwitch(Button):
-    def __init__(self, states : list, *args):
-        super().__init__(*args)
-        self.states = states
+# class SwitchButton(Button):
+#     def __init__(self, states : list, *args):
+#         super().__init__(*args)
+#         self.states = states
 

@@ -50,15 +50,15 @@ class Menu:
             pos.y = self.buttons[key].get_bottom() + self.SPACING
 
     def createButton(self, key : str, pos : Vector2):
-        self.buttons[key] = Button(self.text[key], self.font.myfont, pos)
+        self.buttons[key] = Button(key, self.text[key], self.font.myfont, pos)
 
     def createLabels(self, labels : list, pos : Vector2):
         for key in labels:
-            self.labels[key] = Button(self.text[key], self.font.myfont, pos)
+            self.labels[key] = Button(key, self.text[key], self.font.myfont, pos)
             pos.y = self.labels[key].get_bottom() + self.SPACING
 
     def createText(self, key : str, text : str, pos : Vector2):
-        self.labels[key] = Button(text, self.font.myfont, pos)
+        self.labels[key] = Button(key, text, self.font.myfont, pos)
         # return self.labels[key]
 
     # розміщує дві кнопки/написи рівновіддалено по боках від заданої точки
@@ -73,7 +73,7 @@ class Menu:
 
     def createTitles(self, titles : list, pos : Vector2):
         for key in titles:
-            self.titles[key] = Button(self.text[key], self.font.myBiggerFont, pos)
+            self.titles[key] = Button(key, self.text[key], self.font.myBiggerFont, pos)
             pos.y = self.titles[key].get_bottom() + self.TITLE_SPACING
 
     def create(self, titles : list, buttons : list, labels : list = None, position : Vector2 = None):
