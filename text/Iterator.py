@@ -3,13 +3,17 @@ class BidirectionalIterator:
         self.data = data
         self.index = 0
 
+    # встановлює індекс на переданий елемент
     def set_index(self, value):
-        self.index = self.data.index(value)
+        if value in self.data:
+            self.index = self.data.index(value)
 
+    # повертає поточний елемент
     @property
     def current(self):
         return self.data[self.index]
 
+    # перемикає на наступний елемент і повертає цей елемент
     @property
     def next(self):
         if self.index < len(self.data) - 1:
@@ -20,6 +24,7 @@ class BidirectionalIterator:
 
         return self.data[self.index]
     
+    # перемикає на попередній елемент і повертає цей елемент
     @property
     def prev(self):
         if self.index > 0:
@@ -34,10 +39,14 @@ class BidirectionalIterator:
 class ActiveIterator:
     def __init__(self, buttons : dict):
         self.buttons = buttons
-        self.active_color = "Red"
+        self.active_color = "white"
         self.iterator = BidirectionalIterator(list(self.buttons.values()))
         self.iterator.current.change_color(self.active_color)
     
+    def change_color(self, color):
+        self.active_color = color
+        self.iterator.current.change_color(self.active_color)
+
     def get_active(self):
         return self.iterator.current
 

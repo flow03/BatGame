@@ -1,19 +1,49 @@
 import pygame
 from pygame.math import Vector2
-from text.Iterator import ActiveIterator
+from text.Iterator import ActiveIterator, BidirectionalIterator
 
-class Button:
-    def __init__(self, key : str, text : str, font : pygame.font.Font, position):
-        self.key = key
+class WhiteText:
+    def __init__(self,  text : str, font : pygame.font.Font):
+        # super().__init__(*args)
         self.text = text
         self.font = font
 
         self.image = font.render(text, False, 'Black')
         self.rect = self.image.get_rect()
+        # self.rect.center = position
+    
+        self.white_rect = pygame.Rect(self.rect)
+        border = 5
+        self.white_rect.width += border * 2
+        self.white_rect.height += border * 2
+        self.white_rect.center = self.rect.center
+        # self.rect_health = pygame.Rect(self.rect.x + border, self.rect.y + border, 
+            # self.rect.width - border * 2, self.rect.height - border * 2)
+
+    def update_pos(self, midbottom):
+        self.rect.midbottom = midbottom
+        self.white_rect.center = self.rect.center
+
+    def draw(self, screen):
+        pygame.draw.rect(screen, "White", self.white_rect, border_radius=100)
+        pygame.draw.rect(screen, "Black", self.white_rect, width=1, border_radius=100)
+        # pygame.draw.rect(screen, "Red", self.rect, 2)
+        screen.blit(self.image, self.rect)
+
+class Button:
+    def __init__(self, key : str, text : str, font : pygame.font.Font, position, color : str = 'Black'):
+        self.key = key
+        self.text = text
+        self.font = font
+        self.color = color
+
+        self.image = font.render(text, False, self.color)
+        self.rect = self.image.get_rect()
         self.rect.center = position
 
     def change_color(self, color):
-        self.image = self.font.render(self.text, False, color)
+        self.color = color
+        self.image = self.font.render(self.text, False, self.color)
 
     def get_center(self):
         return self.rect.center
@@ -41,31 +71,9 @@ class Button:
         # print("press", self.key)
         return self.key
 
-class WhiteButton(Button):
-    def __init__(self, *args):
-        super().__init__(*args)
-        self.white_rect = pygame.Rect(self.rect)
-        border = 5
-        self.white_rect.width += border * 2
-        self.white_rect.height += border * 2
-        self.white_rect.center = self.rect.center
-        # self.rect_health = pygame.Rect(self.rect.x + border, self.rect.y + border, 
-            # self.rect.width - border * 2, self.rect.height - border * 2)
-
-    def update_pos(self, midbottom):
-        self.rect.midbottom = midbottom
-        self.white_rect.center = self.rect.center
-
-    def draw(self, screen):
-        pygame.draw.rect(screen, "White", self.white_rect, border_radius=100)
-        pygame.draw.rect(screen, "Black", self.white_rect, width=1, border_radius=100)
-        # pygame.draw.rect(screen, "Red", self.rect, 2)
-        screen.blit(self.image, self.rect)
-
 class ButtonsHandler:
     def __init__(self, buttons : dict):
         self.buttons = buttons
-        # self.active_color = "Red"
 
         self.key_pressed = False
         self.mouse_pressed = False
@@ -137,8 +145,17 @@ class ButtonsHandler:
         pygame.event.post(event)
         # print(f"Event KEYDOWN {keyname} posted")
 
-# class SwitchButton(Button):
-#     def __init__(self, states : list, *args):
-#         super().__init__(*args)
-#         self.states = states
+class SwitchButton(Button):
+    def __init__(self, states : list, text_dict : dict, font : pygame.font.Font, position : Vector2):
+        self.states = BidirectionalIterator(states)
+        self.text_dict = text_dict
+        # TODO не страхує, якщо states пустий, або його елементи не рядки
+        key = self.states.current
+        super().__init__(key, text_dict[key], font, position)
 
+    def press(self):
+        # current = self.key
+        self.key = self.states.next
+        super().__init__(self.key, self.text_dict[self.key], self.font, self.rect.center, self.color)
+        return self.key
+    

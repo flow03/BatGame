@@ -1,5 +1,5 @@
 import random
-from text.Button import WhiteButton
+from text.Button import WhiteText
 import pygame.font
 from pygame.display import get_surface
 from pygame.math import Vector2
@@ -100,7 +100,7 @@ class Line:
             char = self.data.get()
             # self.line += char
             self.line = self.line + char
-            return WhiteButton(self.line, self.font)
+            return WhiteText(self.line, self.font)
 
     def update(self):
         if not self.data.empty():

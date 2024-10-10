@@ -4,7 +4,7 @@ from pygame.display import get_surface
 from add.Path import resource_path
 from os.path import join
 from random import choice
-from text.Button import Button, ButtonsHandler
+from text.Button import Button, SwitchButton, ButtonsHandler
 
 class BiggerFont:
     def __init__(self):
@@ -113,6 +113,9 @@ class Menu:
         # self.font.change_BiggerFont()
         self.createTitles(list(self.titles.keys()), Vector2(self.center))
 
+    def change_color(self, color : str):
+        self.buttons_handler.active.change_color(color)
+
     def back(self):
         return None
     
@@ -176,10 +179,18 @@ class Settings(Menu):
         super().__init__(text, font)
         titles = ['settings']
         labels = ['language', 'color', 'jokes']
-        buttons = ['language_select', 'color_select', 'back']
+        buttons = ['back']
+        # switchers =  ['color_red', 'color_green', 'color_blue']
         
         self.jokes = jokes
         self.create(titles, buttons, labels)
+
+    def createSwitchers(self):
+        color_select = ['color_white', 'color_red', 'color_green', 'color_blue', "color_yellow", "color_violet", "color_magenta", "color_purple", "color_orchid", "color_cyan"]
+        self.buttons['color_select'] = SwitchButton(color_select, self.text, self.font.myfont, (0,0))
+        # ----------------------------------------------------------------
+        language_select = ['language_uk', 'language_en']
+        self.buttons['language_select'] = SwitchButton(language_select, self.text, self.font.myfont, (0,0))
 
     def back(self):
         return "back"
@@ -195,6 +206,8 @@ class Settings(Menu):
         # ----------------------------------------------------------------
         self.createButtons(buttons, position) # змінює position.y
         # print("position after createButtons", position)
+        # ----------------------------------------------------------------
+        self.createSwitchers()
         # ----------------------------------------------------------------
         text = self.jokes.get_text()
         self.createText('jokes_count', text, Vector2(position))
@@ -218,6 +231,7 @@ class MenuContex:
         # таким чином усі меню мають однаковий шрифт
         # якби він був всередині класу Menu, усі меню мали б різний шрифт
         self.font = BiggerFont()
+        # self.color = "Red"
 
         self.start = Start(text, self.font)
         self.pause = Pause(text, self.font)
@@ -269,3 +283,34 @@ class MenuContex:
         self.controls.change_Title()
         self.settings.change_Title()
         self.start.change_Title()
+
+    def get_color(self, key):
+        if key == "color_white":
+            return "white"
+        elif key == "color_red":
+            return "Red"
+        elif key == "color_green":
+            return "Green"
+        elif key == "color_blue":
+            return "Blue"
+        elif key == "color_yellow":
+            return "yellow"
+        elif key == "color_violet":
+            return "darkviolet"
+        elif key == "color_purple":
+            return "purple4"
+        elif key == "color_orchid":
+            return "darkorchid4"
+        elif key == "color_magenta":
+            return "darkmagenta"
+        elif key == "color_cyan":
+            return "cyan"
+
+    def change_color(self, key):
+        color = self.get_color(key)
+
+        self.exit.change_color(color)
+        self.pause.change_color(color)
+        self.controls.change_color(color)
+        self.settings.change_color(color)
+        self.start.change_color(color)
