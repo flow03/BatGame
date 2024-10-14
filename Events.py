@@ -130,8 +130,12 @@ class Events:
                 self.game.menu_change(event.key)
             elif event.key == "back":
                 self.game.menu_back()
-            elif isinstance(event.key, str) and event.key.startswith("color"): # == "color_red" or event.key == "color_green" or event.key == "color_blue":
-                self.game.menu.change_color(event.key)
+            elif isinstance(event.key, str):
+                if event.key.startswith("color"): # == "color_red" or event.key == "color_green" or event.key == "color_blue":
+                    self.game.menu.change_color_key(event.key)
+                elif event.key.startswith("lang"):
+                    self.game.text.load(event.key)
+                    self.game.menu.reload() # self.game.text.text
             # TODO як варіант, можна додати усі потрібні клавіші у list
             # І створити такий же list для клавіш керування
             # elif event.key in menu_keys_list:

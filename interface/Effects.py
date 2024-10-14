@@ -210,7 +210,7 @@ class SpeedEffect(Effect):
 
     def increase(self):
         super().increase() # restart
-        self.increase_speed(1)
+        self.increase_speed(2)
 
     def increase_speed(self, speed):  
         if (self.player.speed + self.player.add_speed) < 10:
@@ -230,9 +230,9 @@ class IronskinEffect(Effect):
 
     def increase(self):
         super().increase()
-        if self.player.defence < 90:
-            self.player.defence += 10
-            self.boost += 1
+        # if self.player.defence < 90:
+        #     self.player.defence += 10
+        #     self.boost += 1
     
     def __del__(self):
         self.player.defence = self.default_defence

@@ -5,6 +5,7 @@ from add.Path import resource_path
 from os.path import join
 from random import choice
 from text.Button import Button, SwitchButton, ButtonsHandler
+from text.Text import Text
 
 class BiggerFont:
     def __init__(self):
@@ -26,7 +27,7 @@ class BiggerFont:
         self.myBiggerFont = pygame.font.Font(font_url, 60)
 
 class Menu:
-    def __init__(self, text : dict, font : BiggerFont):
+    def __init__(self, text : Text, font : BiggerFont):
         # self.font = BiggerFont()
         self.font = font
         self.screen = get_surface()
@@ -34,7 +35,11 @@ class Menu:
         self.center.y -= 85
 
         self.text = text
-        # print(self.text.keys())
+        # ----------------------------------------------------------------
+        self.titles_list = []
+        self.labels_list = []
+        self.buttons_list = []
+        # ----------------------------------------------------------------
         self.titles = {}
         self.labels = {}
         self.buttons = {}
@@ -43,6 +48,18 @@ class Menu:
         # self.create()
         self.TITLE_SPACING = 50
         self.SPACING = 30
+
+    def init(self):
+        # self.create(self.titles_list, self.buttons_list, self.labels_list) # list(self.labels.keys())
+        for key in self.titles:
+            self.titles[key].change_text(self.text[key])
+
+        for key in self.labels:
+            self.labels[key].change_text(self.text[key])
+
+        for key in self.buttons:
+            self.buttons[key].change_text(self.text[key])
+
 
     def createButtons(self, buttons : list, pos : Vector2):
         for key in buttons:
@@ -76,9 +93,8 @@ class Menu:
             self.titles[key] = Button(key, self.text[key], self.font.myBiggerFont, pos)
             pos.y = self.titles[key].get_bottom() + self.TITLE_SPACING
 
-    def create(self, titles : list, buttons : list, labels : list = None, position : Vector2 = None):
-        if not position:
-            position =  Vector2(self.center)
+    def create(self, titles : list, buttons : list, labels : list = None): # , position : Vector2 = None
+        position =  Vector2(self.center)
         # ----------------------------------------------------------------
         self.createTitles(titles, position)
         # TODO потенційна помилка, якщо self.titles пустий
@@ -96,6 +112,7 @@ class Menu:
         
         # create iterator
         self.buttons_handler = ButtonsHandler(self.buttons)
+        # print(type(self), "created")
 
     def update(self):
         self.buttons_handler.update_mouse()
@@ -122,16 +139,16 @@ class Menu:
 class Exit(Menu):
     def __init__(self, *argv):
         super().__init__(*argv)
-        titles = ['over_1', 'over_2']
-        buttons = ['restart_button', 'exit_button']
-        self.create(titles, buttons)
+        self.titles_list = ['over_1', 'over_2']
+        self.buttons_list = ['restart_button', 'exit_button']
+        self.create(self.titles_list, self.buttons_list)
 
 class Pause(Menu):
     def __init__(self, *argv):
         super().__init__(*argv)
-        titles = ['pause']
-        buttons = ['continue', 'controls', 'settings', 'restart_button', 'exit_button']
-        self.create(titles, buttons)
+        self.titles_list = ['pause']
+        self.buttons_list = ['continue', 'controls', 'settings', 'restart_button', 'exit_button']
+        self.create(self.titles_list, self.buttons_list)
 
     def back(self):
         return "game"
@@ -139,16 +156,16 @@ class Pause(Menu):
 class Start(Menu):
     def __init__(self, *argv):
         super().__init__(*argv)
-        titles = ['start']
-        buttons = ['new_game', 'controls', 'settings', 'exit_button']
-        self.create(titles, buttons)
+        self.titles_list = ['start']
+        self.buttons_list = ['new_game', 'controls', 'settings', 'exit_button']
+        self.create(self.titles_list, self.buttons_list)
 
 class Controls(Menu):
     def __init__(self, *argv):
         super().__init__(*argv)
-        titles = ['controls']
+        self.titles_list = ['controls']
         # self.titles = dict.fromkeys(titles)
-        labels = [
+        self.labels_list = [
         'moving',
         'fire',
         'effects',
@@ -163,12 +180,18 @@ class Controls(Menu):
         'events',
         # 'restart',
         'help']
-        buttons = ['back']
+        self.buttons_list = ['back']
         # self.buttons = dict.fromkeys(buttons)
         self.SPACING = 15
         self.center.y = 50  # new title position
         
-        self.create(titles, buttons, labels)
+        self.create(self.titles_list, self.buttons_list, self.labels_list)
+
+    # def init(self):
+    #     self.create(list(self.titles.keys()), list(self.buttons.keys()), list(self.labels.keys()))
+
+    def create(self, titles, buttons, labels):
+        super().create(titles, buttons, labels)
         self.buttons['back'].shift((0, self.SPACING))
 
     def back(self):
@@ -177,27 +200,42 @@ class Controls(Menu):
 class Settings(Menu):
     def __init__(self, text, font, jokes):
         super().__init__(text, font)
-        titles = ['settings']
-        labels = ['language', 'color', 'jokes']
-        buttons = ['back']
+        self.titles_list = ['settings']
+        self.labels_list = ['language', 'color', 'jokes']
+        self.buttons_list = ['back']
         # switchers =  ['color_red', 'color_green', 'color_blue']
         
         self.jokes = jokes
-        self.create(titles, buttons, labels)
+        self.create(self.titles_list, self.buttons_list, self.labels_list)
+
+    def init(self):
+        # self.create(list(self.titles.keys()), list(self.buttons.keys()), list(self.labels.keys()))
+        for key in self.titles:
+            self.titles[key].change_text(self.text[key])
+
+        for key in self.labels:
+            if key != 'jokes_count':
+                self.labels[key].change_text(self.text[key])
+
+        for key in self.buttons:
+            if key == 'color_select' or key == 'language_select':
+                self.buttons[key].change_text() # self.text.text
+            else:
+                self.buttons[key].change_text(self.text[key])
 
     def createSwitchers(self):
-        color_select = ['color_white', 'color_red', 'color_green', 'color_blue', "color_yellow", "color_violet", "color_magenta", "color_purple", "color_orchid", "color_cyan"]
+        color_select = ['color_white', 'color_red', 'color_green', 'color_blue', "color_yellow", "color_violet", "color_magenta", "color_purple", "color_orchid", "color_cyan", "color_black"]
         self.buttons['color_select'] = SwitchButton(color_select, self.text, self.font.myfont, (0,0))
         # ----------------------------------------------------------------
-        language_select = ['language_uk', 'language_en']
+        language_select = ['lang_uk', 'lang_en']
         self.buttons['language_select'] = SwitchButton(language_select, self.text, self.font.myfont, (0,0))
 
     def back(self):
         return "back"
     
-    def create(self, titles : list, buttons : list, labels : list = None, position : Vector2 = None):
-        if not position:
-            position = Vector2(self.center)
+    def create(self, titles : list, buttons : list, labels : list = None): # , position : Vector2 = None
+        # if not position:
+        position = Vector2(self.center)
         # ----------------------------------------------------------------
         self.createTitles(titles, position) # змінює position.y
         back = Vector2(position)
@@ -225,68 +263,76 @@ class Settings(Menu):
         
         # create iterator
         self.buttons_handler = ButtonsHandler(self.buttons)
+        # print(type(self), "created")
 
 class MenuContex:
-    def __init__(self, text : dict, jokes):
+    def __init__(self, text : Text, jokes):
         # таким чином усі меню мають однаковий шрифт
         # якби він був всередині класу Menu, усі меню мали б різний шрифт
+        self.text = text
         self.font = BiggerFont()
-        # self.color = "Red"
+        self.color = "White"
+        self.all_menu = {}
 
-        self.start = Start(text, self.font)
-        self.pause = Pause(text, self.font)
-        self.controls = Controls(text, self.font)
-        self.settings = Settings(text, self.font, jokes)
-        self.exit = Exit(text, self.font)
+        self.all_menu["start"] = Start(text, self.font)
+        self.all_menu["pause"] = Pause(text, self.font)
+        self.all_menu["controls"] = Controls(text, self.font)
+        self.all_menu["settings"] = Settings(text, self.font, jokes)
+        self.all_menu["exit"] = Exit(text, self.font)
 
-        self.menu = self.start
-        self.back_menu = self.start
+        self.current = "start"
+        self.back_menu = "start"
         # self.main_menu = self.pause
 
     def update(self):
-        self.menu.update()
+        self.all_menu[self.current].update()
         # self.change(key)
 
     def change(self, key):
         if key:
             if key == "pause":
-                self.menu = self.pause
+                self.current = key
                 # self.back = None
             elif key == "exit":
-                self.menu = self.exit
+                self.current = key
                 # self.back = self.exit
                 # self.back = None
             elif key == "controls":
-                self.back_menu = self.menu
-                self.menu = self.controls
+                self.back_menu = self.current
+                self.current = key
             elif key == "settings":
-                self.back_menu = self.menu
-                self.menu = self.settings
+                self.back_menu = self.current
+                self.current = key
             elif key == "back":
-                self.menu = self.back_menu
+                self.current = self.back_menu
 
             # print("Menu changed:", key)
 
     # визначає, чи може меню повертатись назад до попереднього меню, чи ні
     # повертає back - якщо так, None - якщо ні, і game - якщо повертає в гру
     def back(self):
-        return self.menu.back()
+        return self.all_menu[self.current].back()
 
     def display(self):
-        self.menu.display()
+        self.all_menu[self.current].display()
 
     def change_BiggerFont(self):
         self.font.change_BiggerFont()
 
-        self.exit.change_Title()
-        self.pause.change_Title()
-        self.controls.change_Title()
-        self.settings.change_Title()
-        self.start.change_Title()
+        for menu in self.all_menu.values():
+            menu.change_Title()
+
+        # self.exit.change_Title()
+        # self.pause.change_Title()
+        # self.controls.change_Title()
+        # self.settings.change_Title()
+        # self.start.change_Title()
 
     def get_color(self, key):
         if key == "color_white":
             return "white"
+        elif key == "color_black":
+            return "Black"
         elif key == "color_red":
             return "Red"
         elif key == "color_green":
@@ -306,11 +352,25 @@ class MenuContex:
         elif key == "color_cyan":
             return "cyan"
 
-    def change_color(self, key):
-        color = self.get_color(key)
+    def change_color(self, color):
+        self.color = color
+        # self.exit.change_color(color)
+        # self.pause.change_color(color)
+        # self.controls.change_color(color)
+        # self.settings.change_color(color)
+        # self.start.change_color(color)
 
-        self.exit.change_color(color)
-        self.pause.change_color(color)
-        self.controls.change_color(color)
-        self.settings.change_color(color)
-        self.start.change_color(color)
+        for menu in self.all_menu.values():
+            menu.change_color(color)
+
+    def change_color_key(self, key):
+        self.change_color(self.get_color(key))
+
+    def reload(self):
+        # TODO потрібно змінювати текст у кожного titles, labels, buttons
+        # інакше змінюється стан SwitchButton, коли ми її перестворюємо з допомогою createSwitchers
+        # це потрібно робити циклічно у методах init
+        # потрібно всього лиш змінити текст кожної кнопки, а не перестворювати і виставляти їх усі заново
+        # також варто приймати об'єкт Text за посиланням, а не dict за значенням
+        for menu in self.all_menu.values():
+            menu.init()

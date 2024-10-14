@@ -31,7 +31,7 @@ class WhiteText:
         screen.blit(self.image, self.rect)
 
 class Button:
-    def __init__(self, key : str, text : str, font : pygame.font.Font, position, color : str = 'Black'):
+    def __init__(self, key : str, text : str, font : pygame.font.Font, position, color = 'Black'):
         self.key = key
         self.text = text
         self.font = font
@@ -44,6 +44,10 @@ class Button:
     def change_color(self, color):
         self.color = color
         self.image = self.font.render(self.text, False, self.color)
+
+    def change_text(self, text : str):
+        self.text = text
+        self.__init__(self.key, self.text, self.font, self.rect.center, self.color)
 
     def get_center(self):
         return self.rect.center
@@ -143,19 +147,21 @@ class ButtonsHandler:
         # self.key_pressed = True
         event = pygame.event.Event(pygame.KEYDOWN, key=keyname)
         pygame.event.post(event)
-        # print(f"Event KEYDOWN {keyname} posted")
+        print(f"Event KEYDOWN {keyname} posted")
 
 class SwitchButton(Button):
     def __init__(self, states : list, text_dict : dict, font : pygame.font.Font, position : Vector2):
         self.states = BidirectionalIterator(states)
         self.text_dict = text_dict
         # TODO не страхує, якщо states пустий, або його елементи не рядки
-        key = self.states.current
-        super().__init__(key, text_dict[key], font, position)
+        self.key = self.states.current
+        super().__init__(self.key, text_dict[self.key], font, position)
 
     def press(self):
-        # current = self.key
         self.key = self.states.next
         super().__init__(self.key, self.text_dict[self.key], self.font, self.rect.center, self.color)
         return self.key
     
+    def change_text(self):
+        self.text = self.text_dict[self.key]
+        super().__init__(self.key, self.text_dict[self.key], self.font, self.rect.center, self.color)

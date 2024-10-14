@@ -11,8 +11,8 @@
 
     "settings": "Налаштування",
     "language": "Мова",
-    "language_uk": "Українська",
-    "language_en": "Англійська",
+    "lang_uk": "Українська",
+    "lang_en": "Англійська",
     "color": "Колір меню",
     "color_red": "Червоний",
     "color_green": "Зелений",
@@ -24,6 +24,7 @@
     "color_magenta": "Пурпуровий",
     "color_cyan": "Блакитний",
     "color_white": "Білий",
+    "color_black": "Чорний",
 
     "start": "МЕНЮ",
     "new_game": "Погнали",

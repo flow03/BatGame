@@ -41,6 +41,14 @@ class Text:
         # over_s = load_json(resource_path(join('text', 'over_s.json')))
         # self.text.update(over_s)
 
+    def load(self, lang : str): # 'lang_uk' або 'lang_en'
+        filename = lang + '.json'
+
+        text_path = resource_path(join('text', filename))
+        self.text = dict(load_json(text_path))
+        # print(lang, "loaded")
+        # print(self.text)
+
     def display(self):
         # if self.game.displayText:
         self.y = 85
@@ -172,3 +180,22 @@ class Text:
         loading_text_rect = loading_text.get_rect(center=self.center) # bottomright
 
         screen.blit(loading_text, loading_text_rect)
+
+    def __getitem__(self, key):
+        return self.text[key]
+
+    def __setitem__(self, key, text):
+        self.text[key] = text
+
+    # для оператора in
+    def __contains__(self, key):
+        return key in self.text
+    
+    # def __delitem__(self, key):
+    #     del self.text[key]
+
+    # def __bool__(self):
+    #     return bool(self.text)
+    
+    # def __len__(self):
+    #     return len(self.text)

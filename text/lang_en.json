@@ -11,8 +11,8 @@
 
     "settings": "Settings",
     "language": "Language",
-    "language_uk": "Ukrainian",
-    "language_en": "English",
+    "lang_uk": "Ukrainian",
+    "lang_en": "English",
     "color": "Menu color",
     "color_red": "Red",
     "color_green": "Green",
@@ -24,6 +24,7 @@
     "color_magenta": "Magenta",
     "color_cyan": "Cyan",
     "color_white": "White",
+    "color_black": "Black",
 
     "start": "MENU",
     "new_game": "New game",
