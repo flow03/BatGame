@@ -1,6 +1,6 @@
 import pygame
 from add.Path import resource_path_args
-from text.Text import Text
+from text.Text import Text, DebugInfo
 from loot.Drops import Drops
 from actors.Groups import Groups
 from Events import Events
@@ -17,7 +17,8 @@ class Game():
         self.screen_init()
         self.screen_center = Vector2(self.screen.get_size())//2
 
-        self.text = Text(self)
+        self.text = Text()
+        self.debug = DebugInfo(self, self.text)
         # self.blit_loading()
         self.jokes = Jokes()
 
@@ -62,7 +63,7 @@ class Game():
 
     def blit_loading(self):
         self.screen.blit(self.background, self.bg_pos)
-        self.text.blit_loading_text(self.screen)
+        self.debug.blit_loading_text(self.screen)
         pygame.display.update()
 
     def update_objects(self):
@@ -124,7 +125,7 @@ class Game():
                 # self.events.update()
                 # self.events.restart_pressed()
                 if self.displayText:            
-                    self.text.display()
+                    self.debug.display()
 
             elif self.state == "menu":
                 self.menu.update()

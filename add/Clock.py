@@ -5,13 +5,12 @@ class Clock:
     def __init__(self, delay : int):
         self.delay = delay
         self.nextFrame = None
-        # self.nextFrame = self.clock() + self.delay
-        # self.start()
+        # self.remain = None  # remaining time
 
     def clock(self):
         return get_ticks()
 
-    # check nextFrame and set new nextFrame if True
+    # check nextFrame and set new nextFrame based on delay if True
     def next(self):
         if self.nextFrame and self.clock() >= self.nextFrame:
             self.nextFrame += self.delay
@@ -22,12 +21,10 @@ class Clock:
     def active(self):
         if self.nextFrame and self.clock() < self.nextFrame:
             return True
-        # return bool(self.nextFrame)
 
     # reverse to active
     def end(self):
         if self.nextFrame and self.clock() >= self.nextFrame:
-            # self.nextFrame = None
             return True
 
     # set nextFrame
@@ -39,7 +36,15 @@ class Clock:
         self.nextFrame = self.clock() + self.delay
     
     def time(self):
-        time = None
+        # time = None
         if self.nextFrame:
-            time = self.nextFrame - self.clock()
-        return time
+            return self.nextFrame - self.clock()
+        # return time
+
+    # def pause(self):
+    #     self.remain = self.nextFrame - self.clock()
+
+    # def go(self):
+    #     if self.remain:
+    #         self.nextFrame = self.clock() + self.remain
+

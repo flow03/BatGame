@@ -13,39 +13,76 @@ from sys import argv
 class Jokes:
     def __init__(self):
         self.data = {}
-        self.load_jokes('text','Jokes.json')
-        # if "-s" in argv: # sys
-        self.load_jokes('text','Jokes_prof.json')   # profanity
-        self.load_jokes('text','Jokes_abs.json')    # abscenity
-        self.load_jokes('text','Jokes_tits.json')   # tits
-        self.jokes = list(self.data.keys())
+        self.data['common'] = self.load_jokes('Jokes.json')
+        self.data['profanity'] = self.load_jokes('Jokes_prof.json') # profanity
+        self.data['abscenity'] = self.load_jokes('Jokes_abs.json')  # abscenity
+        self.data['tits'] = self.load_jokes('Jokes_tits.json')      # tits
+
+        # print('abscenity', self.data['abscenity']['snow_white'])
+        # print('tits', self.data['tits']['snow_white'])
+
+        self.length = 0
+        # 'common', 'profanity', 'abscenity', 'tits'
+        self.combination = ['common', 'profanity', 'abscenity', 'tits'] # set не зберігає порядок елементів
+        self.jokes = self.create()  # uses self.combination and self.length
+
         # print(self.jokes)
 
-    def load_jokes(self, folder, file):
-        path = resource_path(join(folder, file))
-        temp_dict = load_json(path)
-        self.data.update(temp_dict)
+    def load_jokes(self, file):
+        path = resource_path(join('text', file))
+        return load_json(path)  # dict
+        # self.data.update(temp_dict)
+
+    def create(self):
+        jokes = dict()
+        # print('combination', self.combination)
+        for key in self.combination:
+            # print(key)
+            jokes.update(self.data[key])
+
+        self.length = len(jokes)
+        return jokes
 
     def get_joke(self):
-        if not self.jokes:
-            self.jokes = list(self.data.keys())
+        # if not self.jokes:
+        #     self.jokes = self.create()
+ 
+        key = random.choice(list(self.jokes.keys()))
+        joke = Joke(self.jokes[key])
+        self.jokes.pop(key, None)
 
-        key = random.choice(self.jokes)
-        joke = Joke(self.data[key])
-        self.jokes.remove(key)
-        # print(key)
+        if not self.jokes:
+            self.jokes = self.create()
+ 
         return joke
     
     def get_some_joke(self, key):
-        if self.data.get(key, None):
-            # if key in self.jokes:
-            #     self.jokes.remove(key)
-            return Joke(self.data[key])
+        if key in self.jokes:
+            return Joke(self.jokes[key])
+        else:
+            for dictionary in self.data.values():
+                if dictionary.get(key, None):
+                    return Joke(dictionary[key])
 
     # повертає рядок з кількостю жартів для виводу на екран чи в меню
     def get_text(self):
-        text = str(len(self.jokes)) + "/" + str(len(self.data))
+        text = str(len(self.jokes)) + "/" + str(len(self))
         return text
+    
+    def on(self, category : str):
+        if category in self.data.keys():
+            self.combination.append(category)   # add для set
+            self.jokes.update(self.data[category])
+    
+    def off(self, category : str):
+        if category in self.data.keys():
+            self.combination.remove(category)   # discard для set, не викликає KeyError, на відміну від remove
+            for key in self.data[category]:
+                if key in self.jokes:
+                    self.jokes.pop(key)
+
+    def __len__(self):
+        return self.length
 
 
 class Joke:
@@ -127,7 +164,7 @@ class JokeHandler:
     def get_joke(self):
         if not self.joke:
             self.joke = self.jokes.get_joke()
-            # self.joke = self.jokes.get_some_joke("heater") # jonny, kass, snow_white
+            # self.joke = self.jokes.get_some_joke("pivonii") # jonny, kass, snow_white
 
     def draw_joke(self, midtop):
         if self.active():

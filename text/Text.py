@@ -11,10 +11,10 @@ from sys import argv
 # from text.Iterator import ButtonsHandler
 # from text.Menu import Exit
 
-# Text
-class Text:
-    def __init__(self, game):
+class DebugInfo:
+    def __init__(self, game, text):
         self.game = game
+        self.text = text
         self.myfont = pygame.font.SysFont("Montserrat", 30) # Arial Narrow, Montserrat
         # self.whitefont = pygame.font.SysFont("Montserrat", 31)
         # self.myBiggerFont = self.get_BiggerFont()
@@ -26,28 +26,6 @@ class Text:
         self.y_right = 0
         self.y_offset = 25
         self.x_offset = 20
-
-        # self.text = {}
-
-        if "-en" in argv: # sys
-            text_path = resource_path(join('text', 'lang_en.json'))
-        else:
-            text_path = resource_path(join('text', 'lang_uk.json'))
-
-        self.text = dict(load_json(text_path))
-        # self.exit = Exit(self.text)
-
-        # if "-s" in argv: # sys
-        # over_s = load_json(resource_path(join('text', 'over_s.json')))
-        # self.text.update(over_s)
-
-    def load(self, lang : str): # 'lang_uk' або 'lang_en'
-        filename = lang + '.json'
-
-        text_path = resource_path(join('text', filename))
-        self.text = dict(load_json(text_path))
-        # print(lang, "loaded")
-        # print(self.text)
 
     def display(self):
         # if self.game.displayText:
@@ -180,6 +158,31 @@ class Text:
         loading_text_rect = loading_text.get_rect(center=self.center) # bottomright
 
         screen.blit(loading_text, loading_text_rect)
+
+# Text
+class Text:
+    def __init__(self):
+        # self.text = {}
+
+        if "-en" in argv: # sys
+            text_path = resource_path(join('text', 'lang_en.json'))
+        else:
+            text_path = resource_path(join('text', 'lang_uk.json'))
+
+        self.text = dict(load_json(text_path))
+        # self.exit = Exit(self.text)
+
+        # if "-s" in argv: # sys
+        # over_s = load_json(resource_path(join('text', 'over_s.json')))
+        # self.text.update(over_s)
+    
+    def load(self, lang : str): # 'lang_uk' або 'lang_en'
+        filename = lang + '.json'
+
+        text_path = resource_path(join('text', filename))
+        self.text = dict(load_json(text_path))
+        # print(lang, "loaded")
+        # print(self.text)
 
     def __getitem__(self, key):
         return self.text[key]
