@@ -126,7 +126,7 @@ class Events:
             elif event.key == 'continue' or event.key == 'new_game':
                 self.start()
                 self.game.state = "game"
-            elif event.key == "controls" or event.key == "settings":
+            elif event.key == "controls" or event.key == "settings" or event.key == "jokes":
                 self.game.menu_change(event.key)
             elif event.key == "back":
                 self.game.menu_back()

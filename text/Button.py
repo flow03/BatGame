@@ -165,3 +165,13 @@ class SwitchButton(Button):
     def change_text(self):
         self.text = self.text_dict[self.key]
         super().__init__(self.key, self.text_dict[self.key], self.font, self.rect.center, self.color)
+
+class OnOffButton(SwitchButton):
+    def __init__(self, name : str, text_dict : dict, font : pygame.font.Font, position : Vector2):
+        self.name = name
+        states = ["on", "off"]
+        super().__init__(states, text_dict, font, position)
+
+    def press(self):
+        super().press()
+        return self.name + '_' + self.key

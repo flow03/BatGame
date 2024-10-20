@@ -4,7 +4,7 @@ from pygame.display import get_surface
 from add.Path import resource_path
 from os.path import join
 from random import choice
-from text.Button import Button, SwitchButton, ButtonsHandler
+from text.Button import Button, SwitchButton, OnOffButton, ButtonsHandler
 from text.Text import Text
 
 class BiggerFont:
@@ -147,7 +147,7 @@ class Pause(Menu):
     def __init__(self, *argv):
         super().__init__(*argv)
         self.titles_list = ['pause']
-        self.buttons_list = ['continue', 'controls', 'settings', 'restart_button', 'exit_button']
+        self.buttons_list = ['continue', 'controls', 'jokes', 'settings', 'restart_button', 'exit_button']
         self.create(self.titles_list, self.buttons_list)
 
     def back(self):
@@ -157,7 +157,7 @@ class Start(Menu):
     def __init__(self, *argv):
         super().__init__(*argv)
         self.titles_list = ['start']
-        self.buttons_list = ['new_game', 'controls', 'settings', 'exit_button']
+        self.buttons_list = ['new_game', 'controls', 'jokes', 'settings', 'exit_button']
         self.create(self.titles_list, self.buttons_list)
 
 class Controls(Menu):
@@ -265,6 +265,84 @@ class Settings(Menu):
         self.buttons_handler = ButtonsHandler(self.buttons)
         # print(type(self), "created")
 
+class JokesMenu(Menu):
+    def __init__(self, text, font, jokes = None):
+        super().__init__(text, font)
+        self.titles_list = ['jokes']
+        self.labels_list = ['common', 'profanity', 'abscenity', 'tits']
+        self.buttons_list = ['back']
+        self.jokes = jokes
+        # self.center.y -= 50
+
+        self.create(self.titles_list, self.buttons_list, self.labels_list)
+
+    def init(self):
+        # self.create(list(self.titles.keys()), list(self.buttons.keys()), list(self.labels.keys()))
+        for key in self.titles:
+            self.titles[key].change_text(self.text[key])
+
+        for key in self.labels:
+            if key != 'jokes_count':
+                self.labels[key].change_text(self.text[key])
+
+        for key in self.buttons:
+            if key in self.labels_list:
+                self.buttons[key].change_text()
+            else:
+                self.buttons[key].change_text(self.text[key])
+
+    def set_jokes(self, jokes):
+        self.jokes = jokes
+        position = Vector2(self.labels['tits'].get_center())
+        position.y = self.labels['tits'].get_bottom() + self.SPACING
+        self.createJokesText(position)
+        # ----------------------------------------------------------------
+        self.buttons['back'].update_pos(position)
+
+    def createJokesText(self, position):
+        self.labels["jokes"] = Button("jokes", self.text["jokes"], self.font.myfont, (0,0))
+        text = self.jokes.get_text()
+        self.createText('jokes_count', text, (0,0))
+        self.set_position(self.labels['jokes'], self.labels['jokes_count'], Vector2(position))
+        position.y = self.labels['jokes'].get_bottom() + self.SPACING
+
+    def createOnOffButton(self, name):
+        self.buttons[name] = OnOffButton(name, self.text, self.font.myfont, (0,0))
+
+    def createSwitchers(self):
+        for label in self.labels_list:
+            # if label != "jokes":
+            self.createOnOffButton(label)
+
+    def back(self):
+        return "back"
+    
+    def create(self, titles : list, buttons : list, labels : list = None): # , position : Vector2 = None
+        # if not position:
+        position = Vector2(self.center)
+        # ----------------------------------------------------------------
+        self.createTitles(titles, position) # змінює position.y
+        back = Vector2(position)
+        # ----------------------------------------------------------------
+        self.createLabels(labels, position) # змінює position.y
+        # ----------------------------------------------------------------
+        self.createButtons(buttons, position) # змінює position.y
+        # ----------------------------------------------------------------
+        self.createSwitchers()
+        # ----------------------------------------------------------------
+        position = Vector2(back)
+        for label in self.labels_list:
+            self.set_position(self.labels[label], self.buttons[label], Vector2(position))
+            position.y = self.labels[label].get_bottom() + self.SPACING
+        # ----------------------------------------------------------------
+        if self.jokes:
+            self.createJokesText(position)
+        # ----------------------------------------------------------------
+        self.buttons['back'].update_pos(position)
+        
+        # create iterator
+        self.buttons_handler = ButtonsHandler(self.buttons)
+
 class MenuContex:
     def __init__(self, text : Text, jokes):
         # таким чином усі меню мають однаковий шрифт
@@ -279,6 +357,8 @@ class MenuContex:
         self.all_menu["controls"] = Controls(text, self.font)
         self.all_menu["settings"] = Settings(text, self.font, jokes)
         self.all_menu["exit"] = Exit(text, self.font)
+        self.all_menu["jokes"] = JokesMenu(text, self.font, jokes)
+        # self.all_menu["jokes"].set_jokes(jokes)
 
         self.current = "start"
         self.back_menu = "start"
@@ -301,6 +381,9 @@ class MenuContex:
                 self.back_menu = self.current
                 self.current = key
             elif key == "settings":
+                self.back_menu = self.current
+                self.current = key
+            elif key == "jokes":
                 self.back_menu = self.current
                 self.current = key
             elif key == "back":
