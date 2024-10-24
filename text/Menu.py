@@ -60,7 +60,6 @@ class Menu:
         for key in self.buttons:
             self.buttons[key].change_text(self.text[key])
 
-
     def createButtons(self, buttons : list, pos : Vector2):
         for key in buttons:
             self.createButton(key, pos)
@@ -270,9 +269,9 @@ class JokesMenu(Menu):
         super().__init__(text, font)
         self.titles_list = ['jokes']
         self.labels_list = ['common', 'profanity', 'abscenity', 'tits']
-        self.buttons_list = ['back']
+        self.buttons_list = ['jokes_reload','back']
         self.jokes = jokes
-        # self.center.y -= 50
+        self.center.y -= 50
 
         self.create(self.titles_list, self.buttons_list, self.labels_list)
 
@@ -338,10 +337,19 @@ class JokesMenu(Menu):
         if self.jokes:
             self.createJokesText(position)
         # ----------------------------------------------------------------
+        self.buttons['jokes_reload'].update_pos(position)
+        position.y = self.buttons['jokes_reload'].get_bottom() + self.SPACING
+        # ----------------------------------------------------------------
         self.buttons['back'].update_pos(position)
         
         # create iterator
         self.buttons_handler = ButtonsHandler(self.buttons)
+
+    def update(self):
+        super().update()
+        text = self.jokes.get_text()
+        if self.labels['jokes_count'].text != text:
+            self.labels['jokes_count'].change_text(text)
 
 class MenuContex:
     def __init__(self, text : Text, jokes):

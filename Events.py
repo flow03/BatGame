@@ -136,6 +136,12 @@ class Events:
                 elif event.key.startswith("lang"):
                     self.game.text.load(event.key)
                     self.game.menu.reload() # self.game.text.text
+                elif event.key.endswith("on") or event.key.endswith("off"):
+                    # TODO доведеться змінювати, коли з'являться інші перемикачі
+                    self.game.jokes.set_button(event.key)
+                elif event.key == "jokes_reload":
+                    self.game.jokes.create()
+
             # TODO як варіант, можна додати усі потрібні клавіші у list
             # І створити такий же list для клавіш керування
             # elif event.key in menu_keys_list:

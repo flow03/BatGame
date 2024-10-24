@@ -24,7 +24,8 @@ class Jokes:
         self.length = 0
         # 'common', 'profanity', 'abscenity', 'tits'
         self.combination = ['common', 'profanity', 'abscenity', 'tits'] # set не зберігає порядок елементів
-        self.jokes = self.create()  # uses self.combination and self.length
+        self.jokes = dict()
+        self.create()  # uses jokes, combination and length
 
         # print(self.jokes)
 
@@ -34,56 +35,70 @@ class Jokes:
         # self.data.update(temp_dict)
 
     def create(self):
-        jokes = dict()
+        self.jokes.clear()
         # print('combination', self.combination)
         for key in self.combination:
             # print(key)
-            jokes.update(self.data[key])
+            self.jokes.update(self.data[key])
 
-        self.length = len(jokes)
-        return jokes
+        self.length = len(self)
+        # return jokes
 
     def get_joke(self):
-        # if not self.jokes:
-        #     self.jokes = self.create()
- 
-        key = random.choice(list(self.jokes.keys()))
-        joke = Joke(self.jokes[key])
-        self.jokes.pop(key, None)
 
-        if not self.jokes:
-            self.jokes = self.create()
- 
-        return joke
+        if self.jokes and self.combination:
+            key = random.choice(list(self.jokes.keys()))
+            joke = Joke(self.jokes[key])
+            self.jokes.pop(key, None)
+        
+            if not self.jokes: # and self.combination:
+                self.jokes = self.create()
+                
+            return joke
+        elif not self.combination:
+            print('Список combination пустий')
     
     def get_some_joke(self, key):
         if key in self.jokes:
             return Joke(self.jokes[key])
         else:
-            for dictionary in self.data.values():
-                if dictionary.get(key, None):
-                    return Joke(dictionary[key])
+            for category in self.data.values():
+                if category.get(key, None):
+                    return Joke(category[key])
 
     # повертає рядок з кількостю жартів для виводу на екран чи в меню
     def get_text(self):
-        text = str(len(self.jokes)) + "/" + str(len(self))
+        text = str(len(self.jokes)) + "/" + str(self.length)
         return text
     
     def on(self, category : str):
         if category in self.data.keys():
             self.combination.append(category)   # add для set
             self.jokes.update(self.data[category])
+            self.length = len(self)
     
     def off(self, category : str):
-        if category in self.data.keys():
+        if category in self.data.keys() and category in self.combination:
             self.combination.remove(category)   # discard для set, не викликає KeyError, на відміну від remove
             for key in self.data[category]:
                 if key in self.jokes:
                     self.jokes.pop(key)
+            self.length = len(self)
 
     def __len__(self):
-        return self.length
+        length = 0
+        for category in self.combination:
+            length += len(self.data[category])
 
+        return length
+
+    def set_button(self, button : str):
+        name, state = button.split('_')
+        # print('name, state', name, state)
+        if state == 'on':
+            self.on(name)
+        elif state == 'off':
+            self.off(name)
 
 class Joke:
     def __init__(self, joke_list : list):
