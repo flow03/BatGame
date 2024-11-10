@@ -23,7 +23,8 @@ class Jokes:
 
         self.length = 0
         # 'common', 'profanity', 'abscenity', 'tits'
-        self.combination = ['common', 'profanity', 'abscenity', 'tits'] # set не зберігає порядок елементів
+        # використовується list, тому що set не зберігає порядок елементів
+        self.combination = ['common', 'profanity', 'abscenity', 'tits']
         self.jokes = dict()
         self.create()  # uses jokes, combination and length
 
@@ -45,18 +46,20 @@ class Jokes:
         # return jokes
 
     def get_joke(self):
-
         if self.jokes and self.combination:
             key = random.choice(list(self.jokes.keys()))
             joke = Joke(self.jokes[key])
             self.jokes.pop(key, None)
-        
+
             if not self.jokes: # and self.combination:
-                self.jokes = self.create()
-                
+                self.create() # returns None
+                # print('jokes перестворено')
+
             return joke
+        
         elif not self.combination:
             print('Список combination пустий')
+
     
     def get_some_joke(self, key):
         if key in self.jokes:
@@ -66,8 +69,13 @@ class Jokes:
                 if category.get(key, None):
                     return Joke(category[key])
 
-    # повертає рядок з кількостю жартів для виводу на екран чи в меню
+    # повертає рядок з кількістю жартів для виводу на екран чи в меню
     def get_text(self):
+        # if self.jokes:
+        #     jokes_len = len(self.jokes)
+        # else:
+        #     jokes_len = 0
+
         text = str(len(self.jokes)) + "/" + str(self.length)
         return text
     

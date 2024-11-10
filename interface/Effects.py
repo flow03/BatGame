@@ -249,14 +249,18 @@ class OnepunchEffect(Effect):
         self.player.add_damage = 0
         pass
 
+# TODO те ж саме, що і зі StandingEffect
 class HarmlessEffect(Effect):
     def __init__(self, player):
         time = 8000
         super().__init__(player, time)
 
+# TODO поки що прив'язаний тільки до гравця
+# потрібно створити змінну is_moving у класі Actor
+# і завжди звірятися з нею у методах руху дочірніх класів
 class StandingEffect(Effect):
     def __init__(self, player):
-        time = 5000
+        time = 1000
         super().__init__(player, time)
 
 class BulletsEffect(Effect):

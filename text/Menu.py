@@ -197,14 +197,14 @@ class Controls(Menu):
         return "back"
 
 class Settings(Menu):
-    def __init__(self, text, font, jokes):
+    def __init__(self, text, font):
         super().__init__(text, font)
         self.titles_list = ['settings']
-        self.labels_list = ['language', 'color', 'jokes']
+        self.labels_list = ['language', 'color']
         self.buttons_list = ['back']
         # switchers =  ['color_red', 'color_green', 'color_blue']
         
-        self.jokes = jokes
+        # self.jokes = jokes
         self.create(self.titles_list, self.buttons_list, self.labels_list)
 
     def init(self):
@@ -246,17 +246,17 @@ class Settings(Menu):
         # ----------------------------------------------------------------
         self.createSwitchers()
         # ----------------------------------------------------------------
-        text = self.jokes.get_text()
-        self.createText('jokes_count', text, Vector2(position))
+        # text = self.jokes.get_text()
+        # self.createText('jokes_count', text, Vector2(position))
         # ----------------------------------------------------------------
         position = Vector2(back)
         self.set_position(self.labels['language'], self.buttons['language_select'], Vector2(position))
         position.y = self.labels['language'].get_bottom() + self.SPACING
         self.set_position(self.labels['color'], self.buttons['color_select'], Vector2(position))
-        position.y = self.labels['color'].get_bottom() + self.SPACING
-        self.set_position(self.labels['jokes'], self.labels['jokes_count'], Vector2(position))
+        # position.y = self.labels['color'].get_bottom() + self.SPACING
+        # self.set_position(self.labels['jokes'], self.labels['jokes_count'], Vector2(position))
         # ----------------------------------------------------------------
-        position.y = self.labels['jokes'].get_bottom() + self.SPACING
+        position.y = self.labels['color'].get_bottom() + self.SPACING
         self.buttons['back'].update_pos(position)
         # print("position after update_pos", position)
         
@@ -345,6 +345,9 @@ class JokesMenu(Menu):
         # create iterator
         self.buttons_handler = ButtonsHandler(self.buttons)
 
+        self.buttons_handler.post(self.buttons['abscenity'].press())
+        self.buttons_handler.post(self.buttons['tits'].press())
+
     def update(self):
         super().update()
         text = self.jokes.get_text()
@@ -363,7 +366,7 @@ class MenuContex:
         self.all_menu["start"] = Start(text, self.font)
         self.all_menu["pause"] = Pause(text, self.font)
         self.all_menu["controls"] = Controls(text, self.font)
-        self.all_menu["settings"] = Settings(text, self.font, jokes)
+        self.all_menu["settings"] = Settings(text, self.font)
         self.all_menu["exit"] = Exit(text, self.font)
         self.all_menu["jokes"] = JokesMenu(text, self.font, jokes)
         # self.all_menu["jokes"].set_jokes(jokes)

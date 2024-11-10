@@ -5,7 +5,8 @@ from actors.Dance_Girl import Dance_Girl
 class Events:
     def __init__(self, game):
         self.game = game
-        self.isEvents = False # True щоб увімкнути події
+        self.isEvents = True # True щоб увімкнути події
+        # вмикаються після запуску пункту меню
         # self.isTenBats = False
 
         self.init()
@@ -50,7 +51,7 @@ class Events:
                 if not self.game.killedBats % 10: # every 10
                     self.create(self.TEN_BATS)
             if event.type == self.TEN_BATS:
-                for _ in range(5): # five bats
+                for _ in range(3): # three bats
                     groups.add_bat(BatSpecial(self.game))
             if event.type == self.EXIT:
                 self.game.menu_change("exit")
@@ -157,7 +158,8 @@ class Events:
         pygame.time.set_timer(self.FOOD_DROP_TIMER, 5000)
         pygame.time.set_timer(self.BAT_SP_TIMER, 4500)
         # pygame.time.set_timer(self.MUSHROOMS, 50)
-        self.isEvents = True
+        # self.isEvents = True
+        print("START Events timer")
 
     def stop_timer(self):
         pygame.time.set_timer(self.BAT_TIMER, 0)
@@ -165,15 +167,22 @@ class Events:
         pygame.time.set_timer(self.FOOD_DROP_TIMER, 0)
         pygame.time.set_timer(self.BAT_SP_TIMER, 0)
         # pygame.time.set_timer(self.MUSHROOMS, 0)
-        self.isEvents = False
+        # self.isEvents = False
+        print("STOP Events timer")
 
     def switch(self):
         if self.isEvents:
             self.stop_timer()
+            self.isEvents = False
         else:
             self.start_timer()
+            self.isEvents = True
 
-    # якщо події вимкнено, то цей метод ігноруватиметься
+    # якщо події вимкнено, то ці методи ігноруватимуться
     def start(self):
         if self.isEvents:
             self.start_timer()
+
+    def stop(self):
+        if self.isEvents:
+            self.stop_timer()

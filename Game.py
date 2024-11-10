@@ -85,7 +85,7 @@ class Game():
         self.drops.clear()
         # jump.is_jump = False
         self.events.start()
-        self.dummies.is_dummies = True
+        # self.dummies.is_dummies = False
         self.dummies.create() # after groups.clear
         self.menu.change_BiggerFont()
         # isTenBats = False
@@ -107,8 +107,8 @@ class Game():
 
     # Main loop    
     def run(self):
-        self.dummies.is_dummies = True
-        self.dummies.create()
+        # self.dummies.is_dummies = True
+        # self.dummies.create()
 
         while self.active:
             self.FPS.tick(60)
@@ -132,7 +132,7 @@ class Game():
                 self.menu.display()
 
             # elif self.state == "pause":
-            #     # self.events.stop_timer()
+            #     # self.events.stop()
             #     self.pause.update()
             #     self.pause.display()
 
@@ -144,16 +144,18 @@ class Game():
 
         pygame.quit()
 
+    # призначений лише для зміни пунктів меню
     def menu_change(self, key):
-        self.events.stop_timer()
         self.menu.change(key)
         self.state = "menu"
+        self.events.stop()
 
+    # призначений лише для реагування на клавішу Назад
     def menu_back(self):
         state = self.menu.back()
-        # print(state)
+        # print("back state", state)
         if state == "game":
-            self.events.start()
             self.state = "game"
+            self.events.start()
         elif state == "back":
             self.menu_change("back")
