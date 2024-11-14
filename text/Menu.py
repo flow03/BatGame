@@ -136,15 +136,15 @@ class Menu:
         return None
     
 class Exit(Menu):
-    def __init__(self, *argv):
-        super().__init__(*argv)
+    def __init__(self, *args):
+        super().__init__(*args)
         self.titles_list = ['over_1', 'over_2']
         self.buttons_list = ['restart_button', 'exit_button']
         self.create(self.titles_list, self.buttons_list)
 
 class Pause(Menu):
-    def __init__(self, *argv):
-        super().__init__(*argv)
+    def __init__(self, *args):
+        super().__init__(*args)
         self.titles_list = ['pause']
         self.buttons_list = ['continue', 'controls', 'jokes', 'settings', 'restart_button', 'exit_button']
         self.create(self.titles_list, self.buttons_list)
@@ -153,15 +153,15 @@ class Pause(Menu):
         return "game"
 
 class Start(Menu):
-    def __init__(self, *argv):
-        super().__init__(*argv)
+    def __init__(self, *args):
+        super().__init__(*args)
         self.titles_list = ['start']
         self.buttons_list = ['new_game', 'controls', 'jokes', 'settings', 'exit_button']
         self.create(self.titles_list, self.buttons_list)
 
 class Controls(Menu):
-    def __init__(self, *argv):
-        super().__init__(*argv)
+    def __init__(self, *args):
+        super().__init__(*args)
         self.titles_list = ['controls']
         # self.titles = dict.fromkeys(titles)
         self.labels_list = [

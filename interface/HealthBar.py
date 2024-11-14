@@ -377,17 +377,13 @@ class EffectBar:
         self.effect_bar.draw(screen)
 
 
-# class HealthCell:
-#     def __init__(self, rect : pygame.Rect):
-#         self.cell = FancyHealthBar(rect, 1, 1)
-
 class CellHealthBar:
     def __init__(self, rect : pygame.Rect, health : Health, border = 1, colour = "Red"):
         self.health = health # reference
         self.rect = pygame.Rect(rect) # new object
         self.border = border
         self.colour = colour
-        self.cell_list = list() # []
+        self.cell_list = list()
 
         self.init()
 
@@ -405,13 +401,14 @@ class CellHealthBar:
         # cell_width = round((self.rect.width - (self.health.max_health - 1) * self.border)/self.health.max_health)
         # cell_width = (self.rect.width - self.health.max_health + 1)//self.health.max_health + 1
         # print(cell_width)
+        self.set_cell_width(cell_width)
+
+    def set_cell_width(self, cell_width):
         cell_rect = pygame.Rect((0,0), (cell_width, self.rect.height))
         for i in range(self.health.max_health):
             self.cell_list.append(FancyHealthBar(pygame.Rect(cell_rect), Health(1), self.border, self.colour))
-
-        self.update_cells_left() # builds cell order
-
-        # return cell_list
+            
+        self.update_cells_left()
 
     def cell_list_width(self):
         midleft = Vector2(self.cell_list[0].rect.midleft)
@@ -458,7 +455,7 @@ class CellHealthBar:
     def update_health(self):
         for index in range(self.health.max_health):
             # if not self.health.empty():
-                # full cells
+            # full cells
             if index < self.health.health:
                 if self.cell_list[index].health.empty():
                     self.cell_list[index].health.set_heal(1)

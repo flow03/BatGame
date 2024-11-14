@@ -9,104 +9,109 @@ from add.Path import resource_path, load_json
 from os.path import join
 from sys import argv
 
-
-class Jokes:
+class JokesDict:
     def __init__(self):
         self.data = {}
-        self.data['common'] = self.load_jokes('Jokes.json')
+        self.data['common'] = self.load_jokes('Jokes_common.json')
         self.data['profanity'] = self.load_jokes('Jokes_prof.json') # profanity
         self.data['abscenity'] = self.load_jokes('Jokes_abs.json')  # abscenity
         self.data['tits'] = self.load_jokes('Jokes_tits.json')      # tits
 
-        # print('abscenity', self.data['abscenity']['snow_white'])
-        # print('tits', self.data['tits']['snow_white'])
-
-        self.length = 0
-        # 'common', 'profanity', 'abscenity', 'tits'
-        # використовується list, тому що set не зберігає порядок елементів
-        self.combination = ['common', 'profanity', 'abscenity', 'tits']
-        self.jokes = dict()
-        self.create()  # uses jokes, combination and length
-
-        # print(self.jokes)
+        self.jokes = dict.fromkeys(self.data) # None defaults
+        # copy.deepcopy з модуля copy створює копію з усіма рівнями вкладеності
+        # тоді як метод copy у dict чи звичайний конструктор копіюють лише верхній рівень
+        self.update()
 
     def load_jokes(self, file):
         path = resource_path(join('text', file))
         return load_json(path)  # dict
         # self.data.update(temp_dict)
 
-    def create(self):
-        self.jokes.clear()
-        # print('combination', self.combination)
-        for key in self.combination:
-            # print(key)
-            self.jokes.update(self.data[key])
+    def update(self):
+        if self.jokes:
+            # копіює кожну категорію окремо
+            for category in self.jokes:
+                self.jokes[category] = self.data[category].copy()
 
-        self.length = len(self)
-        # return jokes
-
-    def get_joke(self):
-        if self.jokes and self.combination:
-            key = random.choice(list(self.jokes.keys()))
-            joke = Joke(self.jokes[key])
-            self.jokes.pop(key, None)
-
-            if not self.jokes: # and self.combination:
-                self.create() # returns None
-                # print('jokes перестворено')
-
-            return joke
-        
-        elif not self.combination:
-            print('Список combination пустий')
-
-    
-    def get_some_joke(self, key):
-        if key in self.jokes:
-            return Joke(self.jokes[key])
-        else:
-            for category in self.data.values():
-                if category.get(key, None):
-                    return Joke(category[key])
-
-    # повертає рядок з кількістю жартів для виводу на екран чи в меню
-    def get_text(self):
-        # if self.jokes:
-        #     jokes_len = len(self.jokes)
-        # else:
-        #     jokes_len = 0
-
-        text = str(len(self.jokes)) + "/" + str(self.length)
-        return text
-    
     def on(self, category : str):
-        if category in self.data.keys():
-            self.combination.append(category)   # add для set
-            self.jokes.update(self.data[category])
-            self.length = len(self)
-    
-    def off(self, category : str):
-        if category in self.data.keys() and category in self.combination:
-            self.combination.remove(category)   # discard для set, не викликає KeyError, на відміну від remove
-            for key in self.data[category]:
-                if key in self.jokes:
-                    self.jokes.pop(key)
-            self.length = len(self)
+        if category in self.data:
+            self.jokes[category] = self.data[category].copy() # dict(self.data[category])
 
-    def __len__(self):
+    def off(self, category : str):
+        if category in self.data and category in self.jokes:
+            self.jokes.pop(category)
+
+    # повертає кількість поточних жартів
+    def jokes_length(self):
         length = 0
-        for category in self.combination:
-            length += len(self.data[category])
+        if self.jokes:
+            for category in self.jokes:
+                length += len(self.jokes[category])
+        
+        return length
+
+    # повертає кількість усіх жартів
+    def data_length(self):
+        length = 0
+        if self.jokes:
+            for category in self.jokes: # враховує лише активні категорії
+                length += len(self.data[category])
 
         return length
+    
+    # повертає tuple з поточною і загальною кількістю жартів у вказаній категорії
+    def category_length(self, category):
+        if category in self.data and category in self.jokes:
+            return tuple(len(self.jokes[category]), len(self.data[category]))
+
+    def get_joke(self):
+        if self.jokes:
+            category = random.choice(list(self.jokes.keys()))
+            key = random.choice(list(self.jokes[category].keys()))
+            joke = self.jokes[category].pop(key, None)
+
+            if not self.jokes_length():
+                self.update()
+                print('Жарти перестворено')
+
+            return Joke(joke)
+        
+        elif not self.jokes:
+            print('Список жартів пустий')
+
+    def get_some_joke(self, key):
+        for category in self.data.values():
+            if category.get(key, None):
+                return Joke(category[key])
+
+class Jokes:
+    def __init__(self):
+        self.jokes_dict = JokesDict()
+
+    def get_joke(self):
+        return self.jokes_dict.get_joke()
+
+    def get_some_joke(self, key):
+        return self.jokes_dict.get_some_joke(key)
+
+    def category_length(self, category):
+        return self.jokes_dict.category_length(category)
+    
+    def update(self):
+        return self.jokes_dict.update()
+        
+    # повертає рядок з кількістю жартів для виводу на екран чи в меню
+    def get_text(self):
+        text = str(self.jokes_dict.jokes_length()) + "/" + str(self.jokes_dict.data_length())
+        return text
 
     def set_button(self, button : str):
         name, state = button.split('_')
         # print('name, state', name, state)
         if state == 'on':
-            self.on(name)
+            self.jokes_dict.on(name)
         elif state == 'off':
-            self.off(name)
+            self.jokes_dict.off(name)
 
 class Joke:
     def __init__(self, joke_list : list):
@@ -187,7 +192,7 @@ class JokeHandler:
     def get_joke(self):
         if not self.joke:
             self.joke = self.jokes.get_joke()
-            # self.joke = self.jokes.get_some_joke("pivonii") # jonny, kass, snow_white
+            # self.joke = self.jokes.get_some_joke("medicine") # jonny, kass, snow_white
 
     def draw_joke(self, midtop):
         if self.active():

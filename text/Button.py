@@ -1,6 +1,7 @@
 import pygame
 from pygame.math import Vector2
 from text.Iterator import ActiveIterator, BidirectionalIterator
+from interface.HealthBar import CellHealthBar
 
 class WhiteText:
     def __init__(self,  text : str, font : pygame.font.Font):
@@ -175,3 +176,14 @@ class OnOffButton(SwitchButton):
     def press(self):
         super().press()
         return self.name + '_' + self.key
+
+class OnOffButtonBar(OnOffButton):
+    def __init__(self, *args):
+        super().__init__(*args)
+        self.jokes = None
+
+    def create_bar(self, jokes, position : Vector2):
+        self.jokes = jokes
+        rect = pygame.Rect(position, (100, 15))
+        health = None
+        self.bar = CellHealthBar(rect, health, 1, "White")

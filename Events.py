@@ -141,7 +141,7 @@ class Events:
                     # TODO доведеться змінювати, коли з'являться інші перемикачі
                     self.game.jokes.set_button(event.key)
                 elif event.key == "jokes_reload":
-                    self.game.jokes.create()
+                    self.game.jokes.update()
 
             # TODO як варіант, можна додати усі потрібні клавіші у list
             # І створити такий же list для клавіш керування
