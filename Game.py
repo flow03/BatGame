@@ -7,7 +7,7 @@ from Events import Events
 from actors.Player import Player
 from actors.Dummy import DummyCreator
 from pygame.math import Vector2
-from text.Jokes import Jokes
+from text.Jokes import JokesCreator
 from text.Menu import MenuContex
 
 class Game():
@@ -20,7 +20,7 @@ class Game():
         self.text = Text()
         self.debug = DebugInfo(self, self.text)
         # self.blit_loading()
-        self.jokes = Jokes()
+        self.jokes = JokesCreator()
 
         self.drops = Drops()
         self.groups = Groups()

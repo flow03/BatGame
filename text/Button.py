@@ -1,7 +1,8 @@
 import pygame
 from pygame.math import Vector2
 from text.Iterator import ActiveIterator, BidirectionalIterator
-from interface.HealthBar import CellHealthBar
+from text.Jokes import JokesCreator
+from interface.HealthBar import CellHealthBar, Health
 
 class WhiteText:
     def __init__(self,  text : str, font : pygame.font.Font):
@@ -177,13 +178,40 @@ class OnOffButton(SwitchButton):
         super().press()
         return self.name + '_' + self.key
 
-class OnOffButtonBar(OnOffButton):
-    def __init__(self, *args):
-        super().__init__(*args)
-        self.jokes = None
+# class OnOffButtonBar(OnOffButton):
+#     def __init__(self, *args):
+#         super().__init__(*args)
+#         self.jokes = None
 
-    def create_bar(self, jokes, position : Vector2):
+#     def create_bar(self, jokes, position : Vector2):
+#         self.jokes = jokes
+#         rect = pygame.Rect(position, (100, 15))
+#         current_length, max_length = self.jokes.category_length(self.name)
+#         health = Health(max_length)
+#         health.health = current_length
+#         self.bar = CellHealthBar(rect, health, 1, "White")
+
+#     def draw(self, screen):
+#         super().draw(screen)
+#         self.bar.draw(screen)
+
+class JokesBar:
+    def __init__(self, jokes : JokesCreator, buttonsHandler : ButtonsHandler):
         self.jokes = jokes
+        self.buttonsHandler = buttonsHandler
+        self.bars = dict() # dict.fromkeys(jokes.data)
+        for key in self.jokes.data:
+            self.bars[key] = self.create_bar(key)
+
+    def create_bar(self, category : str):
+        # self.jokes = jokes
+        position = Vector2(0,0)
         rect = pygame.Rect(position, (100, 15))
-        health = None
-        self.bar = CellHealthBar(rect, health, 1, "White")
+        current_length, max_length = self.jokes.category_length(category)
+        health = Health(max_length)
+        health.health = current_length
+        return CellHealthBar(rect, health, 1, "White")
+
+    def update(self):
+        active = self.buttonsHandler.active.get_active()
+        print("active", active)

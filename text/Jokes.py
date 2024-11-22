@@ -7,12 +7,12 @@ from add.Clock import Clock
 import queue
 from add.Path import resource_path, load_json
 from os.path import join
-from sys import argv
+# from sys import argv
 
-class JokesDict:
+class JokesCreator:
     def __init__(self):
         self.data = {}
-        self.data['common'] = self.load_jokes('Jokes_common.json')
+        self.data['common'] = self.load_jokes('Jokes_com.json')
         self.data['profanity'] = self.load_jokes('Jokes_prof.json') # profanity
         self.data['abscenity'] = self.load_jokes('Jokes_abs.json')  # abscenity
         self.data['tits'] = self.load_jokes('Jokes_tits.json')      # tits
@@ -33,13 +33,25 @@ class JokesDict:
             for category in self.jokes:
                 self.jokes[category] = self.data[category].copy()
 
-    def on(self, category : str):
-        if category in self.data:
-            self.jokes[category] = self.data[category].copy() # dict(self.data[category])
+    def get_joke(self):
+        if self.jokes:
+            category = random.choice(list(self.jokes.keys()))
+            key = random.choice(list(self.jokes[category].keys()))
+            joke = self.jokes[category].pop(key, None)
 
-    def off(self, category : str):
-        if category in self.data and category in self.jokes:
-            self.jokes.pop(category)
+            if not self.jokes_length():
+                self.update()
+                print('Жарти перестворено')
+
+            return Joke(joke)
+        
+        elif not self.jokes:
+            print('Список жартів пустий')
+
+    def get_some_joke(self, key):
+        for category in self.data.values():
+            if category.get(key, None):
+                return Joke(category[key])
 
     # повертає кількість поточних жартів
     def jokes_length(self):
@@ -64,54 +76,26 @@ class JokesDict:
         if category in self.data and category in self.jokes:
             return tuple(len(self.jokes[category]), len(self.data[category]))
 
-    def get_joke(self):
-        if self.jokes:
-            category = random.choice(list(self.jokes.keys()))
-            key = random.choice(list(self.jokes[category].keys()))
-            joke = self.jokes[category].pop(key, None)
+    def on(self, category : str):
+        if category in self.data:
+            self.jokes[category] = self.data[category].copy() # dict(self.data[category])
 
-            if not self.jokes_length():
-                self.update()
-                print('Жарти перестворено')
-
-            return Joke(joke)
-        
-        elif not self.jokes:
-            print('Список жартів пустий')
-
-    def get_some_joke(self, key):
-        for category in self.data.values():
-            if category.get(key, None):
-                return Joke(category[key])
-
-class Jokes:
-    def __init__(self):
-        self.jokes_dict = JokesDict()
-
-    def get_joke(self):
-        return self.jokes_dict.get_joke()
-
-    def get_some_joke(self, key):
-        return self.jokes_dict.get_some_joke(key)
-
-    def category_length(self, category):
-        return self.jokes_dict.category_length(category)
-    
-    def update(self):
-        return self.jokes_dict.update()
+    def off(self, category : str):
+        if category in self.data and category in self.jokes:
+            self.jokes.pop(category)
         
     # повертає рядок з кількістю жартів для виводу на екран чи в меню
     def get_text(self):
-        text = str(self.jokes_dict.jokes_length()) + "/" + str(self.jokes_dict.data_length())
+        text = str(self.jokes_length()) + "/" + str(self.data_length())
         return text
 
     def set_button(self, button : str):
         name, state = button.split('_')
         # print('name, state', name, state)
         if state == 'on':
-            self.jokes_dict.on(name)
+            self.on(name)
         elif state == 'off':
-            self.jokes_dict.off(name)
+            self.off(name)
 
 class Joke:
     def __init__(self, joke_list : list):
@@ -184,7 +168,7 @@ class Line:
         self.text.draw(screen)
 
 class JokeHandler:
-    def __init__(self, jokes : Jokes):
+    def __init__(self, jokes : JokesCreator):
         self.jokes = jokes
         # self.rect = rect
         self.joke = None
