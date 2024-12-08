@@ -401,14 +401,17 @@ class CellHealthBar:
         # cell_width = round((self.rect.width - (self.health.max_health - 1) * self.border)/self.health.max_health)
         # cell_width = (self.rect.width - self.health.max_health + 1)//self.health.max_health + 1
         # print(cell_width)
+        # print("cell_width", cell_width)
         self.set_cell_width(cell_width)
 
     def set_cell_width(self, cell_width):
         cell_rect = pygame.Rect((0,0), (cell_width, self.rect.height))
+        self.cell_list.clear()
         for i in range(self.health.max_health):
             self.cell_list.append(FancyHealthBar(pygame.Rect(cell_rect), Health(1), self.border, self.colour))
-            
+
         self.update_cells_left()
+        self.fit_rect(self.cell_list_width())
 
     def cell_list_width(self):
         midleft = Vector2(self.cell_list[0].rect.midleft)
@@ -425,6 +428,7 @@ class CellHealthBar:
     # changes rect width if necessary
     def fit_rect(self, new_width):
         # print("fit_rect call")
+        # new_width = self.cell_list_width()
         center = self.rect.center
         if self.rect.width != new_width:
             # print(f"fit_rect: {self.rect.width} != {new_width}")

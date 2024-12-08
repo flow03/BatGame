@@ -5,7 +5,7 @@ from pygame.math import Vector2
 from add.Spritesheet import SpriteSheet
 # from Clock_class import Clock
 # from add.MyGroup import MyGroup
-from loot.Drops import Drops
+# from loot.Drops import Drops
 from interface.HealthBar import Health
 import actors.State
 from text.Jokes import JokeHandler

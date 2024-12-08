@@ -71,10 +71,15 @@ class JokesCreator:
 
         return length
     
-    # повертає tuple з поточною і загальною кількістю жартів у вказаній категорії
+    # повертає загальну кількість жартів у вказаній категорії
+    def category_max_length(self, category):
+        if category in self.data:
+            return len(self.data[category])
+    
+    # повертає поточну кількість жартів у вказаній категорії, якщо вона увімкнена
     def category_length(self, category):
         if category in self.data and category in self.jokes:
-            return tuple(len(self.jokes[category]), len(self.data[category]))
+            return len(self.jokes[category])
 
     def on(self, category : str):
         if category in self.data:

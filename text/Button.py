@@ -1,7 +1,7 @@
 import pygame
 from pygame.math import Vector2
 from text.Iterator import ActiveIterator, BidirectionalIterator
-from text.Jokes import JokesCreator
+# from text.Jokes import JokesCreator
 from interface.HealthBar import CellHealthBar, Health
 
 class WhiteText:
@@ -171,7 +171,7 @@ class SwitchButton(Button):
 class OnOffButton(SwitchButton):
     def __init__(self, name : str, text_dict : dict, font : pygame.font.Font, position : Vector2):
         self.name = name
-        states = ["on", "off"]
+        states = ["on", "off"]  # ключі мають називатись саме так, щоб їх можна було знайти у мовному файлі
         super().__init__(states, text_dict, font, position)
 
     def press(self):
@@ -196,22 +196,50 @@ class OnOffButton(SwitchButton):
 #         self.bar.draw(screen)
 
 class JokesBar:
-    def __init__(self, jokes : JokesCreator, buttonsHandler : ButtonsHandler):
+    def __init__(self, jokes, buttonsHandler : ButtonsHandler): #   jokes : JokesCreator,
         self.jokes = jokes
         self.buttonsHandler = buttonsHandler
         self.bars = dict() # dict.fromkeys(jokes.data)
         for key in self.jokes.data:
             self.bars[key] = self.create_bar(key)
+        self.active = None
+    
+    def set_position(self, pos):
+        for bar in self.bars.values():
+            bar.update_pos(pos)
 
     def create_bar(self, category : str):
         # self.jokes = jokes
-        position = Vector2(0,0)
-        rect = pygame.Rect(position, (100, 15))
-        current_length, max_length = self.jokes.category_length(category)
-        health = Health(max_length)
-        health.health = current_length
-        return CellHealthBar(rect, health, 1, "White")
+        position = Vector2(20,20)
+        rect = pygame.Rect(position, (150, 12))
+        health = Health(self.jokes.category_max_length(category))
+        health.health = self.jokes.category_length(category)
+        bar = CellHealthBar(rect, health, 2, "White")
+        bar.set_cell_width(23)
+        return bar
+
+    # def categories_update(self):
+    #     for category in self.bars:
+    #         self.category_update(category)
+
+    def category_update(self, category):
+        if category in self.bars:
+            length = self.jokes.category_length(category)
+            if length: # None, якщо категорія вимкнена
+                self.bars[category].health.health = length
+                self.bars[self.active].update_health()
 
     def update(self):
-        active = self.buttonsHandler.active.get_active()
-        print("active", active)
+        button = self.buttonsHandler.active.get_active()
+        # показує лише увімкнені категорії
+        if (button.key == "on") and button.name in self.bars: # button.key == "off" or 
+            self.active = button.name
+            # print("active", self.active)
+            # self.bars["tits"].health.health = length
+            self.category_update(self.active)
+        else:
+            self.active = None
+
+    def draw(self, screen):
+        if self.active:
+            self.bars[self.active].draw(screen)

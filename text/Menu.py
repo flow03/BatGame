@@ -4,7 +4,7 @@ from pygame.display import get_surface
 from add.Path import resource_path
 from os.path import join
 from random import choice
-from text.Button import Button, SwitchButton, OnOffButton, ButtonsHandler
+from text.Button import Button, SwitchButton, OnOffButton, ButtonsHandler, JokesBar
 from text.Text import Text
 
 class BiggerFont:
@@ -295,6 +295,7 @@ class JokesMenu(Menu):
         position = Vector2(self.labels['tits'].get_center())
         position.y = self.labels['tits'].get_bottom() + self.SPACING
         self.createJokesText(position)
+        # self.jokes_bar = JokesBar(self.jokes, self.buttons_handler)
         # ----------------------------------------------------------------
         self.buttons['back'].update_pos(position)
 
@@ -338,21 +339,34 @@ class JokesMenu(Menu):
             self.createJokesText(position)
         # ----------------------------------------------------------------
         self.buttons['jokes_reload'].update_pos(position)
-        position.y = self.buttons['jokes_reload'].get_bottom() + self.SPACING
+        position.y = self.buttons['jokes_reload'].get_bottom() + self.SPACING - 10
         # ----------------------------------------------------------------
-        self.buttons['back'].update_pos(position)
+        # self.buttons['back'].update_pos(position)
         
         # create iterator
         self.buttons_handler = ButtonsHandler(self.buttons)
 
         self.buttons_handler.post(self.buttons['abscenity'].press())
         self.buttons_handler.post(self.buttons['tits'].press())
+        # ----------------------------------------------------------------
+        if self.jokes:
+            self.jokes_bar = JokesBar(self.jokes, self.buttons_handler)
+            self.jokes_bar.set_position(position)
+            position.y += self.SPACING
+            self.buttons['back'].update_pos(position)
 
     def update(self):
         super().update()
         text = self.jokes.get_text()
         if self.labels['jokes_count'].text != text:
             self.labels['jokes_count'].change_text(text)
+
+        # TODO потенційна помилка, якщо jokes_bar не буде проініціалізовано на момент виклику update
+        self.jokes_bar.update()
+
+    def display(self):
+        super().display()
+        self.jokes_bar.draw(self.screen)
 
 class MenuContex:
     def __init__(self, text : Text, jokes):
