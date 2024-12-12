@@ -18,7 +18,7 @@ class Events:
         self.FOOD_DROP_TIMER = pygame.USEREVENT + 3
         self.BAT_SP_TIMER = pygame.USEREVENT + 4
         self.MUSHROOMS = pygame.USEREVENT + 5
-        self.TEN_BATS = pygame.USEREVENT + 6
+        # self.TEN_BATS = pygame.USEREVENT + 6
         self.BAT_KILLED = pygame.USEREVENT + 7
         self.EXIT = pygame.USEREVENT + 8
 
@@ -35,25 +35,26 @@ class Events:
                 self.game.active = False
                 # pygame.quit()
             # if not Girl:
-            if event.type == self.BAT_TIMER:
+            elif event.type == self.BAT_TIMER:
                 groups.add_bat(BatMoving(self.game))
-            if event.type == self.BAT_SP_TIMER:
+            elif event.type == self.BAT_SP_TIMER:
                 groups.add_bat(BatSpecial(self.game))
-            if event.type == self.BULLET_DROP_TIMER:
+            elif event.type == self.BULLET_DROP_TIMER:
                 drops.create_bulletDrop()
-            if event.type == self.FOOD_DROP_TIMER:
+            elif event.type == self.FOOD_DROP_TIMER:
                 drops.create_foodDrop()
-            if event.type == self.MUSHROOMS:
+            elif event.type == self.MUSHROOMS:
                 drops.create_Mushrooms()
-            if event.type == self.BAT_KILLED:
+            elif event.type == self.BAT_KILLED:
                 self.game.killedBats += 1
-                # if self.game.killedBats == 10: # >=
-                if not self.game.killedBats % 10: # every 10
-                    self.create(self.TEN_BATS)
-            if event.type == self.TEN_BATS:
-                for _ in range(3): # three bats
-                    groups.add_bat(BatSpecial(self.game))
-            if event.type == self.EXIT:
+                counter = 10    # every 10
+                if not self.game.killedBats % counter:
+                    # print("killedBats", self.game.killedBats)
+                    bats = int(self.game.killedBats/counter + 1)
+                    # print("bats", bats)
+                    for _ in range(bats):
+                        groups.add_bat(BatSpecial(self.game))
+            elif event.type == self.EXIT:
                 self.game.menu_change("exit")
 
             self.key_pressed(event)
@@ -73,43 +74,43 @@ class Events:
             #     player.shoot(groups.bullets)
             if event.key == pygame.K_TAB:
                 self.game.switch_text()
-            if event.key == pygame.K_t:
+            elif event.key == pygame.K_t:
                 self.switch()
-            if event.key == pygame.K_p:
+            elif event.key == pygame.K_p:
                 self.game.dummies.switchDummies()
-            if event.key == pygame.K_1:
+            elif event.key == pygame.K_1:
                 player.add_effect("poison")
-            if event.key == pygame.K_2:
+            elif event.key == pygame.K_2:
                 player.add_effect("onepunch")
-            if event.key == pygame.K_3 or event.key == pygame.K_LSHIFT:
+            elif event.key == pygame.K_3 or event.key == pygame.K_LSHIFT:
                 player.add_effect("speed")
-            if event.key == pygame.K_4:
+            elif event.key == pygame.K_4:
                 player.add_effect("ironskin")
-            if event.key == pygame.K_5:
+            elif event.key == pygame.K_5:
                 player.add_effect("harmless")
-            if event.key == pygame.K_6:
+            elif event.key == pygame.K_6:
                 player.add_effect("stand")
-            if event.key == pygame.K_7 or event.key == pygame.K_x:
+            elif event.key == pygame.K_7 or event.key == pygame.K_x:
                 player.add_effect("bullets")
-            if event.key == pygame.K_m: # unlimited recreates
+            elif event.key == pygame.K_m: # unlimited recreates
                 if not groups.actors.get("girl"):
                     groups.add_actor("girl", Dance_Girl(self.game))
-            if event.key == pygame.K_c:
+            elif event.key == pygame.K_c:
                self.create(self.BAT_SP_TIMER)
-            if event.key == pygame.K_z:
+            elif event.key == pygame.K_z:
                 drops.create_foodDrop()
-            if event.key == pygame.K_LEFTBRACKET or event.key == 1093: # х
+            elif event.key == pygame.K_LEFTBRACKET or event.key == 1093: # х
                 # print("K_LEFTBRACKET")
                 drops.create_RedMushroom()
-            if event.key == pygame.K_RIGHTBRACKET or event.key == 1111: # ї
+            elif event.key == pygame.K_RIGHTBRACKET or event.key == 1111: # ї
                 # print("K_RIGHTBRACKET")
                 drops.create_BlueMushroom()
-            if event.key == pygame.K_j:
+            elif event.key == pygame.K_j:
                 player.joke.get_joke()
-            # if event.key == pygame.K_h:
+            # elif event.key == pygame.K_h:
             #     groups.actors_heal(5)
             #     player.set_heal(5)
-            # if event.key == pygame.K_k:
+            # elif event.key == pygame.K_k:
             #     groups.actors_damage(5)
             #     player.set_damage(5)
 

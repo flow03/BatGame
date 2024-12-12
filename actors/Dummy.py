@@ -15,7 +15,7 @@ class Dummy(pygame.sprite.Sprite):
         self.rect = self.image.get_rect(center=pos)
 
         self.bullet_list = bullet_list
-        self.re_delay = Clock(1000)
+        self.re_delay = Clock(600)
         self.turn_delay = Clock(400)
 
         self.health = Health(health)

@@ -2,7 +2,7 @@ import pygame
 from pygame.math import Vector2
 from text.Iterator import ActiveIterator, BidirectionalIterator
 # from text.Jokes import JokesCreator
-from interface.HealthBar import CellHealthBar, Health
+from interface.HealthBar import CellHealthBar, CellMultiHealthBar, Health
 
 class WhiteText:
     def __init__(self,  text : str, font : pygame.font.Font):
@@ -203,6 +203,8 @@ class JokesBar:
         for key in self.jokes.data:
             self.bars[key] = self.create_bar(key)
         self.active = None
+
+        self.create_test_bar("common")
     
     def set_position(self, pos):
         for bar in self.bars.values():
@@ -216,6 +218,16 @@ class JokesBar:
         health.health = self.jokes.category_length(category)
         bar = CellHealthBar(rect, health, 2, "White")
         bar.set_cell_width(23)
+        return bar
+    
+    def create_test_bar(self, category : str):
+        position = Vector2(20,20)
+        rect = pygame.Rect(position, (150, 12))
+        health = Health(self.jokes.category_max_length(category))
+        health.health = self.jokes.category_length(category)
+        bar = CellMultiHealthBar(rect, health, 2, "White")
+        bar.set_cell_width(23)
+        bar.create_multiple(10)
         return bar
 
     # def categories_update(self):

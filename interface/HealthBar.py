@@ -410,7 +410,7 @@ class CellHealthBar:
         for i in range(self.health.max_health):
             self.cell_list.append(FancyHealthBar(pygame.Rect(cell_rect), Health(1), self.border, self.colour))
 
-        self.update_cells_left()
+        self.update_cells()
         self.fit_rect(self.cell_list_width())
 
     def cell_list_width(self):
@@ -437,14 +437,15 @@ class CellHealthBar:
 
     def update_pos(self, pos):
         self.rect.center = pos
-        self.update_cells_left()
+        self.update_cells()
 
     def update_pos_left(self, pos):
         # print('cell update_pos_left')
         self.rect.midleft = pos
-        self.update_cells_left()
-        
-    def update_cells_left(self):
+        self.update_cells()
+
+    # розміщує по порядку усі комірки починаючи від крайньої лівої    
+    def update_cells(self):
         position = Vector2(self.rect.midleft)
         for cell in self.cell_list:
             cell.update_pos_left(position)
@@ -482,3 +483,65 @@ class CellHealthBar:
     
     def current_cell(self):
         return self.cell_list[self.health.health - 1]
+
+class CellMultiHealthBar(CellHealthBar):
+    def __init__(self, *params):
+        super().__init__(*params)
+
+        self.draw_list = []
+        self.draw_list.append(self.cell_list)
+        self.rect_list = []
+        self.rect_list.append(self.rect)
+
+        self.offset = 10
+        self.shift = None
+
+    def create_multiple(self, limit):
+        if len(self.cell_list) > limit:
+            self.draw_list.clear()
+            self.rect_list.clear()
+
+            for i in range(0, len(self.cell_list), limit):
+                chunk = self.cell_list[i:i + limit]
+                # print(f"original_list[{i}:{i + limit}]")
+                self.fit_cells(chunk)
+                self.draw_list.append(chunk)
+                self.rect_list.append(self.get_rect(chunk))
+
+            self.update_pos(self.rect_list[0].center)
+            self.shift = self.calculate_shift()
+
+    def fit_cells(self, cells : list, position : None):
+        if position:
+            position = Vector2(position)
+        else:
+            position = Vector2(cells[0].rect.midleft)
+
+        for cell in cells:
+            cell.update_pos_left(position)
+            position.x += cell.rect.width - self.border
+
+    def get_rect(self, cells : list):
+        topleft = Vector2(cells[0].rect.topleft)
+        bottomright = Vector2(cells[-1].rect.bottomright)
+
+        width = bottomright.x - topleft.x
+        height = bottomright.y - topleft.y
+
+        return pygame.Rect(topleft, (width, height))
+
+    def update_pos(self, pos : Vector2):
+        if len(self.draw_list) == len(self.rect_list):
+            if self.shift:
+                pos.y -= self.shift
+            for i in range(len(self.cell_list)):
+                self.rect_list[i].center = pos
+                self.fit_cells(self.draw_list[i], self.rect_list[i].midleft)
+                pos += self.offset
+
+    def calculate_shift(self):
+        first = Vector2(self.rect_list[0].center)
+        last = Vector2(self.rect_list[-1].center)
+        average = (first + last) / 2
+        return int(average.y - first.y)
+
