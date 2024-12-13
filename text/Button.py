@@ -204,7 +204,7 @@ class JokesBar:
             self.bars[key] = self.create_bar(key)
         self.active = None
 
-        self.create_test_bar("common")
+        # self.create_test_bar("common")
     
     def set_position(self, pos):
         for bar in self.bars.values():

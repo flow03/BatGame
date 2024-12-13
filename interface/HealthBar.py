@@ -411,7 +411,7 @@ class CellHealthBar:
             self.cell_list.append(FancyHealthBar(pygame.Rect(cell_rect), Health(1), self.border, self.colour))
 
         self.update_cells()
-        self.fit_rect(self.cell_list_width())
+        self.fit_rect() # self.cell_list_width()
 
     def cell_list_width(self):
         midleft = Vector2(self.cell_list[0].rect.midleft)
@@ -426,9 +426,9 @@ class CellHealthBar:
     #     return int(width)
 
     # changes rect width if necessary
-    def fit_rect(self, new_width):
+    def fit_rect(self):
         # print("fit_rect call")
-        # new_width = self.cell_list_width()
+        new_width = self.cell_list_width()
         center = self.rect.center
         if self.rect.width != new_width:
             # print(f"fit_rect: {self.rect.width} != {new_width}")
@@ -486,15 +486,23 @@ class CellHealthBar:
 
 class CellMultiHealthBar(CellHealthBar):
     def __init__(self, *params):
-        super().__init__(*params)
 
         self.draw_list = []
-        self.draw_list.append(self.cell_list)
         self.rect_list = []
+
+        super().__init__(*params)
+
+        self.draw_list.append(self.cell_list)
         self.rect_list.append(self.rect)
 
         self.offset = 10
         self.shift = None
+
+        self.health.restore()
+        self.createCellList()
+
+    def init(self):
+        pass
 
     def create_multiple(self, limit):
         if len(self.cell_list) > limit:
@@ -511,7 +519,7 @@ class CellMultiHealthBar(CellHealthBar):
             self.update_pos(self.rect_list[0].center)
             self.shift = self.calculate_shift()
 
-    def fit_cells(self, cells : list, position : None):
+    def fit_cells(self, cells : list, position = None):
         if position:
             position = Vector2(position)
         else:
@@ -531,13 +539,14 @@ class CellMultiHealthBar(CellHealthBar):
         return pygame.Rect(topleft, (width, height))
 
     def update_pos(self, pos : Vector2):
+        pos = Vector2(pos)
         if len(self.draw_list) == len(self.rect_list):
             if self.shift:
                 pos.y -= self.shift
-            for i in range(len(self.cell_list)):
+            for i in range(len(self.draw_list)):
                 self.rect_list[i].center = pos
                 self.fit_cells(self.draw_list[i], self.rect_list[i].midleft)
-                pos += self.offset
+                pos.y += self.offset
 
     def calculate_shift(self):
         first = Vector2(self.rect_list[0].center)
@@ -545,3 +554,24 @@ class CellMultiHealthBar(CellHealthBar):
         average = (first + last) / 2
         return int(average.y - first.y)
 
+    # def draw(self, screen):
+    #     for cell in self.cell_list:
+    #         cell.draw(screen)
+
+    def set_cell_width(self, cell_width):
+        cell_rect = pygame.Rect((0,0), (cell_width, self.rect.height))
+        self.cell_list.clear()
+        for i in range(self.health.max_health):
+            self.cell_list.append(FancyHealthBar(pygame.Rect(cell_rect), Health(1), self.border, self.colour))
+
+        self.update_pos(self.rect_list[0].center)
+        # self.fit_rect(self.cell_list_width())
+
+    def fit_rect(self, new_width):
+        # print("fit_rect call")
+        # new_width = self.cell_list_width()
+        center = self.rect.center
+        if self.rect.width != new_width:
+            # print(f"fit_rect: {self.rect.width} != {new_width}")
+            self.rect.width = new_width
+            self.update_pos(center)
