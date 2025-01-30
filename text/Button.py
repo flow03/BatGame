@@ -209,7 +209,7 @@ class JokesBar:
     def set_position(self, pos):
         for bar in self.bars.values():
             bar.update_pos(pos)
-
+    
     def create_bar(self, category : str):
         # self.jokes = jokes
         position = Vector2(20,20)

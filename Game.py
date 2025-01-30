@@ -151,11 +151,19 @@ class Game():
         self.events.stop()
 
     # призначений лише для реагування на клавішу Назад
+    # def menu_back(self):
+    #     state = self.menu.back()
+    #     # print("back state", state)
+    #     if state == "game":
+    #         self.state = "game"
+    #         self.events.start()
+    #     elif state == "back":
+    #         self.menu_change("back")
+
     def menu_back(self):
-        state = self.menu.back()
-        # print("back state", state)
-        if state == "game":
-            self.state = "game"
-            self.events.start()
-        elif state == "back":
-            self.menu_change("back")
+        if self.state == "menu":
+            back_state = self.menu.back()
+
+            if back_state == "game":
+                self.state = "game"
+                self.events.start()

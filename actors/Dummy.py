@@ -137,7 +137,7 @@ class CellDummy(Dummy):
     def healthBarCreate(self):
         self.health.restore()
         health_bar_rect = pygame.Rect((0, 0), (100, 8))
-        self.health_bar = HealthBar.CellHealthBar(health_bar_rect, self.health, 1)
+        self.health_bar = HealthBar.FancyCellHealthBar(health_bar_rect, self.health, 1)
         self.update_bar_pos()
 
 class BlueDummy(Dummy):

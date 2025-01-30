@@ -132,8 +132,8 @@ class Menu:
     def change_color(self, color : str):
         self.buttons_handler.active.change_color(color)
 
-    def back(self):
-        return None
+    # def back(self):
+    #     return None
     
 class Exit(Menu):
     def __init__(self, *args):
@@ -146,17 +146,17 @@ class Pause(Menu):
     def __init__(self, *args):
         super().__init__(*args)
         self.titles_list = ['pause']
-        self.buttons_list = ['continue', 'controls', 'jokes', 'settings', 'restart_button', 'exit_button']
+        self.buttons_list = ['continue', 'controls', 'settings', 'restart_button', 'exit_button']
         self.create(self.titles_list, self.buttons_list)
 
-    def back(self):
-        return "game"
+    # def back(self):
+    #     return "game"
 
 class Start(Menu):
     def __init__(self, *args):
         super().__init__(*args)
         self.titles_list = ['start']
-        self.buttons_list = ['new_game', 'controls', 'jokes', 'settings', 'exit_button']
+        self.buttons_list = ['new_game', 'controls', 'settings', 'exit_button']
         self.create(self.titles_list, self.buttons_list)
 
 class Controls(Menu):
@@ -191,17 +191,20 @@ class Controls(Menu):
 
     def create(self, titles, buttons, labels):
         super().create(titles, buttons, labels)
-        self.buttons['back'].shift((0, self.SPACING))
+        position = Vector2(self.center)
+        position.y = self.labels['help'].get_bottom() + self.SPACING * 4
+        self.buttons['back'].update_pos(position)
+        # self.buttons['back'].shift((0, self.SPACING * 2))
 
-    def back(self):
-        return "back"
+    # def back(self):
+    #     return "back"
 
 class Settings(Menu):
     def __init__(self, text, font):
         super().__init__(text, font)
         self.titles_list = ['settings']
         self.labels_list = ['language', 'color']
-        self.buttons_list = ['back']
+        self.buttons_list = ['jokes', 'back']
         # switchers =  ['color_red', 'color_green', 'color_blue']
         
         # self.jokes = jokes
@@ -229,8 +232,8 @@ class Settings(Menu):
         language_select = ['lang_uk', 'lang_en']
         self.buttons['language_select'] = SwitchButton(language_select, self.text, self.font.myfont, (0,0))
 
-    def back(self):
-        return "back"
+    # def back(self):
+    #     return "back"
     
     def create(self, titles : list, buttons : list, labels : list = None): # , position : Vector2 = None
         # if not position:
@@ -253,10 +256,16 @@ class Settings(Menu):
         self.set_position(self.labels['language'], self.buttons['language_select'], Vector2(position))
         position.y = self.labels['language'].get_bottom() + self.SPACING
         self.set_position(self.labels['color'], self.buttons['color_select'], Vector2(position))
-        # position.y = self.labels['color'].get_bottom() + self.SPACING
+        # TODO костиль, який нівелює подвійне натискання при першому запуску меню, 
+        # тому що зміщує кнопку Жартів трохи вниз
+        position.y = self.labels['color'].get_bottom() + self.SPACING * 2
         # self.set_position(self.labels['jokes'], self.labels['jokes_count'], Vector2(position))
         # ----------------------------------------------------------------
-        position.y = self.labels['color'].get_bottom() + self.SPACING
+        # position.y = self.labels['color'].get_bottom() + self.SPACING
+        # self.buttons['jokes'].update_pos(position)
+        # ----------------------------------------------------------------
+        self.buttons['jokes'].update_pos(position)
+        position.y = self.buttons['jokes'].get_bottom() + self.SPACING
         self.buttons['back'].update_pos(position)
         # print("position after update_pos", position)
         
@@ -314,8 +323,8 @@ class JokesMenu(Menu):
             # if label != "jokes":
             self.createOnOffButton(label)
 
-    def back(self):
-        return "back"
+    # def back(self):
+    #     return "back"
     
     def create(self, titles : list, buttons : list, labels : list = None): # , position : Vector2 = None
         # if not position:
@@ -387,6 +396,7 @@ class MenuContex:
 
         self.current = "start"
         self.back_menu = "start"
+        self.back_stack = []
         # self.main_menu = self.pause
 
     def update(self):
@@ -395,31 +405,18 @@ class MenuContex:
 
     def change(self, key):
         if key:
-            if key == "pause":
+            if key != "start" and key != "pause" and key != "exit":
+                self.back_stack.append(self.current)
                 self.current = key
-                # self.back = None
-            elif key == "exit":
+            else:
                 self.current = key
-                # self.back = self.exit
-                # self.back = None
-            elif key == "controls":
-                self.back_menu = self.current
-                self.current = key
-            elif key == "settings":
-                self.back_menu = self.current
-                self.current = key
-            elif key == "jokes":
-                self.back_menu = self.current
-                self.current = key
-            elif key == "back":
-                self.current = self.back_menu
-
-            # print("Menu changed:", key)
 
     # визначає, чи може меню повертатись назад до попереднього меню, чи ні
-    # повертає back - якщо так, None - якщо ні, і game - якщо повертає в гру
     def back(self):
-        return self.all_menu[self.current].back()
+        if self.back_stack:
+            self.current = self.back_stack.pop()
+        elif self.current == "pause":
+            return "game"
 
     def display(self):
         self.all_menu[self.current].display()

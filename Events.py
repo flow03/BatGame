@@ -159,8 +159,7 @@ class Events:
         pygame.time.set_timer(self.FOOD_DROP_TIMER, 5000)
         pygame.time.set_timer(self.BAT_SP_TIMER, 4500)
         # pygame.time.set_timer(self.MUSHROOMS, 50)
-        # self.isEvents = True
-        print("START Events timer")
+        # print("START Events timer")
 
     def stop_timer(self):
         pygame.time.set_timer(self.BAT_TIMER, 0)
@@ -168,8 +167,7 @@ class Events:
         pygame.time.set_timer(self.FOOD_DROP_TIMER, 0)
         pygame.time.set_timer(self.BAT_SP_TIMER, 0)
         # pygame.time.set_timer(self.MUSHROOMS, 0)
-        # self.isEvents = False
-        print("STOP Events timer")
+        # print("STOP Events timer")
 
     def switch(self):
         if self.isEvents:

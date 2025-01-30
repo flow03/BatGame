@@ -27,9 +27,11 @@ class DebugInfo:
         self.y_offset = 25
         self.x_offset = 20
 
+        self.r_y = self.HEIGHT - self.y_offset # reversed y
+        
     def display(self):
         # if self.game.displayText:
-        self.y = 85
+        # self.y = 85
         self.print_debug_info()
         self.print_effects()
         # if Girl:
@@ -44,9 +46,10 @@ class DebugInfo:
 
     def print_debug_info(self):
         # self.y = 85
+        player = self.game.player
+        self.y = player.bullet_bar.get_bottom() + 5
         # groups = self.game.groups
         # drops = self.game.drops
-        player = self.game.player
         self.print(self.text['bats'], len(self.game.groups.bats))
         # self.print('bullets on screen', len(drops.bulletDrops))
         # self.print('loot on screen', len(drops.fallen_drops))
@@ -57,8 +60,8 @@ class DebugInfo:
         self.print_plus(self.text['speed'], player.speed, player.add_speed)
         self.print_plus(self.text['bullet_speed'], player.b_speed, player.add_b_speed)
         self.print(self.text['defence'], player.defence)
-        jokes_text = self.game.jokes.get_text()
-        self.print(self.text['jokes'], jokes_text)
+        # jokes_text = self.game.jokes.get_text()
+        self.print(self.text['jokes'], self.game.jokes.get_text())
 
         # self.print('bats', len(groups.bats))
         # self.print('bullets', len(groups.bullets))
@@ -80,7 +83,7 @@ class DebugInfo:
                 if effects.queue[key].boost <= 1:
                     self.print(key + ' effect', effects.queue[key].time())
                 else:
-                    boost_text = str(effects.queue[key].boost) + 'x '
+                    boost_text = str(effects.queue[key].boost) + 'x ' # with space
                     self.print(boost_text + key + ' effect', effects.queue[key].time())
 
             self.print_empty()

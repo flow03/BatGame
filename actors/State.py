@@ -171,8 +171,8 @@ class danceState(IState):
         self.name = "dance"
         self.dance = Dance(npc)
         self.foodCircle = FoodCircle(self.npc.drops, self.npc.rect.center)
-        if randint(0, 1):
-            self.npc.joke.get_joke()
+        # if randint(0, 1):
+        self.npc.joke.get_joke()
     
     def doState(self):
         # if not self.dance:

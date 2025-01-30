@@ -357,6 +357,11 @@ class BulletBar:
         # print(new_width, new_height)
         self.bullet_image = pygame.transform.scale(self.bullet_image, (new_width, new_height))
 
+    def get_bottom(self):
+        bottom = self.rect.top
+        bottom += (self.rect.height + 2) * len(self.image_list)
+        return bottom
+
 class EffectBar:
     def __init__(self, effect : Effect):
         self.effect = effect
@@ -408,7 +413,7 @@ class CellHealthBar:
         cell_rect = pygame.Rect((0,0), (cell_width, self.rect.height))
         self.cell_list.clear()
         for i in range(self.health.max_health):
-            self.cell_list.append(FancyHealthBar(pygame.Rect(cell_rect), Health(1), self.border, self.colour))
+            self.cell_list.append(HealthBar(pygame.Rect(cell_rect), Health(1), self.border, self.colour))
 
         self.update_cells()
         self.fit_rect() # self.cell_list_width()
@@ -483,6 +488,20 @@ class CellHealthBar:
     
     def current_cell(self):
         return self.cell_list[self.health.health - 1]
+
+class FancyCellHealthBar(CellHealthBar):
+    def __init__(self, *params):
+        super().__init__(*params)
+
+    def set_cell_width(self, cell_width):
+        cell_rect = pygame.Rect((0,0), (cell_width, self.rect.height))
+        self.cell_list.clear()
+        for i in range(self.health.max_health):
+            self.cell_list.append(FancyHealthBar(pygame.Rect(cell_rect), Health(1), self.border, self.colour))
+
+        self.update_cells()
+        self.fit_rect() # self.cell_list_width()
+
 
 class CellMultiHealthBar(CellHealthBar):
     def __init__(self, *params):

@@ -84,7 +84,7 @@ class AllHealthBars:
         self.shieldbar = shield_bar_temp
         self.align = 'left'
 
-class BlueShield(HealthBar.CellHealthBar):
+class BlueShield(HealthBar.FancyCellHealthBar):
     def __init__(self, rect : pygame.Rect, health : HealthBar.Health, border = 1):
         super().__init__(rect, health, border, "Blue")
         # self.visible_empty = True
@@ -136,7 +136,7 @@ class ShiftBlueShield(BlueShield):
         if self.decreased_cell:
             if not self.decreased_cell.decrease:
                 self.decreased_cell = None
-                self.fit_rect(self.cell_visible_width()) # update_pos inside
+                self.fit_rect() # update_pos inside
     
     def cell_visible_width(self):
         midleft = Vector2(self.cell_list[0].rect.midleft)
