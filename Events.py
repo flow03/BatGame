@@ -73,7 +73,7 @@ class Events:
             # if event.key == pygame.K_e or event.key == pygame.K_q:
             #     player.shoot(groups.bullets)
             if event.key == pygame.K_TAB:
-                self.game.switch_text()
+                self.game.debug.switch_text()
             elif event.key == pygame.K_t:
                 self.switch()
             elif event.key == pygame.K_p:
@@ -138,11 +138,12 @@ class Events:
                 elif event.key.startswith("lang"):
                     self.game.text.load(event.key)
                     self.game.menu.reload() # self.game.text.text
-                elif event.key.endswith("on") or event.key.endswith("off"):
-                    # TODO доведеться змінювати, коли з'являться інші перемикачі
+                elif event.key.startswith(("common","profanity","abscenity","tits")): # in ["common","profanity","abscenity","tits"]:
                     self.game.jokes.set_button(event.key)
                 elif event.key == "jokes_reload":
                     self.game.jokes.update()
+                elif event.key.startswith(("displayKilled", "displayFPS")):
+                    self.game.debug.set_button(event.key)
 
             # TODO як варіант, можна додати усі потрібні клавіші у list
             # І створити такий же list для клавіш керування

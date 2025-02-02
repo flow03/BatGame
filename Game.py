@@ -1,6 +1,6 @@
 import pygame
 from add.Path import resource_path_args
-from text.Text import Text, DebugInfo
+from text.Text import Text, DebugInfo, DebugDisplay
 from loot.Drops import Drops
 from actors.Groups import Groups
 from Events import Events
@@ -18,7 +18,8 @@ class Game():
         self.screen_center = Vector2(self.screen.get_size())//2
 
         self.text = Text()
-        self.debug = DebugInfo(self, self.text)
+        self.info = DebugInfo(self, self.text)
+        self.debug = DebugDisplay(self, self.info)
         # self.blit_loading()
         self.jokes = JokesCreator()
 
@@ -63,7 +64,7 @@ class Game():
 
     def blit_loading(self):
         self.screen.blit(self.background, self.bg_pos)
-        self.debug.blit_loading_text(self.screen)
+        self.info.blit_loading_text(self.screen)
         pygame.display.update()
 
     def update_objects(self):
@@ -92,19 +93,6 @@ class Game():
         self.state = "game"
         self.killedBats = 0
 
-    def switch_text(self):
-        if not self.displayText:
-            self.displayText = True
-        else:
-            self.displayText = False
-
-        if self.displayText:
-            self.groups.drawer.rect()
-            self.drops.drawer.rect()
-        else:
-            self.groups.drawer.common()
-            self.drops.drawer.common()
-
     # Main loop    
     def run(self):
         # self.dummies.is_dummies = True
@@ -124,8 +112,7 @@ class Game():
                 
                 # self.events.update()
                 # self.events.restart_pressed()
-                if self.displayText:            
-                    self.debug.display()
+                self.debug.display()
 
             elif self.state == "menu":
                 self.menu.update()

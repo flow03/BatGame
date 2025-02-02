@@ -18,6 +18,9 @@
     "abscenity": "Непристойні жарти",
     "tits": "Жарти про цицьки",
 
+    "displayFPS": "Відображати FPS",
+    "displayKilled": "Вбиті мишки",
+
     "settings": "Налаштування",
     "language": "Мова",
     "lang_uk": "Українська",
@@ -38,7 +41,7 @@
     "start": "МЕНЮ",
     "new_game": "Погнали",
 
-    "bats": "Мишки",
+    "bats_on_screen": "Мишки на екрані",
     "killed_bats": "Вбиті мишки",
     "health": "Здоров'я",
     "speed": "Швидкість",

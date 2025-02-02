@@ -203,7 +203,7 @@ class Settings(Menu):
     def __init__(self, text, font):
         super().__init__(text, font)
         self.titles_list = ['settings']
-        self.labels_list = ['language', 'color']
+        self.labels_list = ['language', 'color', "displayFPS", "displayKilled"]
         self.buttons_list = ['jokes', 'back']
         # switchers =  ['color_red', 'color_green', 'color_blue']
         
@@ -216,14 +216,13 @@ class Settings(Menu):
             self.titles[key].change_text(self.text[key])
 
         for key in self.labels:
-            if key != 'jokes_count':
-                self.labels[key].change_text(self.text[key])
+            self.labels[key].change_text(self.text[key])
 
         for key in self.buttons:
-            if key == 'color_select' or key == 'language_select':
-                self.buttons[key].change_text() # self.text.text
-            else:
+            if key in self.text:
                 self.buttons[key].change_text(self.text[key])
+            else:
+                self.buttons[key].change_text()
 
     def createSwitchers(self):
         color_select = ['color_white', 'color_red', 'color_green', 'color_blue', "color_yellow", "color_violet", "color_magenta", "color_purple", "color_orchid", "color_cyan", "color_black"]
@@ -232,8 +231,8 @@ class Settings(Menu):
         language_select = ['lang_uk', 'lang_en']
         self.buttons['language_select'] = SwitchButton(language_select, self.text, self.font.myfont, (0,0))
 
-    # def back(self):
-    #     return "back"
+        self.buttons["displayFPS"] = OnOffButton("displayFPS", self.text, self.font.myfont, (0,0))
+        self.buttons["displayKilled"] = OnOffButton("displayKilled", self.text, self.font.myfont, (0,0))
     
     def create(self, titles : list, buttons : list, labels : list = None): # , position : Vector2 = None
         # if not position:
@@ -258,11 +257,13 @@ class Settings(Menu):
         self.set_position(self.labels['color'], self.buttons['color_select'], Vector2(position))
         # TODO костиль, який нівелює подвійне натискання при першому запуску меню, 
         # тому що зміщує кнопку Жартів трохи вниз
-        position.y = self.labels['color'].get_bottom() + self.SPACING * 2
+        position.y = self.labels['color'].get_bottom() + self.SPACING # * 2
         # self.set_position(self.labels['jokes'], self.labels['jokes_count'], Vector2(position))
         # ----------------------------------------------------------------
-        # position.y = self.labels['color'].get_bottom() + self.SPACING
-        # self.buttons['jokes'].update_pos(position)
+        self.set_position(self.labels['displayFPS'], self.buttons['displayFPS'], Vector2(position))
+        position.y = self.labels['displayFPS'].get_bottom() + self.SPACING
+        self.set_position(self.labels["displayKilled"], self.buttons["displayKilled"], Vector2(position))
+        position.y = self.labels["displayKilled"].get_bottom() + self.SPACING
         # ----------------------------------------------------------------
         self.buttons['jokes'].update_pos(position)
         position.y = self.buttons['jokes'].get_bottom() + self.SPACING
@@ -294,10 +295,10 @@ class JokesMenu(Menu):
                 self.labels[key].change_text(self.text[key])
 
         for key in self.buttons:
-            if key in self.labels_list:
-                self.buttons[key].change_text()
-            else:
+            if key in self.text:
                 self.buttons[key].change_text(self.text[key])
+            else:
+                self.buttons[key].change_text()
 
     def set_jokes(self, jokes):
         self.jokes = jokes

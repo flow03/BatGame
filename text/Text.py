@@ -38,11 +38,16 @@ class DebugInfo:
         #     text.print_girl_info(screen, Girl.sprites()[-1]) # the last one
         self.print_girl_info()
 
-        self.print_fps(self.game.FPS)
+        # self.print_fps(self.game.FPS)
+        # self.print_killed_bats()
         self.print_help()
 
-    def print_fps(self, FPS):
-        self.screen.blit(self.myfont.render('FPS: ' + str(int(FPS.get_fps())), True, "Black"), (self.WIDTH - 85, 15))
+    def print_fps(self):
+        self.screen.blit(self.myfont.render('FPS: ' + str(int(self.game.FPS.get_fps())), True, "Black"), (self.WIDTH - 85, 15))
+
+    def print_killed_bats(self):
+        text = self.myfont.render(self.text['killed_bats'] + ': ' + str(self.game.killedBats), True, "Black")
+        self.screen.blit(text, (self.WIDTH - text.get_width() - 10, 40))
 
     def print_debug_info(self):
         # self.y = 85
@@ -50,10 +55,10 @@ class DebugInfo:
         self.y = player.bullet_bar.get_bottom() + 5
         # groups = self.game.groups
         # drops = self.game.drops
-        self.print(self.text['bats'], len(self.game.groups.bats))
+        self.print(self.text['bats_on_screen'], len(self.game.groups.bats))
         # self.print('bullets on screen', len(drops.bulletDrops))
         # self.print('loot on screen', len(drops.fallen_drops))
-        self.print(self.text['killed_bats'], self.game.killedBats)
+        # self.print(self.text['killed_bats'], self.game.killedBats)
         # self.print('bullets', player.bullets_count)
         self.print(self.text['health'], player.health.health)
         # self.print(self.text['speed'], player.speed)
@@ -161,6 +166,50 @@ class DebugInfo:
         loading_text_rect = loading_text.get_rect(center=self.center) # bottomright
 
         screen.blit(loading_text, loading_text_rect)
+
+class DebugDisplay:
+    def __init__(self, game, info : DebugInfo):
+        self.game = game
+        self.info = info
+        self.displayText = False
+        self.displayFPS = True
+        self.display_killed_bats = True
+
+    def switch_text(self):
+        if not self.displayText:
+            self.displayText = True
+        else:
+            self.displayText = False
+
+    def set_button(self, button : str):
+        name, state = button.split('_')
+        # print('name, state', name, state)
+        if name == "displayKilled":
+            if state == 'on':
+                self.display_killed_bats = True
+            elif state == 'off':
+                self.display_killed_bats = False
+        elif name == "displayFPS":
+            if state == 'on':
+                self.displayFPS = True
+            elif state == 'off':
+                self.displayFPS = False
+
+    def display(self):
+        if self.displayText:  
+            self.info.display()
+            
+        if self.displayFPS:
+            self.info.print_fps()
+        if self.display_killed_bats:
+            self.info.print_killed_bats()
+
+        if self.displayText:
+            self.game.groups.drawer.alpha("Red")
+            self.game.drops.drawer.alpha("Green")
+        else:
+            self.game.groups.drawer.common()
+            self.game.drops.drawer.common()
 
 # Text
 class Text:

@@ -18,6 +18,9 @@
     "abscenity": "Abscenity",
     "tits": "Tits jokes",
 
+    "displayFPS": "Display FPS",
+    "displayKilled": "Killed bats",
+
     "settings": "Settings",
     "language": "Language",
     "lang_uk": "Ukrainian",
@@ -38,7 +41,7 @@
     "start": "MENU",
     "new_game": "New game",
 
-    "bats": "bats",
+    "bats_on_screen": "bats on screen",
     "killed_bats": "killed bats",
     "health": "health",
     "speed": "speed",

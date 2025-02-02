@@ -5,7 +5,7 @@ class Drawer():
     def __init__(self):
         # self.screen = pygame.display.get_surface()
         # self.displayText = False
-        self.drawer = Draw()
+        self.drawer = Draw() # common as default
 
     def draw_group(self, group):
         self.drawer.draw_group(group)
@@ -19,8 +19,9 @@ class Drawer():
     def rect(self):
         self.drawer = DrawRect()
 
-    def alpha(self):
+    def alpha(self, color): # "Red"
         self.drawer = DrawAlpha()
+        self.drawer.color = color
 
 class Draw():
     def __init__(self):
@@ -38,25 +39,25 @@ class Draw():
 class DrawRect(Draw):
     def __init__(self):
         super().__init__()
-        self.colour = "Red"
+        self.color = "Red"
     
     def draw_sprite(self, sprite : pygame.sprite.Sprite):
         sprite.draw(self.screen)
-        pygame.draw.rect(self.screen, self.colour, sprite.rect, 2)
+        pygame.draw.rect(self.screen, self.color, sprite.rect, 2)
 
 class DrawAlpha(Draw):
     def __init__(self):
         super().__init__()
-        self.colour = "Red"
+        self.color = "Red"
     
     def draw_sprite(self, sprite : pygame.sprite.Sprite):
-        alpha_rect = self.create_alpha(self.colour, sprite.rect.size)
+        alpha_rect = self.create_alpha(self.color, sprite.rect.size)
         self.screen.blit(alpha_rect, sprite.rect)
         sprite.draw(self.screen)
-                
-    def create_alpha(self, colour, size):
+
+    def create_alpha(self, color, size):
         alpha_rect = pygame.Surface(size)
-        alpha_rect.fill(colour)
+        alpha_rect.fill(color)
         alpha_rect.set_alpha(100)
         return alpha_rect
  

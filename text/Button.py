@@ -164,7 +164,7 @@ class SwitchButton(Button):
         super().__init__(self.key, self.text_dict[self.key], self.font, self.rect.center, self.color)
         return self.key
     
-    def change_text(self):
+    def change_text(self, text = None): # two argument needed
         self.text = self.text_dict[self.key]
         super().__init__(self.key, self.text_dict[self.key], self.font, self.rect.center, self.color)
 
