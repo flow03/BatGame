@@ -18,7 +18,7 @@ class Events:
         self.FOOD_DROP_TIMER = pygame.USEREVENT + 3
         self.BAT_SP_TIMER = pygame.USEREVENT + 4
         self.MUSHROOMS = pygame.USEREVENT + 5
-        # self.TEN_BATS = pygame.USEREVENT + 6
+        self.TEN_BATS = pygame.USEREVENT + 6
         self.BAT_KILLED = pygame.USEREVENT + 7
         self.EXIT = pygame.USEREVENT + 8
 
@@ -47,13 +47,16 @@ class Events:
                 drops.create_Mushrooms()
             elif event.type == self.BAT_KILLED:
                 self.game.killedBats += 1
+            elif event.type == self.TEN_BATS:
                 counter = 10    # every 10
-                if not self.game.killedBats % counter:
-                    # print("killedBats", self.game.killedBats)
-                    bats = int(self.game.killedBats/counter + 1)
-                    # print("bats", bats)
-                    for _ in range(bats):
-                        groups.add_bat(BatSpecial(self.game))
+                max = 5
+                bats = int(self.game.killedBats/counter)
+                if bats > max:
+                    bats = max
+                print("additional bats", bats)
+                for _ in range(bats):
+                    groups.add_bat(BatSpecial(self.game))
+
             elif event.type == self.EXIT:
                 self.game.menu_change("exit")
 
@@ -80,7 +83,7 @@ class Events:
                 self.game.dummies.switchDummies()
             elif event.key == pygame.K_1:
                 player.add_effect("poison")
-            elif event.key == pygame.K_2:
+            elif event.key == pygame.K_2 or event.key == pygame.K_x:
                 player.add_effect("onepunch")
             elif event.key == pygame.K_3 or event.key == pygame.K_LSHIFT:
                 player.add_effect("speed")
@@ -90,7 +93,7 @@ class Events:
                 player.add_effect("harmless")
             elif event.key == pygame.K_6:
                 player.add_effect("stand")
-            elif event.key == pygame.K_7 or event.key == pygame.K_x:
+            elif event.key == pygame.K_7:
                 player.add_effect("bullets")
             elif event.key == pygame.K_m: # unlimited recreates
                 if not groups.actors.get("girl"):
@@ -159,6 +162,7 @@ class Events:
         pygame.time.set_timer(self.BULLET_DROP_TIMER, 4000)
         pygame.time.set_timer(self.FOOD_DROP_TIMER, 5000)
         pygame.time.set_timer(self.BAT_SP_TIMER, 4500)
+        pygame.time.set_timer(self.TEN_BATS, 10000)
         # pygame.time.set_timer(self.MUSHROOMS, 50)
         # print("START Events timer")
 
@@ -167,6 +171,7 @@ class Events:
         pygame.time.set_timer(self.BULLET_DROP_TIMER, 0)
         pygame.time.set_timer(self.FOOD_DROP_TIMER, 0)
         pygame.time.set_timer(self.BAT_SP_TIMER, 0)
+        pygame.time.set_timer(self.TEN_BATS, 0)
         # pygame.time.set_timer(self.MUSHROOMS, 0)
         # print("STOP Events timer")
 

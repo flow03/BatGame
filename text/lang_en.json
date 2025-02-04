@@ -53,7 +53,7 @@
     "fire" : "Fire: Any mouse key",
     "effects" : "Effects: 1-7 number keys",
     "speed_key" : "Add speed: Shift",
-    "b_speed_key" : "Add bullet speed: X",
+    "b_speed_key" : "Onepunch effect: X",
     "food" : "Create random food: Z",
     "bat" : "Create bat: C",
     "mushrooms" : "Create mushrooms: [ ]",

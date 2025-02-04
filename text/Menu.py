@@ -268,11 +268,11 @@ class Settings(Menu):
         self.buttons['jokes'].update_pos(position)
         position.y = self.buttons['jokes'].get_bottom() + self.SPACING
         self.buttons['back'].update_pos(position)
-        # print("position after update_pos", position)
         
         # create iterator
         self.buttons_handler = ButtonsHandler(self.buttons)
-        # print(type(self), "created")
+        
+        self.buttons_handler.post(self.buttons['displayFPS'].press())
 
 class JokesMenu(Menu):
     def __init__(self, text, font, jokes = None):

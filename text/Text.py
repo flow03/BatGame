@@ -135,7 +135,7 @@ class DebugInfo:
         self.print_r_text(self.text['dummies'])
         self.print_r_text(self.text['joke'])
 
-        self.print_r_text()
+        # self.print_r_text()
         self.print_r_text(self.text['events'])
         # self.print_r_text(self.text['restart'])
         self.print_r_text(self.text['help'])
@@ -225,8 +225,8 @@ class Text:
         # self.exit = Exit(self.text)
 
         # if "-s" in argv: # sys
-        # over_s = load_json(resource_path(join('text', 'over_s.json')))
-        # self.text.update(over_s)
+        over_s = load_json(resource_path(join('text', 'over_s.json')))
+        self.text.update(over_s)
     
     def load(self, lang : str): # 'lang_uk' або 'lang_en'
         filename = lang + '.json'
