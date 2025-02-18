@@ -196,7 +196,7 @@ class Fish(Food):
     def do(self, actor):
         # actor.set_heal(self.min_heal)
         super().do(actor)
-        actor.add_effect('speed')
+        actor.effects.add_effect('speed')
 
 # 3, 7 - poison
 # 2, 8 - non poison
@@ -210,7 +210,7 @@ class RedMushroom(Mushroom):
         super().__init__(image)
 
     def do(self, actor):
-        actor.add_effect('poison')
+        actor.effects.add_effect('poison')
         # pass
 
 class BlueMushroom(Mushroom):
@@ -219,7 +219,7 @@ class BlueMushroom(Mushroom):
 
     def do(self, actor):
         super().do(actor) # heal
-        actor.remove_effect('poison')
+        actor.effects.remove_effect('poison')
 
 class Flour(Food):
     def __init__(self, image):
@@ -229,7 +229,7 @@ class Flour(Food):
     def do(self, actor):
         super().do(actor)
         if self.stand:
-            actor.add_effect('stand')
+            actor.effects.add_effect('stand')
 
 class Crab(Food):
     def __init__(self, image):
@@ -248,7 +248,7 @@ class Egg(Food):
 
     def do(self, actor):
         super().do(actor)
-        actor.add_effect("bullets")
+        actor.effects.add_effect("bullets")
 
 class Cake(Food):
     def __init__(self, image):

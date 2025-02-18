@@ -5,11 +5,12 @@ from pygame.math import Vector2
 import interface.HealthBar as HealthBar
 # import interface.Effects as Effects
 import add.Path as Path
-from actors.Actor import ActorEffects
+from interface.Effects import EffectsHandler
+from actors.Actor import Actor
 # from loot.Drops import Drops
 import interface.Shields as Shields
 
-class Bat(ActorEffects):
+class Bat(Actor):
     def __init__(self, game):
         super().__init__() # self.screen
 
@@ -61,7 +62,7 @@ class Bat(ActorEffects):
             self.dir_image = DirectionImage(image)
 
     def update(self):
-        super().update() # effects update
+        super().update()
 
     def collide(self):
         # Перевірка колізій з гравцем
@@ -102,7 +103,7 @@ class BatMoving(Bat):
         return Vector2(WIDTH + half_image, bat_y)
 
     def update(self):
-        super().update() # effects update
+        super().update()
         self.rect = self.rect.move(-self.speed, 0)
 
         self.collide()
@@ -121,6 +122,7 @@ class BatSpecial(Bat):
         self.createHealth()
         # self.direction = Vector2()
         self.target = None
+        self.effects = EffectsHandler(self)
 
         self.health.set_damage(10) # test
 
@@ -186,7 +188,8 @@ class BatSpecial(Bat):
         if self.health.empty():
             self.kill()
 
-        super().update() # effects
+        self.effects.update()
+        super().update()
 
     def nearest_food(self):
         nearest_distance = None # distance

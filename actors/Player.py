@@ -18,10 +18,10 @@ class Player:
         self.load_animation_frames()
         self.start_pos = Vector2(position)
         self.speed = 4
-        self.b_speed = 10   # bullet speed
+        self.bullet_speed = 10   # bullet speed
         self.defence = 0
         # self.bullet_speed_bonus = 0
-        self.effects = Effects.EffectQueue_draw(self)
+        self.effects = Effects.EffectsHandler(self)
         self.drops = game.drops
         self.joke = JokeHandler(game.jokes)
         self.events = game.events
@@ -37,16 +37,16 @@ class Player:
         self.animation_speed = 0.2  # Швидкість анімації (кількість фреймів за один update)
         self.image = self.animation_frames[self.current_animation][int(self.frame_index)]
         self.rect = self.image.get_rect(center=self.start_pos)
-        self.velocity = Vector2(0)
+        self.velocity = Vector2()
 
         self.bullets_count = 32 # self.max_bullets_count
         # self.killedBats = 0
         # self.gameplay = True
         self.is_moving = False
         # self.onepunch = False
-        self.add_damage = 0
-        self.add_b_speed = 0
-        self.add_speed = 0
+        # self.add_damage = 0
+        # self.add_bullet_speed = 0
+        # self.add_speed = 0
         # self.harmless = False
         # self.standing = False
         self.effects.clear()
@@ -74,11 +74,11 @@ class Player:
         # shield_bar
         # self.health_bar.createBlueShield(10)
 
-    def add_effect(self, effect_key : str):
-        self.effects.add(effect_key)
+    # def add_effect(self, effect_key : str):
+    #     self.effects.add(effect_key)
 
-    def remove_effect(self, effect_key : str):
-        self.effects.remove(effect_key)
+    # def remove_effect(self, effect_key : str):
+    #     self.effects.remove(effect_key)
 
     def load_animation_frames(self):
         # Завантаження всіх кадрів анімацій для кожного напрямку руху
@@ -93,7 +93,7 @@ class Player:
     def update(self):
         # moving
         if self.is_moving and self.velocity:
-            self.rect.center += round(self.velocity * (self.speed + self.add_speed))
+            self.rect.center += round(self.velocity * (self.speed + self.effects.add_speed))
             self.velocity = Vector2(0,0)
             # print()
 
@@ -145,8 +145,8 @@ class Player:
         self.health_bar.draw(screen)
         self.bullet_bar.draw(screen)
         
-        if self.effects:
-            self.effects.draw(screen)  
+        # if self.effects:
+        self.effects.draw(screen)
 
         self.joke.draw_joke(self.rect.midtop)
             
@@ -224,10 +224,10 @@ class Player:
     def shoot(self, bullet_group, target = None):
         if not self.effects.get('harmless'):
             if self.bullets_count > 0 or self.effects.get('onepunch'):
-                new_bullet = Bullet(self.rect.center, self.b_speed)
-                new_bullet.damage += self.add_damage
-                new_bullet.speed += self.add_b_speed
-                # print('add_b_speed: ', self.add_b_speed)
+                new_bullet = Bullet(self.rect.center, self.bullet_speed)
+                new_bullet.damage += self.effects.add_damage
+                new_bullet.speed += self.effects.add_bullet_speed
+                # print('add_bullet_speed: ', self.add_bullet_speed)
 
                 # bullet_effect = self.effects.get('bullets')
                 # if bullet_effect:
@@ -255,3 +255,11 @@ class Player:
             # elif isinstance(target, tuple):
             #     print("target is tuple")
             #     new_bullet.velocity_by_mouse(target)
+
+    # TODO Можливо, варто перенести у EffectsHandler
+    def get_speed(self):
+        speed_effect = self.effects.get("speed")
+        if speed_effect:
+            return speed_effect.get_speed()
+        else:
+            return self.speed

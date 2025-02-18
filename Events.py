@@ -82,19 +82,19 @@ class Events:
             elif event.key == pygame.K_p:
                 self.game.dummies.switchDummies()
             elif event.key == pygame.K_1:
-                player.add_effect("poison")
+                player.effects.add_effect("poison")
             elif event.key == pygame.K_2 or event.key == pygame.K_x:
-                player.add_effect("onepunch")
+                player.effects.add_effect("onepunch")
             elif event.key == pygame.K_3 or event.key == pygame.K_LSHIFT:
-                player.add_effect("speed")
+                player.effects.add_effect("speed")
             elif event.key == pygame.K_4:
-                player.add_effect("ironskin")
+                player.effects.add_effect("ironskin")
             elif event.key == pygame.K_5:
-                player.add_effect("harmless")
+                player.effects.add_effect("harmless")
             elif event.key == pygame.K_6:
-                player.add_effect("stand")
+                player.effects.add_effect("stand")
             elif event.key == pygame.K_7:
-                player.add_effect("bullets")
+                player.effects.add_effect("bullets")
             elif event.key == pygame.K_m: # unlimited recreates
                 if not groups.actors.get("girl"):
                     groups.add_actor("girl", Dance_Girl(self.game))
@@ -160,8 +160,8 @@ class Events:
     def start_timer(self):
         pygame.time.set_timer(self.BAT_TIMER, 3500)
         pygame.time.set_timer(self.BULLET_DROP_TIMER, 4000)
-        pygame.time.set_timer(self.FOOD_DROP_TIMER, 5000)
-        pygame.time.set_timer(self.BAT_SP_TIMER, 4500)
+        pygame.time.set_timer(self.FOOD_DROP_TIMER, 4400)
+        pygame.time.set_timer(self.BAT_SP_TIMER, 4600)
         pygame.time.set_timer(self.TEN_BATS, 10000)
         # pygame.time.set_timer(self.MUSHROOMS, 50)
         # print("START Events timer")

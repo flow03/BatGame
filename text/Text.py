@@ -55,18 +55,18 @@ class DebugInfo:
         self.y = player.bullet_bar.get_bottom() + 5
         # groups = self.game.groups
         # drops = self.game.drops
-        self.print(self.text['bats_on_screen'], len(self.game.groups.bats))
+        self.print_var(self.text['bats_on_screen'], len(self.game.groups.bats))
         # self.print('bullets on screen', len(drops.bulletDrops))
         # self.print('loot on screen', len(drops.fallen_drops))
         # self.print(self.text['killed_bats'], self.game.killedBats)
         # self.print('bullets', player.bullets_count)
-        self.print(self.text['health'], player.health.health)
+        self.print_var(self.text['health'], player.health.health)
         # self.print(self.text['speed'], player.speed)
-        self.print_plus(self.text['speed'], player.speed, player.add_speed)
-        self.print_plus(self.text['bullet_speed'], player.b_speed, player.add_b_speed)
-        self.print(self.text['defence'], player.defence)
+        self.print_plus(self.text['speed'], player.speed, player.effects.add_speed)
+        self.print_plus(self.text['bullet_speed'], player.bullet_speed, player.effects.add_bullet_speed)
+        self.print_var(self.text['defence'], player.defence)
         # jokes_text = self.game.jokes.get_text()
-        self.print(self.text['jokes'], self.game.jokes.get_text())
+        self.print_var(self.text['jokes'], self.game.jokes.get_text())
 
         # self.print('bats', len(groups.bats))
         # self.print('bullets', len(groups.bullets))
@@ -82,16 +82,12 @@ class DebugInfo:
         self.print_empty()
 
     def print_effects(self):
-        effects = self.game.player.effects
-        if effects.queue:
-            for key in effects.queue.keys():
-                if effects.queue[key].boost <= 1:
-                    self.print(key + ' effect', effects.queue[key].time())
-                else:
-                    boost_text = str(effects.queue[key].boost) + 'x ' # with space
-                    self.print(boost_text + key + ' effect', effects.queue[key].time())
-
-            self.print_empty()
+        # effects = self.game.player.effects
+        text_list = self.game.player.effects.get_text_list()
+        for text in text_list:
+            self.print(text)
+            
+        self.print_empty()
 
     def print_girl_info(self):
         girl = self.game.groups.actors.get("girl")
@@ -102,8 +98,8 @@ class DebugInfo:
             self.screen.blit(self.myfont.render("Girl", True, "Black"), (self.x_offset, self.y))
             self.y += self.y_offset
 
-            self.print('state', girl.state.name)
-            self.print('current', girl.current_animation)
+            self.print_var('state', girl.state.name)
+            self.print_var('current', girl.current_animation)
             # self.print('girl health', girl.health.health)
             # if girl.state == "move_around_player":
             #     self.print('angle', girl.circle.angle)
@@ -141,7 +137,11 @@ class DebugInfo:
         self.print_r_text(self.text['help'])
         self.print_r_text()
 
-    def print(self, text : str, variable):
+    def print(self, text : str):
+        self.screen.blit(self.myfont.render(text, True, "Black"), (self.x_offset, self.y))
+        self.y += self.y_offset
+
+    def print_var(self, text : str, variable):
         self.screen.blit(self.myfont.render(text + ": " + str(variable), True, "Black"), (self.x_offset, self.y))
         self.y += self.y_offset
 
@@ -225,8 +225,8 @@ class Text:
         # self.exit = Exit(self.text)
 
         # if "-s" in argv: # sys
-        over_s = load_json(resource_path(join('text', 'over_s.json')))
-        self.text.update(over_s)
+        # over_s = load_json(resource_path(join('text', 'over_s.json')))
+        # self.text.update(over_s)
     
     def load(self, lang : str): # 'lang_uk' або 'lang_en'
         filename = lang + '.json'

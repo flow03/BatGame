@@ -49,10 +49,22 @@ class EffectQueue:
     def draw(self, screen):
         ...
 
+    def keys(self):
+        return self.queue.keys()
+
     def clear(self):
         for effect in self.queue.values():
             effect.__del__()
         self.queue.clear() # does not call effect destructors of effects
+
+    def get_text(self, key : str):
+        if self.queue[key].boost <= 1:
+            text = str(key + ' effect: ' + str(self.queue[key].time()))
+        else:
+            boost_text = str(self.queue[key].boost) + 'x ' # with space
+            text = str(boost_text + key + ' effect: ' + str(self.queue[key].time()))
+        
+        return text
 
     # def empty(self):
     #     return not bool(self.queue)
@@ -159,7 +171,7 @@ class PoisonEffect(Effect):
         time = 20000
         super().__init__(player, time)
 
-        self.player.add_speed -= 1
+        self.player.effects.add_speed -= 1
         self.healthBar = self.player.health_bar.healthbar
         self.healthBar.change_colour("forestgreen")
         # self.damage_percent = 2 # percent
@@ -208,17 +220,20 @@ class SpeedEffect(Effect):
         self.increase_speed(2) # boost = 2
         self.boost = 1
 
+    def get_speed(self):
+        return self.player.speed + self.player.effects.add_speed
+
     def increase(self):
         super().increase() # restart
         self.increase_speed(2)
 
     def increase_speed(self, speed):  
-        if (self.player.speed + self.player.add_speed) < 10:
-            self.player.add_speed += speed
+        if (self.player.speed + self.player.effects.add_speed) < 10:
+            self.player.effects.add_speed += speed
             self.boost += 1
     
     def __del__(self):
-        self.player.add_speed = 0
+        self.player.effects.add_speed = 0
 
 class IronskinEffect(Effect):
     def __init__(self, player):
@@ -241,12 +256,12 @@ class OnepunchEffect(Effect):
     def __init__(self, player):
         time = 8000
         super().__init__(player, time)
-        self.player.add_b_speed = 20
-        self.player.add_damage = 1000000
+        self.player.effects.add_bullet_speed = 20
+        self.player.effects.add_damage = 1000000
     
     def __del__(self):
-        self.player.add_b_speed = 0
-        self.player.add_damage = 0
+        self.player.effects.add_bullet_speed = 0
+        self.player.effects.add_damage = 0
         pass
 
 # TODO те ж саме, що і зі StandingEffect
@@ -268,7 +283,7 @@ class BulletsEffect(Effect):
         time = 10000
         super().__init__(player, time)
 
-        self.b_speed_bonus = 3
+        self.bullet_speed_bonus = 3
         self.add_bullet_speed()
         self.boost = 1
 
@@ -276,10 +291,55 @@ class BulletsEffect(Effect):
         super().increase()
         self.add_bullet_speed()
 
+# TODO перемістити усі додаткові змінні типу add_bullet_speed всередину класів ефектів
+# створити додатковий метод для ефекту, який повертатиме нову швидкість
+# наприклад get_bullet_speed
+# який НЕ замінятиме оригінальну змінну гравця, а використовуватиметься замість неї
     def add_bullet_speed(self):
-        if self.player.add_b_speed < self.b_speed_bonus * 3:
-            self.player.add_b_speed += self.b_speed_bonus
+        if self.player.effects.add_bullet_speed < self.bullet_speed_bonus * 3:
+            self.player.effects.add_bullet_speed += self.bullet_speed_bonus
             self.boost += 1
     
     def __del__(self):
-        self.player.add_b_speed = 0
+        self.player.effects.add_bullet_speed = 0
+
+# TODO ефекти мають бути в окремому класі, не в Actor
+# об'єкт якого створюватиметься всередині потрібних класів
+class EffectsHandler():
+    def __init__(self, player):
+        # super().__init__()
+        
+        self.queue = EffectQueue_draw(player)
+
+        self.add_speed = 0
+        self.add_damage = 0
+        self.add_bullet_speed = 0
+
+    def add_effect(self, effect_key : str):
+        self.queue.add(effect_key)
+
+    def remove_effect(self, effect_key : str):
+        self.queue.remove(effect_key)
+
+    def update(self):
+        # super().update()
+        self.queue.update()
+
+    def draw(self, screen):
+        # super().draw(screen)
+        if self.queue:
+            self.queue.draw(screen)
+
+    def clear(self):
+        self.queue.clear()
+
+    def get(self, key):
+        return self.queue.get(key)
+   
+    def get_text_list(self):
+        text_list = []
+        for key in self.queue.keys():
+            text_list.append(self.queue.get_text(key))
+
+        return text_list
+    

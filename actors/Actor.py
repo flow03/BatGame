@@ -80,29 +80,4 @@ class Actor(pygame.sprite.Sprite):
 
         return direction
 
-# TODO ефекти мають бути в окремому класі, не в Actor
-# об'єкт якого створюватиметься всередині потрібних класів
-class ActorEffects(Actor):
-    def __init__(self):
-        super().__init__()
-        
-        self.effects = Effects.EffectQueue_draw(self)
-
-        self.add_speed = 0
-        self.add_damage = 0
-        self.add_b_speed = 0
-
-    def add_effect(self, effect_key : str):
-        self.effects.add(effect_key)
-
-    def remove_effect(self, effect_key : str):
-        self.effects.remove(effect_key)
-
-    def update(self):
-        super().update()
-        self.effects.update()
-
-    def draw(self, screen):
-        super().draw(screen)
-        if self.effects:
-            self.effects.draw(self.screen)
+ 
