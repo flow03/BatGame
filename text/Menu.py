@@ -225,7 +225,8 @@ class Settings(Menu):
                 self.buttons[key].change_text()
 
     def createSwitchers(self):
-        color_select = ['color_white', 'color_red', 'color_green', 'color_blue', "color_yellow", "color_violet", "color_magenta", "color_purple", "color_orchid", "color_cyan", "color_black"]
+        color_select = ['color_white', "color_violet", "color_magenta", "color_purple", "color_orchid", "color_black"]
+        #  'color_red', 'color_green', 'color_blue', "color_yellow", "color_cyan",
         self.buttons['color_select'] = SwitchButton(color_select, self.text, self.font.myfont, (0,0))
         # ----------------------------------------------------------------
         language_select = ['lang_uk', 'lang_en']
@@ -439,14 +440,14 @@ class MenuContex:
             return "white"
         elif key == "color_black":
             return "Black"
-        elif key == "color_red":
-            return "Red"
-        elif key == "color_green":
-            return "Green"
-        elif key == "color_blue":
-            return "Blue"
-        elif key == "color_yellow":
-            return "yellow"
+        # elif key == "color_red":
+        #     return "Red"
+        # elif key == "color_green":
+        #     return "Green"
+        # elif key == "color_blue":
+        #     return "Blue"
+        # elif key == "color_yellow":
+        #     return "yellow"
         elif key == "color_violet":
             return "darkviolet"
         elif key == "color_purple":
@@ -455,8 +456,8 @@ class MenuContex:
             return "darkorchid4"
         elif key == "color_magenta":
             return "darkmagenta"
-        elif key == "color_cyan":
-            return "cyan"
+        # elif key == "color_cyan":
+        #     return "cyan"
 
     def change_color(self, color):
         self.color = color

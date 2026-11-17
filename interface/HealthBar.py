@@ -2,7 +2,9 @@ import pygame
 from pygame.math import Vector2
 from add.Clock import Clock
 from add.Path import resource_path
+# from interface.Drawer import Draw
 from interface.Effects import Effect
+# from interface.Shields import AllHealthBars
 
 # --- bordered rects ---
 # player  258 17
@@ -13,7 +15,8 @@ class Health:
     def __init__(self, max_health):
         self.max_health = max_health
         self.health = self.max_health
-    
+
+ # TODO функція робить дві справи: зменшує здоров'я та повертає надлишкове значення. Можливо, краще розділити на дві функції: одна для зменшення здоров'я, інша для перевірки надлишку.   
     def set_damage(self, damage: int):
         self.health -= int(damage)
         if self.health <= 0:
@@ -23,10 +26,6 @@ class Health:
         else:
             return False
 
-    def get_percent(self, percent):
-        damage = round(self.max_health * (percent / 100))
-        return damage
-
     def set_heal(self, heal: int):
         self.health += int(heal)
         if self.health > self.max_health:
@@ -35,6 +34,10 @@ class Health:
             return overheal
         else:
             return False
+        
+    def get_percent(self, percent):
+        damage = round(self.max_health * (percent / 100))
+        return damage
 
     def get_ratio(self):
         return self.health/self.max_health
@@ -47,6 +50,39 @@ class Health:
 
     def empty(self):
         return self.health == 0
+
+class Bullets:
+    def __init__(self, max_bullets: int):
+        self.max_bullets = max_bullets
+        self.bullets_count = self.max_bullets
+        # self.bullet_speed = 10
+
+    def add_bullet(self, new_bullet : int):
+        self.bullets_count += new_bullet
+        if self.bullets_count < 0:
+            self.bullets_count = 0
+        # if self.bullets_count > self.max_bullets_count:
+        #     self.bullets_count = self.max_bullets_count
+        # self.bullet_bar.update(self.bullets_count)
+
+    # def add_bullet(self, bullets_count: int):
+    #     self.bullet_bar.update(bullets_count)
+
+    # def get_percent(self, percent):
+    #     damage = round(self.max_bullets * (percent / 100))
+    #     return damage
+
+    # def get_ratio(self):
+    #     return self.bullets/self.max_bullets
+
+    def restore(self):
+        self.bullets = self.max_bullets
+
+    # def full(self):
+    #     return self.bullets == self.max_bullets
+
+    def empty(self):
+        return self.bullets == 0
 
 class HealthBar:
     def __init__(self, rect : pygame.Rect, health : Health, border = 1, colour = "Red"):
@@ -63,7 +99,7 @@ class HealthBar:
         self.prev_health = self.health.health
         self.colour = colour
 
-    def init(self):
+    def restore(self):
         self.rect_health.width = self.max_width
         self.health.restore()
 
@@ -113,8 +149,8 @@ class HealthBar:
     def set_heal(self, heal: int):
         return self.health.set_heal(heal)
 
-    def restore(self):
-        self.health.restore()
+    # def restore(self):
+    #     self.health.restore()
 
 class FancyHealthBar(HealthBar):
     # def __init__(self, pos, width, height, border = 2):
@@ -315,9 +351,9 @@ class BulletBar:
     #     if bullets_count:
     #         self.create_image(bullets_count)
 
-    def update_variant_second(self, bullets_count):
-        full_images = bullets_count // self.capacity
-        least_bullets = bullets_count % self.capacity
+    def update_variant_second(self, bullets : Bullets):
+        full_images = bullets.bullets_count // self.capacity
+        least_bullets = bullets.bullets_count % self.capacity
 
         # print(f"full_images: {full_images}")
         # print(f"least_bullets: {least_bullets}")
@@ -338,9 +374,9 @@ class BulletBar:
         # print(f"list_len: {len(self.image_list)}")
         # print()
 
-    def update(self, bullets_count):
+    def update(self, bullets : Bullets):
         # self.update_variant_first(bullets_count)
-        self.update_variant_second(bullets_count)
+        self.update_variant_second(bullets)
 
 
     def draw(self, screen):
@@ -594,3 +630,6 @@ class CellMultiHealthBar(CellHealthBar):
             # print(f"fit_rect: {self.rect.width} != {new_width}")
             self.rect.width = new_width
             self.update_pos(center)
+
+
+

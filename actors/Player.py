@@ -2,13 +2,16 @@ import pygame
 from pygame.math import Vector2
 from add.Spritesheet import SpriteSheet
 from actors.Bullet import Bullet
-import interface.HealthBar as HealthBar
+from interface.HealthBar import Bullets, Health
 import interface.Effects as Effects
-import interface.Shields as Shields
+# import interface.Shields as Shields
 from text.Jokes import JokeHandler
+from interface.Drawer import Drawer
 
-class Player:
+class Player(pygame.sprite.Sprite):
     def __init__(self, position, game): # drops, groups.bullets
+        super().__init__()
+
         self.animation_frames = {
             'down': [],
             'up': [],
@@ -17,16 +20,23 @@ class Player:
         }
         self.load_animation_frames()
         self.start_pos = Vector2(position)
-        self.speed = 4
-        self.bullet_speed = 10   # bullet speed
+        self.speed = 5
+        self.bullet_speed = 10
+        self.health = Health(100)
+        self.bullets = Bullets(32)
         self.defence = 0
         # self.bullet_speed_bonus = 0
         self.effects = Effects.EffectsHandler(self)
         self.drops = game.drops
         self.joke = JokeHandler(game.jokes)
         self.events = game.events
+        self.drawer = Drawer()
+        # self.interface_drawer = interfaceDrawer(self.health, self.bullets)
 
-        self.createHealth()
+        self.image = None
+        self.rect = None
+
+        # self.createHealthBars()
         
         self.init()
 
@@ -39,7 +49,6 @@ class Player:
         self.rect = self.image.get_rect(center=self.start_pos)
         self.velocity = Vector2()
 
-        self.bullets_count = 32 # self.max_bullets_count
         # self.killedBats = 0
         # self.gameplay = True
         self.is_moving = False
@@ -52,33 +61,8 @@ class Player:
         self.effects.clear()
         self.joke.clear()
 
-        self.health_bar.init() # restore
-        self.bullet_bar.update(self.bullets_count)
-        # self.health_bar.createBlueShield(4) # del after debug
-        # self.health_bar.createGrayShield(50)
-        # self.health_bar.set_damage(90)
-
-    def createHealth(self):
-        start_pos = Vector2(20, 30)
-
-        # health_bar
-        self.health = HealthBar.Health(100)
-        health_bar_rect = pygame.Rect(start_pos, (258, 17)) # 254, 13
-        health_bar_temp = HealthBar.FancyHealthBar(health_bar_rect, self.health, 2)
-        self.health_bar = Shields.AllHealthBars(health_bar_temp)
-
-        # bullet_bar
-        start_pos.y += 17 + 5
-        self.bullet_bar = HealthBar.BulletBar(start_pos, 254, 16) # 15+13+(2*2)
-
-        # shield_bar
-        # self.health_bar.createBlueShield(10)
-
-    # def add_effect(self, effect_key : str):
-    #     self.effects.add(effect_key)
-
-    # def remove_effect(self, effect_key : str):
-    #     self.effects.remove(effect_key)
+        self.health.restore()
+        self.bullets.restore()
 
     def load_animation_frames(self):
         # Завантаження всіх кадрів анімацій для кожного напрямку руху
@@ -100,7 +84,7 @@ class Player:
         if self.drops.bulletDrops:
             sprite = pygame.sprite.spritecollideany(self, self.drops.bulletDrops)
             if sprite:
-                self.add_bullet(2)
+                self.bullets.add_bullet(2)
                 sprite.kill()
             # pygame.sprite.spritecollide(player, bulletDrops, True)
 
@@ -111,8 +95,6 @@ class Player:
                 food.do(self)
                 # self.health_bar.update_health()
                 food.kill()
-
-        self.health_bar.update_health()
 
         self.effects.update()
 
@@ -142,14 +124,11 @@ class Player:
         # if colour:
         #     pygame.draw.rect(screen, colour, self.rect, 2)
 
-        self.health_bar.draw(screen)
-        self.bullet_bar.draw(screen)
-        
         # if self.effects:
         self.effects.draw(screen)
 
         self.joke.draw_joke(self.rect.midtop)
-            
+
     def get_colour_rect(self, colour):
         colour_rect = pygame.Surface(self.rect.size)
         colour_rect.fill(colour)
@@ -159,9 +138,9 @@ class Player:
     def input(self):
         screen = pygame.display.get_surface()
         keys = pygame.key.get_pressed()
-        if (keys[pygame.K_a]) and self.rect.x > 0:
+        if (keys[pygame.K_LEFT] or keys[pygame.K_a]) and self.rect.x > 0:
             self.move('left')
-        if (keys[pygame.K_d]) and self.rect.x < (screen.get_width() - self.rect.width):
+        if (keys[pygame.K_RIGHT] or keys[pygame.K_d]) and self.rect.x < (screen.get_width() - self.rect.width):
             self.move('right')
         if (keys[pygame.K_UP] or keys[pygame.K_w]) and self.rect.y > 0:
             self.move('up')
@@ -207,23 +186,15 @@ class Player:
 
     def set_damage(self, damage: int):
         damage = self.defence_damage(damage)
-        self.health_bar.set_damage(damage)
+        self.health.set_damage(damage)
 
     def set_heal(self, heal: int):
-        self.health_bar.set_heal(heal)
-
-    def add_bullet(self, new_bullet : int):
-        self.bullets_count += new_bullet
-        if self.bullets_count < 0:
-            self.bullets_count = 0
-        # if self.bullets_count > self.max_bullets_count:
-        #     self.bullets_count = self.max_bullets_count
-        self.bullet_bar.update(self.bullets_count)
+        self.health.set_heal(heal)
 
     # target is direction as default
     def shoot(self, bullet_group, target = None):
         if not self.effects.get('harmless'):
-            if self.bullets_count > 0 or self.effects.get('onepunch'):
+            if not self.bullets.empty() or self.effects.get('onepunch'):
                 new_bullet = Bullet(self.rect.center, self.bullet_speed)
                 new_bullet.damage += self.effects.add_damage
                 new_bullet.speed += self.effects.add_bullet_speed
@@ -246,7 +217,7 @@ class Player:
                 bullet_group.add(new_bullet)
 
                 if not self.effects.get('onepunch'):
-                    self.add_bullet(-1)
+                    self.bullets.add_bullet(-1)
 
             # # if type(target) == str:
             # if isinstance(target, str):

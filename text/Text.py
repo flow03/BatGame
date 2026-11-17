@@ -52,7 +52,7 @@ class DebugInfo:
     def print_debug_info(self):
         # self.y = 85
         player = self.game.player
-        self.y = player.bullet_bar.get_bottom() + 5
+        self.y = self.game.interface.bullet_bar.get_bottom() + 5
         # groups = self.game.groups
         # drops = self.game.drops
         self.print_var(self.text['bats_on_screen'], len(self.game.groups.bats))
@@ -207,9 +207,11 @@ class DebugDisplay:
         if self.displayText:
             self.game.groups.drawer.alpha("Red")
             self.game.drops.drawer.alpha("Green")
+            # self.game.player.drawer.alpha("Green")
         else:
             self.game.groups.drawer.common()
             self.game.drops.drawer.common()
+            # self.game.player.drawer.common()
 
 # Text
 class Text:

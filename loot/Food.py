@@ -174,7 +174,7 @@ class Food(pygame.sprite.Sprite):
         # self.image = self.get_rand_image(size)
         self.rect = self.image.get_rect()
         self.min_heal = 5
-        self.heal = randint(10, 25)
+        self.heal = randint(10, 20)
         self.screen = pygame.display.get_surface()
 
     def do(self, sprite : pygame.sprite.Sprite):
@@ -186,7 +186,7 @@ class Food(pygame.sprite.Sprite):
 class Meat(Food):
     def __init__(self, image):
         super().__init__(image)
-        self.heal = 40
+        self.heal = 30
 
 class Fish(Food):
     def __init__(self, image):
@@ -234,12 +234,12 @@ class Flour(Food):
 class Crab(Food):
     def __init__(self, image):
         super().__init__(image)
-        self.heal = self.min_heal
-        self.shield = randint(20, 50)
+        self.heal = randint(20, 30)
+        # self.shield = randint(20, 50)
 
-    def do(self, actor):
-        super().do(actor)
-        actor.health_bar.createGrayShield(self.shield)
+    # def do(self, actor):
+    #     super().do(actor)
+    #     actor.health_bar.createGrayShield(self.shield)
 
 class Egg(Food):
     def __init__(self, image):
@@ -257,5 +257,5 @@ class Cake(Food):
 
     def do(self, actor):
         super().do(actor)
-        actor.add_bullet(32)
+        actor.bullets.add_bullet(10)
          

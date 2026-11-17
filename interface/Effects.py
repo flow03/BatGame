@@ -19,6 +19,14 @@ class EffectQueue:
                 if self.get("poison") or self.get("stand"):
                     effect_key = None
                     # print("speed ignored")
+            elif effect_key == "onepunch":
+                if self.get("bullets"):
+                    self.remove("bullets")
+                    # print("bullets removed")
+            elif effect_key == "bullets":
+                if self.get("onepunch"):
+                    effect_key = None
+                    # print("bullets ignored")
 
             self.createEffect(effect_key) # creation and adding
         else: 
@@ -171,23 +179,23 @@ class PoisonEffect(Effect):
         time = 20000
         super().__init__(player, time)
 
-        self.player.effects.add_speed -= 1
-        self.healthBar = self.player.health_bar.healthbar
-        self.healthBar.change_colour("forestgreen")
+        # self.player.effects.add_speed -= 1
+        self.health = self.player.health
+        # self.healthBar.change_colour("forestgreen")
         # self.damage_percent = 2 # percent
-        self.poison_damage = 5
+        self.poison_damage = 4
 
         self.tick_timer = Clock(1200)
         self.tick_timer.start()
         # self.healthBar.health.set_damage(self.poison_damage) # first tick
 
-    def get_damage(self, percent):
-        damage = self.healthBar.health.get_percent(percent)
-        return damage
+    # def get_damage(self, percent):
+    #     damage = self.health.get_percent(percent)
+    #     return damage
 
     def update(self):
         if self.tick_timer.next():
-            self.healthBar.health.set_damage(self.poison_damage) # directly, without defence        
+            self.health.set_damage(self.poison_damage) # directly, without defence        
 
     def increase(self):
         # no restart
@@ -197,18 +205,19 @@ class PoisonEffect(Effect):
             self.poison_damage += 2
             self.boost += 1
 
-    def increase_old(self):
-        # no restart
-        if self.player.add_speed > -2:
-            self.player.add_speed -= 1
-        if self.damage_percent < 6:
-            self.damage_percent += 2
-            self.boost += 1
-        self.poison_damage = self.get_damage(self.damage_percent)
+    # def increase_old(self):
+    #     # no restart
+    #     # if self.player.add_speed > -2:
+    #     #     self.player.add_speed -= 1
+    #     if self.damage_percent < 6:
+    #         self.damage_percent += 2
+    #         self.boost += 1
+    #     self.poison_damage = self.get_damage(self.damage_percent)
 
     def __del__(self):
-        self.healthBar.change_colour("red")
-        self.player.add_speed = 0
+        ...
+        # self.healthBar.change_colour("red")
+        # self.player.add_speed = 0
 
 class SpeedEffect(Effect):
     def __init__(self, player):

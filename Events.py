@@ -5,7 +5,7 @@ from actors.Dance_Girl import Dance_Girl
 class Events:
     def __init__(self, game):
         self.game = game
-        self.isEvents = True # True щоб увімкнути події
+        self.isEvents = False # True щоб увімкнути події
         # вмикаються після запуску пункту меню
         # self.isTenBats = False
 
