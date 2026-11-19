@@ -9,7 +9,7 @@ from actors.Dummy import DummyCreator
 from pygame.math import Vector2
 from text.Jokes import JokesCreator
 from text.Menu import MenuContex
-from interface.Drawer import interfaceDrawer
+from interface.Drawer import interfaceDrawer, Drawer
 
 class Game():
     def __init__(self):
@@ -29,6 +29,7 @@ class Game():
         self.events = Events(self)
 
         self.player = Player(self.screen_center, self)
+        self.player_drawer = Drawer()
         self.dummies = DummyCreator(self.groups)
         self.interface = interfaceDrawer(self.player.health, self.player.bullets)
 
@@ -80,7 +81,7 @@ class Game():
     def draw_objects(self):
         self.drops.draw()
         self.groups.draw()
-        self.player.draw(self.screen)
+        self.player_drawer.draw(self.player)
         self.interface.draw(self.screen)
 
     def restart(self):

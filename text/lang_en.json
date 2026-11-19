@@ -12,11 +12,14 @@
     "on": "On",
     "off": "Off",
     "jokes_reload": "Reload jokes",
+    "censorship": "Censorship",
 
-    "common": "Сommon",
+    "common": "Common",
     "profanity": "Profanity",
     "abscenity": "Abscenity",
     "tits": "Tits jokes",
+    "demons": "Demons jokes",
+    "sad": "Sad jokes",
 
     "displayFPS": "Display FPS",
     "displayKilled": "Killed bats",

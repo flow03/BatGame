@@ -146,7 +146,7 @@ class Pause(Menu):
     def __init__(self, *args):
         super().__init__(*args)
         self.titles_list = ['pause']
-        self.buttons_list = ['continue', 'controls', 'settings', 'restart_button', 'exit_button']
+        self.buttons_list = ['continue', 'controls', 'settings', 'jokes', 'restart_button', 'exit_button']
         self.create(self.titles_list, self.buttons_list)
 
     # def back(self):
@@ -156,7 +156,7 @@ class Start(Menu):
     def __init__(self, *args):
         super().__init__(*args)
         self.titles_list = ['start']
-        self.buttons_list = ['new_game', 'controls', 'settings', 'exit_button']
+        self.buttons_list = ['new_game', 'controls', 'settings', 'jokes', 'exit_button']
         self.create(self.titles_list, self.buttons_list)
 
 class Controls(Menu):
@@ -204,7 +204,7 @@ class Settings(Menu):
         super().__init__(text, font)
         self.titles_list = ['settings']
         self.labels_list = ['language', 'color', "displayFPS", "displayKilled"]
-        self.buttons_list = ['jokes', 'back']
+        self.buttons_list = ['back']
         # switchers =  ['color_red', 'color_green', 'color_blue']
         
         # self.jokes = jokes
@@ -225,13 +225,13 @@ class Settings(Menu):
                 self.buttons[key].change_text()
 
     def createSwitchers(self):
+        language_select = ['lang_uk', 'lang_en']
+        self.buttons['language_select'] = SwitchButton(language_select, self.text, self.font.myfont, (0,0))
+        # ----------------------------------------------------------------
         color_select = ['color_white', "color_violet", "color_magenta", "color_purple", "color_orchid", "color_black"]
         #  'color_red', 'color_green', 'color_blue', "color_yellow", "color_cyan",
         self.buttons['color_select'] = SwitchButton(color_select, self.text, self.font.myfont, (0,0))
         # ----------------------------------------------------------------
-        language_select = ['lang_uk', 'lang_en']
-        self.buttons['language_select'] = SwitchButton(language_select, self.text, self.font.myfont, (0,0))
-
         self.buttons["displayFPS"] = OnOffButton("displayFPS", self.text, self.font.myfont, (0,0))
         self.buttons["displayKilled"] = OnOffButton("displayKilled", self.text, self.font.myfont, (0,0))
     
@@ -266,8 +266,8 @@ class Settings(Menu):
         self.set_position(self.labels["displayKilled"], self.buttons["displayKilled"], Vector2(position))
         position.y = self.labels["displayKilled"].get_bottom() + self.SPACING
         # ----------------------------------------------------------------
-        self.buttons['jokes'].update_pos(position)
-        position.y = self.buttons['jokes'].get_bottom() + self.SPACING
+        # self.buttons['jokes'].update_pos(position)
+        # position.y = self.buttons['jokes'].get_bottom() + self.SPACING
         self.buttons['back'].update_pos(position)
         
         # create iterator
@@ -279,10 +279,11 @@ class JokesMenu(Menu):
     def __init__(self, text, font, jokes = None):
         super().__init__(text, font)
         self.titles_list = ['jokes']
-        self.labels_list = ['common', 'profanity', 'abscenity', 'tits']
-        self.buttons_list = ['jokes_reload','back']
+        self.labels_list = ['common', 'profanity', 'abscenity', 'tits', 'demons', 'sad', 'censorship']
+        self.buttons_list = ['jokes_reload', 'back']
         self.jokes = jokes
-        self.center.y -= 50
+        # self.center.y -= 50
+        self.center.y = 50
 
         self.create(self.titles_list, self.buttons_list, self.labels_list)
 

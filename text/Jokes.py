@@ -12,12 +12,17 @@ from os.path import join
 class JokesCreator:
     def __init__(self):
         self.data = {}
-        self.data['common'] = self.load_jokes('Jokes_com.json')
+        self.data['common'] = self.load_jokes('Jokes_com.json')     # common jokes
         self.data['profanity'] = self.load_jokes('Jokes_prof.json') # profanity
         self.data['abscenity'] = self.load_jokes('Jokes_abs.json')  # abscenity
         self.data['tits'] = self.load_jokes('Jokes_tits.json')      # tits
+        self.data['demons'] = self.load_jokes('Jokes_demons.json')  # demons
+        self.data['sad'] = self.load_jokes('Jokes_sad.json')        # sad jokes
 
         self.jokes = dict.fromkeys(self.data) # None defaults
+        # self.data['profanity_u'] = self.load_jokes('Jokes_prof_u.json') # profanity uncensored
+        
+        # self.jokes.pop('profanity', None) # profanity
         # copy.deepcopy з модуля copy створює копію з усіма рівнями вкладеності
         # тоді як метод copy у dict чи звичайний конструктор копіюють лише верхній рівень
         self.update()
@@ -94,6 +99,7 @@ class JokesCreator:
         text = str(self.jokes_length()) + "/" + str(self.data_length())
         return text
 
+    # повертає категорію жартів, яку потрібно увімкнути чи вимкнути
     def set_button(self, button : str):
         name, state = button.split('_')
         # print('name, state', name, state)

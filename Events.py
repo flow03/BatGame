@@ -141,8 +141,11 @@ class Events:
                 elif event.key.startswith("lang"):
                     self.game.text.load(event.key)
                     self.game.menu.reload() # self.game.text.text
-                elif event.key.startswith(("common","profanity","abscenity","tits")): # in ["common","profanity","abscenity","tits"]:
+                elif event.key.startswith(("common","profanity","abscenity","tits","demons","sad")): # in ["common","profanity","abscenity","tits"]:
                     self.game.jokes.set_button(event.key)
+                elif event.key == "censorship":
+                    ...
+                    # self.game.jokes.change_profanity()
                 elif event.key == "jokes_reload":
                     self.game.jokes.update()
                 elif event.key.startswith(("displayKilled", "displayFPS")):

@@ -207,11 +207,11 @@ class DebugDisplay:
         if self.displayText:
             self.game.groups.drawer.alpha("Red")
             self.game.drops.drawer.alpha("Green")
-            # self.game.player.drawer.alpha("Green")
+            self.game.player_drawer.alpha("Green")
         else:
             self.game.groups.drawer.common()
             self.game.drops.drawer.common()
-            # self.game.player.drawer.common()
+            self.game.player_drawer.common()
 
 # Text
 class Text:

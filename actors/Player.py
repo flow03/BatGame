@@ -30,7 +30,7 @@ class Player(pygame.sprite.Sprite):
         self.drops = game.drops
         self.joke = JokeHandler(game.jokes)
         self.events = game.events
-        self.drawer = Drawer()
+        # self.drawer = Drawer()
         # self.interface_drawer = interfaceDrawer(self.health, self.bullets)
 
         self.image = None
@@ -120,7 +120,6 @@ class Player(pygame.sprite.Sprite):
 
     def draw(self, screen):
         screen.blit(self.image, self.rect)
-        # self.drawer.draw(self)
         # if colour:
         #     pygame.draw.rect(screen, colour, self.rect, 2)
 
